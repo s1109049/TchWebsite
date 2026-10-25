@@ -1073,6 +1073,11 @@ let appData;
             try {
                 if (file.size > 20*1024*1024) throw new Error('size');
                 const importTarget=currentClassKey;
+                if(/\.xlsx$/i.test(file.name)){
+                    const roster=await readSchoolExcel(file);
+                    if(fileWriteBusy||isPicking||!isAdminLoggedIn||currentClassKey!==importTarget)return;
+                    importSchoolRosters(roster);return;
+                }
                 const text = await file.text();
                 if(fileWriteBusy||isPicking||!isAdminLoggedIn||currentClassKey!==importTarget)return;
                 const parsed = /\.html?$/i.test(file.name) ? new DOMParser().parseFromString(text, 'text/html').getElementById('embedded-data')?.textContent : text;
@@ -1092,7 +1097,7 @@ let appData;
                 renderLessonTab();renderHomeworkTab();renderAdminTab();
                 setFileStatus(L('已匯入。按「儲存並更新原檔」把資料寫回目前連接的 HTML。', 'Imported. Use Save & update original to write the data into the connected HTML.'));
             } catch {
-                setFileStatus(L('匯入失敗：HTML / JSON 格式不正確或檔案過大。原資料未變更。','Import failed: invalid or oversized HTML / JSON. Current data was not changed.'), true);
+                setFileStatus(L('匯入失敗：請檢查 Excel / HTML / JSON 格式、檔案大小及瀏覽器支援。原資料未變更。','Import failed: invalid or oversized HTML / JSON. Current data was not changed.'), true);
             }
         }
         function renderFlowEditList() {

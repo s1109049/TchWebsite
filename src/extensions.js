@@ -110,7 +110,7 @@ function applyExtensionLabels() {
         'btn-export-json':classBook?L('📄 匯出全部班科備份','📄 Back up all classes'):L('📄 匯出 JSON','📄 Export JSON'),
         'btn-download-copy':L('📥 下載副本','📥 Download copy'),
         'btn-reconnect':L('📂 重新選擇原檔','📂 Reconnect original'),
-        'btn-import-json':L('📂 匯入舊 HTML / JSON','📂 Import old HTML / JSON'),
+        'btn-import-json':L('📂 匯入 Excel / HTML / JSON','📂 Import Excel / HTML / JSON'),
         'btn-save-lesson-content':L('💾 儲存並更新課堂 HTML','💾 Save & update lesson HTML'),
         'txt-save-banner-desc':L('首次儲存請選取原本的 HTML 並授權；之後會直接更新同一檔案。更換瀏覽器或權限到期時可能需要再次授權。','Select and authorize the original HTML on first save. Later saves update that file. A different browser or expired permission may require authorization again.'),
         'unsaved-banner':L('⚠️ 內容已變更，已嘗試備份到此瀏覽器。請在後台儲存原檔，才會更新 USB 的 HTML。','⚠️ Content changed. Local backup attempted. Save the original file in Admin to update the USB HTML.'),

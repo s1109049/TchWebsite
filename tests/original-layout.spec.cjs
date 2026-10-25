@@ -141,3 +141,9 @@ test('roster-only import maps the same class to both subjects without replacing 
  expect(await page.evaluate(()=>appData.submissions['保留習作']['1 學生甲'])).toBe('submitted');await choose(page,'CL:S1D');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生甲','2 學生乙']);await choose(page,'公經社:S3B');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生丙']);
  await page.reload();await choose(page,'中國歷史:S1D');await expect(page.locator('#display-title')).toHaveText('保留課堂');
 });
+test('local Excel imports class numbers and names into all matching subjects and keeps lessons',async({page})=>{
+ await open(page);await login(page);await page.locator('#edit-title').fill('原課堂不變');
+ await page.locator('input[type=file]').setInputFiles('tests/fixtures/example-class-list.xlsx');await expect(page.locator('#file-save-status')).toContainText('已更新 4 個班科');await expect(page.locator('#edit-title')).toHaveValue('原課堂不變');
+ expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生甲','2 學生乙']);await choose(page,'CL:S1D');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生甲','2 學生乙']);await choose(page,'公經社:S3B');expect(await page.evaluate(()=>appData.students)).toEqual(['1 EXAMPLE THREE']);
+ await login(page);await page.locator('input[type=file]').setInputFiles({name:'broken.xlsx',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',buffer:Buffer.from('invalid zip')});await expect(page.locator('#file-save-status')).toContainText('匯入失敗');expect(await page.evaluate(()=>appData.students)).toEqual(['1 EXAMPLE THREE']);
+});
