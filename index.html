@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#5456c9"><link rel="icon" href="data:,"><title>課堂管理系統 · Classroom</title><style>:root{--ink:#263347;--muted:#717d91;--primary:#5456c9;--light:#eeeffc;--border:#e4e8f0;--bg:#f5f6fa;--radius:20px;font-family:ui-rounded,'Arial Rounded MT Bold','Microsoft JhengHei',system-ui,sans-serif;color:var(--ink);font-size:19px;line-height:1.6}*{box-sizing:border-box}body{margin:0;background:var(--bg)}[hidden]{display:none!important}button,input,textarea,select{font:inherit}button,.button{border:1px solid var(--border);background:white;border-radius:10px;padding:10px 17px;color:var(--ink);cursor:pointer;font-size:.88rem;font-weight:650;transition:background .15s,transform .15s;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}button:hover,.button:hover{background:var(--light);border-color:#bfc1ea}button:active{transform:translateY(1px)}button:disabled{opacity:.48;cursor:not-allowed}button.primary{background:var(--primary);color:white;border-color:var(--primary)}button.primary:hover{background:#4446ae}.subtle{background:transparent}.big{padding:15px 28px;font-size:1.1rem}:focus-visible{outline:3px solid #9597e9;outline-offset:3px}header{height:108px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:20px 42px;border-bottom:1px solid var(--border);gap:18px}.brand{display:flex;gap:14px;align-items:center}.brand-icon{background:var(--primary);color:white;width:48px;height:48px;display:grid;place-items:center;border-radius:15px;font-size:34px}.brand strong{display:block;font-size:1.25rem;letter-spacing:.04em}.brand small{display:block;color:var(--muted);font-size:.7rem}.header-actions{display:flex;gap:10px}.workspace{display:grid;grid-template-columns:225px minmax(0,1fr);min-height:calc(100vh - 108px)}aside{background:#fff;border-right:1px solid var(--border);padding:30px 18px;display:flex;flex-direction:column}.nav-label{font-size:.62rem;letter-spacing:.13em;color:#9a9fad;margin:0 14px 20px}nav{display:flex;flex-direction:column;gap:10px}nav button{justify-content:flex-start;border:0;background:transparent;padding:14px 16px;gap:12px;color:#69738a;font-size:.87rem}nav button>span:first-child{font-size:24px;min-width:25px}nav button.active{background:var(--light);color:var(--primary)}.aside-note{margin-top:auto;padding:40px 12px 10px;font-size:.61rem;color:var(--muted);display:flex;align-items:center;gap:8px}.dot{background:#65aa98;display:inline-block;width:7px;height:7px;border-radius:50%}main{padding:38px 40px;max-width:1600px;width:100%;margin:auto}.page-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:28px}.eyebrow{font-size:.65rem;letter-spacing:.13em;font-weight:750;color:var(--primary);margin:0 0 9px}h1{font-size:1.65rem;letter-spacing:.02em;line-height:1.4;margin:0;font-weight:750}h2{font-size:1.2rem;margin:0 0 20px;font-weight:750}h3{font-size:1rem;margin:0 0 12px}p{margin:8px 0}.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:22px;box-shadow:0 4px 20px #25315b03}.lesson-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:24px}.lesson-intro{background:linear-gradient(145deg,#fff 50%,#f5f4ff)}#lesson-title{font-size:1.85rem;line-height:1.5;margin:18px 0 30px;overflow-wrap:anywhere}.section-label{font-size:.72rem;letter-spacing:.09em;font-weight:750;color:var(--muted);display:block;margin:18px 0 12px}.prose{white-space:pre-wrap;overflow-wrap:anywhere}.inset{background:#eeeffb;border-radius:13px;padding:18px;margin-top:25px;font-size:.87rem}.inset b{color:var(--primary)}.warm{background:#fff6e9}.warm b{color:#9b6d2a}.card-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:20px}.card-heading h2{margin:0}.pill{font-size:.7rem;background:var(--light);color:var(--primary);padding:5px 11px;border-radius:9px}.flow-step{display:grid;grid-template-columns:38px 1fr;gap:15px;padding:15px 0}.step-number{width:36px;height:36px;border-radius:12px;background:var(--light);color:var(--primary);display:grid;place-items:center;font-weight:800;font-size:.8rem}.step-time{font-size:.7rem;color:var(--primary);font-weight:750}.flow-step h3{margin:2px 0 4px;font-size:1.07rem}.flow-step p{color:var(--muted);font-size:.88rem;margin:0}.flow-step+.flow-step{border-top:1px dashed var(--border)}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.spread{justify-content:space-between}.center{justify-content:center}.end{justify-content:flex-end}.muted{color:var(--muted);font-size:.79rem}.empty{text-align:center;padding:45px 24px;color:var(--muted)}.empty h2,.empty h3{color:var(--ink)}.empty-icon{font-size:40px;color:var(--primary);display:block;margin-bottom:15px}.empty button{margin-top:15px}label{display:block;font-size:.88rem;margin-bottom:15px}label span{display:inline-block;margin-bottom:7px}label.row{margin:0}label.row span{margin:0}input:not([type=checkbox]),textarea,select{background:#fbfcfe;border:1px solid #dce1eb;border-radius:10px;padding:11px 13px;color:var(--ink);width:100%;min-width:0}textarea{resize:vertical}input[type=checkbox]{width:20px;height:20px;accent-color:var(--primary);flex-shrink:0}input[type=number]{max-width:100px}select{width:auto;max-width:100%}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.optional{margin-top:24px}.flow-edit{border:1px solid var(--border);border-radius:13px;padding:16px;margin-bottom:14px;background:#fafbfe}.flow-edit-fields{display:grid;grid-template-columns:120px 1fr;gap:12px;margin-bottom:10px}.flow-edit .row{margin-top:8px}.flow-edit button{font-size:.75rem;padding:6px 12px}.save-panel{border-left:4px solid var(--primary)}#save-status{font-size:.83rem;color:#387565}#file-status{margin-top:16px}.error{color:#a62e48}.warning{color:#a75d1c!important;background:#fff4e0;padding:12px;border-radius:8px}.login{max-width:440px;margin:60px auto;text-align:center;padding:38px}.login input{margin:0 0 12px}.login button{width:100%}.item-list{margin-top:18px}.list-item{display:flex;align-items:center;gap:10px;border-top:1px solid var(--border);padding:14px 0}.list-item>span{flex:1;overflow-wrap:anywhere}.list-item button{font-size:.75rem;padding:5px 10px}.segmented{display:flex;border-radius:12px;background:#e9ebf4;padding:5px;gap:4px}.segmented button{border:0;background:transparent}.segmented button.active{background:#fff;color:var(--primary);box-shadow:0 2px 6px #28345710}.picker-stage{background:linear-gradient(125deg,#e8e9fc,#f1edfc 65%,#f9f2e6);border-radius:24px;min-height:450px;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:35px;margin-bottom:25px;border:1px solid #dedff3}.picker-visual{text-align:center;min-width:0}#shuffle-name{font-size:2.4rem;font-weight:800;color:var(--primary);overflow-wrap:anywhere}#wheel-box{position:relative;max-width:350px;margin:auto}#wheel{width:100%;height:auto;display:block}.pointer{position:absolute;top:-12px;left:calc(50% - 12px);color:#293654;font-size:28px;z-index:1}.picker-result{text-align:center;padding:20px;min-width:0}#picked-name{font-size:clamp(40px,5vw,84px);font-weight:800;line-height:1.3;overflow-wrap:anywhere;margin:24px 0;color:#393a91}.picker-result button{margin:10px auto;display:flex}#picker-count{color:var(--muted);font-size:.85rem}.chips{display:flex;gap:10px;flex-wrap:wrap}.chip{background:#f1f3fa;border-radius:8px;padding:5px 14px;font-size:.87rem}.timer-card{text-align:center;padding:35px;max-width:1080px;margin:auto}#timer-task{font-size:28px;text-align:center;font-weight:700;color:#393a91;background:#f5f5ff;border-color:#d4d5f0;min-height:100px}#timer-display{font-size:clamp(70px,10vw,150px);font-weight:750;line-height:1.5;font-variant-numeric:tabular-nums;letter-spacing:.03em;color:#393a91}.progress{height:52px;background:#e9edf4;position:relative;border-radius:13px;overflow:hidden;isolation:isolate;margin:5px 0 20px}#timer-progress{height:100%;width:100%;background:#9acdbb;transition:width .25s linear}#timer-percent{position:absolute;inset:0;display:grid;place-items:center;color:#203b38;font-size:24px}.progress.ending #timer-progress{background:#edb5ac}.timer-buttons{margin-top:25px}.timer-buttons button{font-size:1rem;padding:12px 26px}#timer-message{min-height:1.6em;color:#975b41}#timer-presets button{padding:7px 14px}.table-scroll{overflow:auto;margin-top:20px;max-height:65vh}table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95rem}th,td{border-bottom:1px solid var(--border);padding:14px 16px;text-align:center;white-space:nowrap}th{background:#f7f8fc;position:sticky;top:0;z-index:2;color:var(--muted);font-size:.8rem}th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:1}th:first-child{background:#f7f8fc;z-index:3}.status{padding:5px 13px;border-radius:8px;font-size:.85rem;font-weight:650;display:inline-block;min-width:84px}.submitted{background:#e8f5ef;color:#267055}.missing{background:#fff0ed;color:#a64d42}.late{background:#fff6df;color:#8e681a}.redo{background:#efedff;color:#6e55ab}button.status{border:0}.legend{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0}.missing-box{background:#fff8f5;border:1px solid #f5dfd6;padding:20px;border-radius:14px;margin:20px 0 25px}.missing-box h3{color:#a2644e;font-size:.9rem;margin:0}.missing-box .chips{margin-top:15px}.missing-box .chip{background:#ffede7;color:#a2644e}#student-search{max-width:300px}#hw-select{max-width:320px}details{font-size:.78rem;color:var(--muted);margin-top:15px}summary{cursor:pointer}dialog{border:1px solid var(--border);border-radius:20px;padding:30px;max-width:540px;width:calc(100% - 40px);color:var(--ink);box-shadow:0 20px 80px #18263b25}dialog::backdrop{background:#20244055;backdrop-filter:blur(4px)}dialog .row{margin-top:24px}#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#263347;color:#fff;border-radius:12px;padding:13px 24px;box-shadow:0 8px 25px #26334722;z-index:50;max-width:90vw;font-size:.9rem}.present aside{display:none}.present .workspace{grid-template-columns:1fr}.present main{max-width:1600px}.present{font-size:23px}.present header{height:75px}.present .brand small{display:none}.present .workspace{min-height:calc(100vh - 75px)}@media(min-width:1500px){main{padding:45px 55px}}@media(max-width:1100px){.workspace{grid-template-columns:185px minmax(0,1fr)}main{padding:28px 22px}.lesson-grid{grid-template-columns:1fr}.page-heading{align-items:flex-start;flex-direction:column}.form-grid{grid-template-columns:1fr}.lesson-intro{margin-bottom:0}}@media(max-width:700px){:root{font-size:18px}header{height:auto;padding:18px;align-items:flex-start}.brand strong{font-size:1rem}.brand small{font-size:.6rem}.brand-icon{display:none}.header-actions{gap:5px}.header-actions button{font-size:.7rem;padding:7px 10px}.workspace{display:block}aside{padding:8px;border-right:0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}.nav-label,.aside-note{display:none}nav{flex-direction:row;gap:3px;overflow:auto}nav button{flex-direction:column;gap:0;min-width:75px;padding:7px 9px;font-size:.65rem;white-space:nowrap}nav button>span:first-child{font-size:21px}main{padding:24px 15px}h1{font-size:1.4rem}.card{padding:21px;border-radius:15px}.lesson-grid{gap:18px}.picker-stage{grid-template-columns:1fr;padding:25px 15px;min-height:0}.picker-visual{padding:15px 0}#wheel-box{max-width:280px}.picker-result{padding:15px}#picked-name{margin:10px}.flow-edit-fields{grid-template-columns:85px 1fr}.row{gap:8px}.timer-card{padding:20px 12px}.segmented{width:100%}.segmented button{flex:1}.page-heading>.row{width:100%}.save-panel .row>*{flex:1 1 42%}th,td{padding:12px 10px}.present aside{display:none}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}@media print{header,aside,button,.header-actions{display:none!important}.workspace{display:block}main{padding:0}.card{break-inside:avoid;box-shadow:none}}
+</style></head>
+<body>
+<header><div class="brand"><span class="brand-icon">▦</span><div><strong data-t="課堂管理系統|Classroom"></strong><small data-t="每一課，都從容開始。|A little more room to teach."></small></div></div><div class="header-actions"><button id="language" class="subtle">中 / EN</button><button id="project" class="subtle" data-t="⛶ 投影模式|⛶ Present"></button></div></header>
+<div class="workspace"><aside><p class="nav-label" data-t="教學工作台|TEACHING SPACE"></p><nav aria-label="Main navigation">
+<button data-tab="lesson"><span>▤</span><span data-t="課堂內容|Lesson"></span></button><button data-tab="picker"><span>✧</span><span data-t="互動點名|Random picker"></span></button><button data-tab="timer"><span>◷</span><span data-t="課堂計時器|Timer"></span></button><button data-tab="homework"><span>▦</span><span data-t="家課交收|Homework"></span></button><button data-tab="admin"><span>⚙</span><span data-t="後台管理|Teacher desk"></span></button>
+</nav><div class="aside-note"><span class="dot"></span><span data-t="離線也能安心備課|Made for offline teaching"></span></div></aside>
+<main>
+<section id="lesson" class="page">
+<div class="page-heading"><div><p class="eyebrow" data-t="TODAY’S CLASS|TODAY’S CLASS"></p><h1 data-t="準備好，一起學習。|Let’s learn something new."></h1></div><div class="row"><button id="previous" data-t="← 上一課|← Previous lesson"></button><button id="edit-lesson" class="primary" data-t="編輯課堂|Edit lesson"></button></div></div>
+<div id="previous-panel" class="card" hidden></div>
+<div class="lesson-grid"><div class="card lesson-intro"><p class="eyebrow" id="lesson-date"></p><h2 id="lesson-title"></h2><p class="section-label" data-t="學習目標|LEARNING GOALS"></p><div id="lesson-goals" class="prose"></div><div id="materials-block" class="inset"><b data-t="準備器材 / 教具|Materials"></b><p id="lesson-materials" class="prose"></p></div><div id="announcement-block" class="inset warm"><b data-t="課後作業 / 公告|Homework & announcements"></b><p id="lesson-announcement" class="prose"></p></div></div>
+<div class="card"><div class="card-heading"><h2 data-t="課堂流程|Lesson flow"></h2><span class="pill" id="flow-count"></span></div><div id="lesson-flow"></div></div></div>
+<div id="lesson-empty" class="empty card" hidden><span class="empty-icon">✎</span><h2 data-t="從一份簡單的流程開始|Start with a simple lesson plan"></h2><p data-t="在後台加入主題與步驟，即可在這裡展示。|Add a topic and steps at the teacher desk to begin."></p><button id="first-lesson" class="primary" data-t="建立第一課|Create your first lesson"></button></div>
+</section>
+<section id="picker" class="page" hidden><div class="page-heading"><div><p class="eyebrow">CLASSROOM MOMENTS</p><h1 data-t="讓每個聲音，都被聽見。|Every voice deserves a turn."></h1></div><div class="segmented"><button data-picker="slot" data-t="跑馬燈|Name shuffle"></button><button data-picker="wheel" data-t="幸運輪盤|Lucky wheel"></button></div></div>
+<div class="picker-stage"><div class="picker-visual"><div id="shuffle-name" data-t="準備好了嗎？|Ready to join in?"></div><div id="wheel-box" hidden><span class="pointer">▼</span><canvas id="wheel" width="640" height="640" aria-label="Student wheel"></canvas></div></div><div class="picker-result"><p class="eyebrow" data-t="這一刻，輪到你|YOUR MOMENT"></p><div id="picked-name" aria-live="polite">—</div><p id="picker-count"></p><button id="draw" class="primary big" data-t="✧ 幸運抽點|✧ Pick a student"></button><button id="reset-picker" class="subtle" data-t="開始新一輪|Start a new round"></button></div></div><div class="card"><h3 data-t="本輪已抽學生|Picked this round"></h3><div id="picked-list" class="chips"></div></div>
+</section>
+<section id="timer" class="page" hidden><div class="page-heading"><div><p class="eyebrow">TIME TO FOCUS</p><h1 data-t="專注眼前，掌握節奏。|Find your focus."></h1></div><label class="row"><span data-t="任務字體|Task size"></span><select id="task-size"><option value="28" data-t="標準|Regular"></option><option value="40" data-t="大字|Large"></option><option value="56" data-t="特大|Extra large"></option></select></label></div>
+<div class="card timer-card"><label for="timer-task" class="section-label" data-t="當前課堂任務 / 工作說明|CURRENT TASK"></label><textarea id="timer-task" rows="2" aria-label="Current task"></textarea><div id="timer-display" role="timer">05:00</div><div class="progress" role="progressbar" aria-label="Remaining time" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="timer-progress"></div><strong id="timer-percent">100%</strong></div><p id="timer-message" role="status"></p><div class="row center" id="timer-presets"><button data-minutes="1">1</button><button data-minutes="3">3</button><button data-minutes="5">5</button><button data-minutes="10">10</button><button data-minutes="15">15</button><label class="row"><input id="custom-minutes" type="number" min="0.0167" max="180" step="any" value="5" aria-label="Minutes"><span data-t="分鐘|min"></span></label><button id="set-timer" data-t="設定|Set"></button></div><div class="row center timer-buttons"><button id="start-timer" class="primary" data-t="▶ 開始|▶ Start"></button><button id="pause-timer" data-t="Ⅱ 暫停|Ⅱ Pause"></button><button id="reset-timer" data-t="↺ 重設|↺ Reset"></button><label class="row"><input type="checkbox" id="timer-sound"><span data-t="完成音效|Completion sound"></span></label></div></div>
+</section>
+<section id="homework" class="page" hidden><div class="page-heading"><div><p class="eyebrow">KEEP TRACK, WITH CARE</p><h1 data-t="交收進度，一目了然。|A clearer picture of progress."></h1></div><div class="segmented"><button data-view="single" data-t="單一習作|Single task"></button><button data-view="matrix" data-t="全班總覽|Class overview"></button></div></div>
+<div class="card"><div class="row spread"><label class="row" id="homework-selector"><span data-t="習作|Task"></span><select id="hw-select"></select></label><div class="row"><label class="row"><input id="show-rate" type="checkbox"><span data-t="顯示繳交率|Show submission rate"></span></label><label class="row"><input id="edit-records" type="checkbox"><span data-t="編輯紀錄|Edit records"></span></label></div></div><p id="rate" hidden></p><div class="legend"><span class="status submitted" data-t="✓ 已交|✓ Submitted"></span><span class="status missing" data-t="○ 未交|○ Missing"></span><span class="status late" data-t="◷ 遲交|◷ Late"></span><span class="status redo" data-t="↺ 重作|↺ Redo"></span></div><div id="missing-box" class="missing-box"><div class="row spread"><h3 data-t="待跟進 · 未交學生|To follow up · Missing"></h3><button id="copy-missing" data-t="複製名單|Copy names"></button></div><div id="missing-list" class="chips"></div></div><div class="row spread"><input id="student-search" type="search" data-ph="搜尋學生姓名|Search students" aria-label="Search students"><button id="mark-all" hidden data-t="全班標示已交|Mark all submitted"></button></div><div class="table-scroll"><table id="hw-table"></table></div><div id="hw-empty" class="empty" hidden><h3 data-t="尚未有學生或習作|No students or tasks yet"></h3><p data-t="請在後台匯入學生名單，並新增習作。|Import a roster and add a task at the teacher desk."></p></div></div>
+</section>
+<section id="admin" class="page" hidden><div class="page-heading"><div><p class="eyebrow">YOUR TEACHER DESK</p><h1 data-t="備好下一課。|Make room for your next lesson."></h1></div><button id="logout" hidden data-t="鎖定後台|Lock teacher desk"></button></div>
+<form id="login" class="card login"><div class="empty-icon">⚿</div><h2 data-t="老師，歡迎回來|Welcome back, teacher"></h2><label for="password" data-t="請輸入管理密碼|Enter your management password"></label><input id="password" type="password" autocomplete="current-password" required><p id="login-error" class="error" role="alert"></p><button class="primary" data-t="解鎖後台|Unlock teacher desk"></button></form>
+<div id="admin-panel" hidden>
+<div class="save-panel card"><div><h3 data-t="資料與備份|Data & backups"></h3><p id="save-status" role="status"></p><p class="muted" data-t="自動儲存只保留在這個瀏覽器。轉電腦或使用 USB 前，請匯出備份。|Autosave stays in this browser. Export a backup before moving to another computer or USB."></p></div><div class="row"><button id="save-local" class="primary" data-t="儲存課堂|Save lesson"></button><button id="export-html" data-t="下載離線 HTML|Download offline HTML"></button><button id="export-json" data-t="匯出 JSON|Export JSON"></button><button id="write-file" data-t="連接 / 更新 USB HTML|Connect / update USB HTML"></button><label class="button" for="import-json" data-t="匯入備份|Import backup"></label><input id="import-json" type="file" accept=".json,application/json" hidden></div><p id="file-status" class="muted"></p><details><summary data-t="儲存與隱私說明|Storage & privacy"></summary><p data-t="這是離線工具，後台密碼只防誤觸，不會加密資料。HTML／JSON 備份含學生資料，請妥善保管，不要上傳到公開網站。瀏覽器可能要求重新授權 USB 寫入；取消授權不影響本機資料。|This offline tool uses a password to prevent accidental edits, not encryption. HTML/JSON backups contain student data. Keep them private. Browsers may ask again for USB write permission; cancelling leaves local data intact."></p></details></div>
+<div class="card"><div class="card-heading"><h2 data-t="課堂內容|Lesson content"></h2><button id="new-lesson" data-t="封存並建立新課|Archive & start new"></button></div><div class="form-grid"><label><span data-t="單元主題|Lesson topic"></span><input data-lesson="title" id="edit-title"></label><label><span data-t="課堂日期|Lesson date"></span><input data-lesson="date" id="edit-date" type="text"></label></div><label><span data-t="學習目標|Learning goals"></span><textarea data-lesson="objectives" id="edit-objectives" rows="3"></textarea></label><h3 data-t="流程步驟|Lesson steps"></h3><div id="flow-editor"></div><button id="add-step" data-t="＋ 新增流程步驟|＋ Add step"></button><div class="form-grid optional"><div><label class="row"><input data-lesson="showAnnouncement" type="checkbox"><span data-t="加入課後作業 / 公告|Include homework / announcements"></span></label><textarea data-lesson="announcement" rows="3" aria-label="Announcement"></textarea></div><div><label class="row"><input data-lesson="showMaterials" type="checkbox"><span data-t="加入器材 / 教具|Include materials"></span></label><textarea data-lesson="materials" rows="3" aria-label="Materials"></textarea></div></div><p class="muted" data-t="修改會即時同步至課堂內容。|Edits appear immediately in the lesson view."></p></div>
+<div class="form-grid"><div class="card"><h2 data-t="流程範本|Flow templates"></h2><div class="row"><input id="preset-name" data-ph="範本名稱|Template name" aria-label="Template name"><button id="save-preset" data-t="儲存範本|Save template"></button></div><div id="preset-list" class="item-list"></div></div><div class="card"><h2 data-t="課堂歷史|Lesson history"></h2><button id="archive-lesson" data-t="封存目前課堂|Archive current lesson"></button><div id="history-list" class="item-list"></div></div></div>
+<div class="card"><h2 data-t="學生名單|Student roster"></h2><p class="muted" data-t="每行一位學生；可貼上試算表的「學號、姓名」兩欄。相同姓名會依出現次序保留交收紀錄。|One student per line; paste number/name columns from a spreadsheet. Matching names retain records in occurrence order."></p><textarea id="roster-input" rows="5" aria-label="Student roster"></textarea><div class="row"><button id="import-roster" class="primary" data-t="更新學生名單|Update roster"></button><label class="button" for="roster-file" data-t="讀取 CSV / TXT|Read CSV / TXT"></label><input type="file" id="roster-file" accept=".csv,.txt,text/plain,text/csv" hidden><span id="roster-count"></span></div></div>
+<div class="card"><h2 data-t="習作管理|Homework tasks"></h2><div class="row"><input id="new-homework" data-ph="習作名稱|Task name" aria-label="New homework"><button id="add-homework" class="primary" data-t="新增習作|Add task"></button></div><div id="homework-list" class="item-list"></div></div>
+</div></section>
+</main></div>
+<div id="toast" role="status" hidden></div>
+<dialog id="confirm-dialog"><form method="dialog"><h2 id="confirm-title"></h2><p id="confirm-text" class="prose"></p><div class="row end"><button value="cancel" data-t="取消|Cancel"></button><button value="ok" class="primary" data-t="確認|Confirm"></button></div></form></dialog>
+<dialog id="conflict-dialog"><h2 data-t="另一個視窗有新版本|Another window has newer data"></h2><p data-t="為避免覆蓋，編輯已暫停。先下載目前版本備份，再載入另一視窗的版本。|Editing is paused to avoid overwriting data. Download this version first, then load the other window’s version."></p><div class="row"><button id="conflict-backup" data-t="下載目前備份|Back up this version"></button><button id="conflict-load" class="primary" data-t="載入新版本|Load newer version"></button></div></dialog>
+<script id="embedded-data" type="application/json">null</script>
+<script>/* Shared, DOM-independent data model. Every edit updates this model first. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.Classroom = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+  const VERSION = 4;
+  const statuses = ['missing', 'submitted', 'late', 'redo'];
+  const uid = () => globalThis.crypto?.randomUUID?.() || `id-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const date = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  };
+  function emptyLesson() {
+    return {title: '', date: date(), objectives: '', flow: [], announcement: '', materials: '', showAnnouncement: false, showMaterials: false};
+  }
+  function createData() {
+    return {schemaVersion: VERSION, id: uid(), revision: 0, updatedAt: 0, lang: 'zh', lesson: emptyLesson(), history: [], presets: [], students: [], homework: [], records: {}, picked: []};
+  }
+  const text = (v, fallback = '') => typeof v === 'string' ? v : fallback;
+  const isObject = v => !!v && typeof v === 'object' && !Array.isArray(v);
+  function normalizeLesson(raw) {
+    if (!isObject(raw) || !Array.isArray(raw.flow)) throw new Error('Invalid lesson');
+    if (raw.flow.length > 300) throw new Error('Too many steps');
+    return {title:text(raw.title), date:text(raw.date), objectives:text(raw.objectives),
+      flow:raw.flow.map(step => {if(!isObject(step)) throw new Error('Invalid step'); return {id:text(step.id, uid()),time:text(step.time),title:text(step.title),detail:text(step.detail)};}),
+      announcement:text(raw.announcement), materials:text(raw.materials),showAnnouncement:raw.showAnnouncement===true,showMaterials:raw.showMaterials===true};
+  }
+  function validate(raw) {
+    if (!isObject(raw) || raw.schemaVersion !== VERSION || !text(raw.id) || !Array.isArray(raw.students) || !Array.isArray(raw.homework) || !Array.isArray(raw.history) || !Array.isArray(raw.presets) || !Array.isArray(raw.picked) || !isObject(raw.records)) throw new Error('Invalid backup format');
+    if (raw.students.length > 1000 || raw.homework.length > 500 || raw.history.length > 500 || raw.presets.length > 500) throw new Error('Backup too large');
+    function entries(list) {
+      const seen = new Set();
+      return list.map(item => {
+        if (!isObject(item) || !text(item.id) || ['__proto__','prototype','constructor'].includes(item.id) || !text(item.name).trim() || seen.has(item.id)) throw new Error('Invalid or duplicate entry');
+        seen.add(item.id); return {id:item.id,name:item.name.trim()};
+      });
+    }
+    const data = {schemaVersion:VERSION,id:raw.id,revision:Number.isSafeInteger(raw.revision)&&raw.revision>=0?raw.revision:0,updatedAt:Number.isFinite(raw.updatedAt)?raw.updatedAt:0,
+      lang:['zh','en','bi'].includes(raw.lang)?raw.lang:'zh', lesson:normalizeLesson(raw.lesson),students:entries(raw.students),homework:entries(raw.homework),records:{},
+      history:raw.history.map(h => ({id:text(h.id,uid()),lesson:normalizeLesson(h.lesson)})),
+      presets:raw.presets.map(p => {if(!isObject(p)||!text(p.name)||!Array.isArray(p.flow)) throw new Error('Invalid preset');return {id:text(p.id,uid()),name:p.name,flow:normalizeLesson({...emptyLesson(),flow:p.flow}).flow};}),picked:[]};
+    for (const hw of data.homework) {
+      data.records[hw.id] = {};
+      for (const st of data.students) {
+        const value = raw.records[hw.id]?.[st.id];
+        if (value !== undefined && !statuses.includes(value)) throw new Error('Invalid status');
+        if (value) data.records[hw.id][st.id] = value;
+      }
+    }
+    data.picked = [...new Set(raw.picked.filter(id => data.students.some(s=>s.id===id)))];
+    return data;
+  }
+  function migrate(raw) {
+    if (raw?.schemaVersion === VERSION) return validate(raw);
+    // The conversation's v3 JSON format: names keyed records; no code is imported.
+    if (!isObject(raw) || !isObject(raw.lesson) || !Array.isArray(raw.lesson.flow) || !Array.isArray(raw.students) || !Array.isArray(raw.homeworks || raw.homework)) throw new Error('Unrecognised backup');
+    const data = createData();
+    data.lesson = normalizeLesson(raw.lesson);
+    data.lang = ['zh','en','bi'].includes(raw.lang)?raw.lang:'zh';
+    data.students = raw.students.map(name => ({id:uid(),name:text(name).trim()}));
+    data.homework = (raw.homeworks || raw.homework).map(name => ({id:uid(),name:text(name).trim()}));
+    const map = {0:'missing',1:'submitted',2:'late',3:'redo',missing:'missing',submitted:'submitted',late:'late',redo:'redo'};
+    for (const hw of data.homework) {
+      data.records[hw.id]={};
+      for(const st of data.students) {
+        const value=(raw.records || raw.hwRecords || raw.submissions || {})[hw.name]?.[st.name];
+        if(value!==undefined) { if(!Object.hasOwn(map,value)) throw new Error('Unknown legacy status');data.records[hw.id][st.id]=map[value]; }
+      }
+    }
+    data.history=(raw.historyLessons || raw.history || []).map(lesson=>({id:uid(),lesson:normalizeLesson(lesson)})).reverse();
+    data.presets=(raw.flowPresets || []).map(p=>({id:uid(),name:p.name,flow:p.flow}));
+    return validate(data);
+  }
+  function touch(data) {data.revision++;data.updatedAt=Date.now();return data;}
+  function setStatus(data,hwId,studentId,status) {
+    if(!data.homework.some(h=>h.id===hwId)||!data.students.some(s=>s.id===studentId)||!statuses.includes(status)) throw new Error('Invalid status target');
+    data.records[hwId] ||= {};data.records[hwId][studentId]=status;
+  }
+  const getStatus = (data,hwId,studentId) => data.records[hwId]?.[studentId] || 'missing';
+  function parseRoster(input) {
+    // CSV/TSV and one-name-per-line input, including BOM and common headers.
+    const lines=input.replace(/^\uFEFF/,'').split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    const rows=lines.map((line,i)=>{
+      const delimiter=line.includes('\t')?'\t':',';
+      const fields=[];let value='',quoted=false;
+      for(let j=0;j<line.length;j++) {
+        const ch=line[j];
+        if(ch==='"') {
+          if(quoted && line[j+1]==='"'){value+='"';j++;}
+          else if(quoted || !value.trim())quoted=!quoted;
+          else value+=ch;
+        } else if(ch===delimiter&&!quoted){fields.push(value.trim());value='';}
+        else value+=ch;
+      }
+      if(quoted)throw new Error(`Unclosed quote on line ${i+1}`);
+      fields.push(value.trim());return fields;
+    });
+    if(rows.length && (rows[0].length===1 ? /^(姓名|學生姓名|name|student name)$/i.test(rows[0][0]) : /^(學號|班號|編號|class number|number|no\.?|id)$/i.test(rows[0][0]) && /^(姓名|學生姓名|name|student name)$/i.test(rows[0][1])))rows.shift();
+    return rows.map((parts,i)=>{
+      const name=parts.length>1 && /^\d+$/.test(parts[0]) ? parts.slice(1).join(' ') : parts.join(' ');
+      if(!name || name.length>100) throw new Error(`Invalid name on line ${i+1}`);
+      return name;
+    });
+  }
+  function replaceRoster(data,names) {
+    if(names.length>1000) throw new Error('Too many students');
+    // Preserve IDs/records by name occurrence, including duplicate names.
+    const queues=new Map();data.students.forEach(s=>{if(!queues.has(s.name))queues.set(s.name,[]);queues.get(s.name).push(s);});
+    data.students=names.map(name=>queues.get(name)?.shift() || {id:uid(),name});
+    const ids=new Set(data.students.map(s=>s.id));
+    for(const hw of data.homework) for(const id of Object.keys(data.records[hw.id] || {})) if(!ids.has(id))delete data.records[hw.id][id];
+    data.picked=data.picked.filter(id=>ids.has(id));
+  }
+  function choose(data, random = Math.random) {
+    const candidates=data.students.filter(s=>!data.picked.includes(s.id));
+    return candidates.length?candidates[Math.min(candidates.length-1,Math.floor(random()*candidates.length))]:null;
+  }
+  const remaining = (deadline,now) => Math.max(0,Math.ceil((deadline-now)/1000));
+  const safeJSON = value => JSON.stringify(value).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+  return {VERSION,statuses,uid,clone,date,emptyLesson,createData,validate,migrate,touch,setStatus,getStatus,parseRoster,replaceRoster,choose,remaining,safeJSON};
+});
+</script><script>(() => {
+  'use strict';
+  const C = window.Classroom;
+  const $ = id => document.getElementById(id);
+  const $$ = selector => [...document.querySelectorAll(selector)];
+  // Capture a clean shell once: exports never serialize live inputs, unlocked panels or transient UI.
+  const cleanShell = document.documentElement.cloneNode(true);
+  const prefix = 'tch-classroom-v4:';
+  const pointerKey = prefix + 'active:' + location.pathname;
+  let data, storageError = '', recoveryNotice = '';
+  let admin = false, tab = 'lesson', hwView = 'single', pickerMode = 'slot', selectedHw = '';
+  let editingRecords = false, conflicted = false, remoteData = null, exportedRevision = -1;
+  let toastTimeout, fileHandle = null, writing = false, drawing = false, pickedResult = '', finalWheel = null;
+  const tr = (zh,en) => data.lang === 'en' ? en : data.lang === 'bi' && zh !== en ? `${zh} / ${en}` : zh;
+  const translate = s => {const [zh,en=zh] = s.split('|');return tr(zh,en);};
+  function el(tag, text, className) {const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;}
+  function button(text, fn, className='') {const b=el('button',text,className);b.type='button';b.addEventListener('click',fn);return b;}
+  function toast(message) {clearTimeout(toastTimeout);$('toast').textContent=message;$('toast').hidden=false;toastTimeout=setTimeout(()=>$('toast').hidden=true,4500);}
+  function read(key) {try{return localStorage.getItem(key);}catch{storageError='unavailable';return null;}}
+  try {
+    const embedded = JSON.parse($('embedded-data').textContent);
+    if (embedded) {
+      data=C.validate(embedded);
+      const cached=read(prefix+data.id);
+      if(cached) {try {const candidate=C.validate(JSON.parse(cached));if(candidate.id===data.id && candidate.revision>data.revision)data=candidate;} catch {recoveryNotice='corrupt';}}
+    } else {
+      const id=read(pointerKey), cached=id?read(prefix+id):null;
+      if(cached)data=C.validate(JSON.parse(cached));
+      else data=C.createData();
+    }
+  } catch {
+    // Keep unreadable original data untouched; use a new dataset until an explicit restore.
+    data=C.createData();recoveryNotice='corrupt';
+  }
+  function persist() {
+    try {localStorage.setItem(prefix+data.id,JSON.stringify(data));localStorage.setItem(pointerKey,data.id);storageError='';}
+    catch {storageError='unavailable';}
+    updateSaveStatus();
+  }
+  function canEdit() {return admin && !conflicted;}
+  function change(fn) {
+    if(conflicted)return false;
+    fn(data);C.touch(data);persist();return true;
+  }
+  function updateSaveStatus() {
+    if(!$('save-status'))return;
+    $('save-status').textContent=storageError?tr('本機自動儲存失敗。請立即匯出備份，避免關閉後遺失。','Local autosave failed. Export a backup before closing.'):
+      recoveryNotice?tr('偵測到無法讀取的舊資料，已保留原始儲存。請匯入有效備份復原。','Unreadable stored data was preserved. Import a valid backup to recover.'):
+      tr('已自動儲存在此瀏覽器','Autosaved in this browser') + (data.updatedAt?` · ${new Date(data.updatedAt).toLocaleTimeString(data.lang==='en'?'en-GB':'zh-HK')}`:'');
+    $('save-status').classList.toggle('warning',!!storageError||!!recoveryNotice);
+  }
+  function ask(title,message) {
+    if($('confirm-dialog').open)return Promise.resolve(false);
+    $('confirm-title').textContent=title;$('confirm-text').textContent=message;
+    return new Promise(resolve=>{$('confirm-dialog').addEventListener('close',()=>resolve($('confirm-dialog').returnValue==='ok'),{once:true});$('confirm-dialog').showModal();});
+  }
+  function applyLanguage() {
+    document.documentElement.lang=data.lang==='en'?'en':'zh-Hant';
+    $$('[data-t]').forEach(n=>n.textContent=translate(n.dataset.t));
+    $$('[data-ph]').forEach(n=>n.placeholder=translate(n.dataset.ph));
+    $('language').textContent=data.lang==='zh'?'English':data.lang==='en'?'中英雙語':'繁體中文';
+    renderLesson();renderPicker();renderHomework();updateTimer();updateSaveStatus();
+    if(admin)renderAdminLists();
+  }
+  function switchTab(name) {
+    if(!['lesson','picker','timer','homework','admin'].includes(name))return;
+    tab=name;$$('.page').forEach(n=>n.hidden=n.id!==name);
+    $$('[data-tab]').forEach(n=>{n.classList.toggle('active',n.dataset.tab===name);n.setAttribute('aria-current',n.dataset.tab===name?'page':'false');});
+    if(name==='lesson')renderLesson();
+    if(name==='homework')renderHomework();
+    if(name==='picker')renderPicker();
+    if(name==='admin') {renderAdmin();setTimeout(()=>{if(!admin)$('password').focus();},0);}
+  }
+  function renderFlow(container, flow) {
+    container.replaceChildren();
+    if(!flow.length) {container.append(el('p',tr('尚未加入流程步驟','No lesson steps yet'),'muted'));return;}
+    flow.forEach((step,i)=>{const row=el('div',undefined,'flow-step');row.append(el('span',String(i+1).padStart(2,'0'),'step-number'));const body=el('div');body.append(el('span',step.time,'step-time'),el('h3',step.title||tr('未命名步驟','Untitled step')),el('p',step.detail,'prose'));row.append(body);container.append(row);});
+  }
+  function renderLesson() {
+    const l=data.lesson;
+    $('lesson-date').textContent=l.date || tr('新的一課','A NEW LESSON');
+    $('lesson-title').textContent=l.title || tr('今天，我們學甚麼？','What are we learning today?');
+    $('lesson-goals').textContent=l.objectives || tr('在後台加入這一課的學習目標。','Add your learning goals at the teacher desk.');
+    $('lesson-materials').textContent=l.materials;$('materials-block').hidden=!l.showMaterials;
+    $('lesson-announcement').textContent=l.announcement;$('announcement-block').hidden=!l.showAnnouncement;
+    $('flow-count').textContent=tr(`${l.flow.length} 個步驟`,`${l.flow.length} steps`);
+    renderFlow($('lesson-flow'),l.flow);
+    const empty=!l.title&&!l.objectives&&!l.flow.length;
+    $('lesson-empty').hidden=!empty;document.querySelector('.lesson-grid').hidden=empty;
+    $('previous').disabled=!data.history.length;
+    if(!$('previous-panel').hidden)renderPrevious();
+  }
+  function renderPrevious() {
+    const panel=$('previous-panel');panel.replaceChildren();
+    const l=data.history[0]?.lesson;if(!l)return;
+    panel.append(el('p',tr('上一課','Previous lesson'),'eyebrow'),el('h2',l.title || tr('未命名課堂','Untitled lesson')),el('p',l.date,'muted'),el('p',l.objectives,'prose'));
+    const flow=el('div');renderFlow(flow,l.flow);panel.append(flow);
+    if(l.showAnnouncement)panel.append(el('p',l.announcement,'prose'));
+    if(l.showMaterials)panel.append(el('p',l.materials,'prose'));
+  }
+  function renderAdmin() {
+    $('login').hidden=admin;$('admin-panel').hidden=!admin;$('logout').hidden=!admin;
+    if(!admin)return;
+    $$('[data-lesson]').forEach(n=>{const value=data.lesson[n.dataset.lesson];if(n.type==='checkbox')n.checked=value;else n.value=value;});
+    renderFlowEditor();renderAdminLists();updateSaveStatus();
+    $('roster-input').value=data.students.map(s=>s.name).join('\n');
+    $('file-status').textContent=fileHandle?tr(`已連接：${fileHandle.name}；尚未代表已寫入最新修改。`,`Connected: ${fileHandle.name}; this does not mean the latest edits have been written.`):
+      tr('USB 寫入需支援檔案選擇器的瀏覽器並獲授權；不支援時請使用下載。','USB writing requires a supported browser and permission. Use Download otherwise.');
+  }
+  function renderFlowEditor() {
+    const container=$('flow-editor');container.replaceChildren();
+    data.lesson.flow.forEach((step,index)=>{
+      const card=el('div',undefined,'flow-edit');card.dataset.stepId=step.id;
+      const fields=el('div',undefined,'flow-edit-fields');
+      for(const [key,label] of [['time',tr('時間','Time')],['title',tr('步驟標題','Step title')],['detail',tr('詳細說明','Details')]]) {
+        const input=el(key==='detail'?'textarea':'input');input.value=step[key];input.setAttribute('aria-label',label);input.placeholder=label;input.dataset.field=key;
+        if(key==='detail'){input.rows=2;card.append(input);}else fields.append(input);
+        input.addEventListener('input',()=>{if(!canEdit())return;change(()=>{step[key]=input.value;});renderLesson();});
+      }
+      card.prepend(fields);
+      const actions=el('div',undefined,'row');actions.append(el('span',`#${index+1}`,'muted'));
+      const up=button(tr('↑ 上移','↑ Move up'),()=>moveStep(index,-1));up.disabled=index===0;
+      const down=button(tr('↓ 下移','↓ Move down'),()=>moveStep(index,1));down.disabled=index===data.lesson.flow.length-1;
+      actions.append(up,down,button(tr('刪除','Delete'),async()=>{
+        if(!canEdit())return;
+        if((step.time||step.title||step.detail) && !await ask(tr('刪除此步驟？','Delete this step?'),tr('其他步驟和已輸入文字會保留。','Other steps and their text will be kept.')))return;
+        if(!canEdit())return;change(d=>{d.lesson.flow=d.lesson.flow.filter(s=>s.id!==step.id);});renderFlowEditor();renderLesson();
+      }));card.append(actions);container.append(card);
+    });
+  }
+  function moveStep(i,dir) {if(!canEdit())return;change(d=>{const [s]=d.lesson.flow.splice(i,1);d.lesson.flow.splice(i+dir,0,s);});renderFlowEditor();renderLesson();}
+  function renderAdminLists() {
+    $('roster-count').textContent=tr(`${data.students.length} 位學生`,`${data.students.length} students`);
+    $('preset-list').replaceChildren();data.presets.forEach(p=>{
+      const row=el('div',undefined,'list-item');row.append(el('span',p.name),button(tr('套用','Apply'),async()=>{
+        if(!canEdit()||!await ask(tr('套用流程範本？','Apply flow template?'),tr('這會取代目前流程步驟，主題及目標會保留。','This replaces the current flow steps; the topic and goals stay.')))return;
+        if(!canEdit())return;change(d=>{d.lesson.flow=C.clone(p.flow).map(s=>({...s,id:C.uid()}));});renderFlowEditor();renderLesson();
+      }),button(tr('刪除','Delete'),async()=>{if(!canEdit()||!await ask(tr('刪除範本？','Delete template?'),p.name))return;if(!canEdit())return;change(d=>d.presets=d.presets.filter(x=>x.id!==p.id));renderAdminLists();}));$('preset-list').append(row);
+    });
+    if(!data.presets.length)$('preset-list').append(el('p',tr('把常用流程儲存為範本，下次一鍵套用。','Save a routine here to reuse it next time.'),'muted'));
+    $('history-list').replaceChildren();data.history.forEach(h=>{
+      const row=el('div',undefined,'list-item');row.append(el('span',`${h.lesson.date} · ${h.lesson.title || tr('未命名課堂','Untitled lesson')}`),button(tr('載入','Load'),async()=>{
+        if(!canEdit()||!await ask(tr('載入歷史課堂？','Load archived lesson?'),tr('目前課堂會先自動封存，再載入此課。','The current lesson will be archived before loading this one.')))return;
+        if(!canEdit())return;change(d=>{d.history.unshift({id:C.uid(),lesson:C.clone(d.lesson)});d.lesson=C.clone(h.lesson);});renderAdmin();renderLesson();
+      }),button(tr('刪除','Delete'),async()=>{if(!canEdit()||!await ask(tr('刪除歷史課堂？','Delete archived lesson?'),h.lesson.title))return;if(!canEdit())return;change(d=>d.history=d.history.filter(x=>x.id!==h.id));renderAdminLists();renderLesson();}));$('history-list').append(row);
+    });
+    $('homework-list').replaceChildren();data.homework.forEach(h=>{
+      const row=el('div',undefined,'list-item');row.append(el('span',h.name),button(tr('刪除','Delete'),async()=>{
+        if(!canEdit()||!await ask(tr('刪除此習作？','Delete task?'),tr('這份習作的全班交收紀錄也會刪除。建議先匯出備份。','All submission records for this task will also be removed. Export a backup first.')))return;
+        if(!canEdit())return;change(d=>{d.homework=d.homework.filter(x=>x.id!==h.id);delete d.records[h.id];});renderAdminLists();renderHomework();
+      }));$('homework-list').append(row);
+    });
+  }
+  const statusLabel = status => translate({missing:'○ 未交|○ Missing',submitted:'✓ 已交|✓ Submitted',late:'◷ 遲交|◷ Late',redo:'↺ 重作|↺ Redo'}[status]);
+  function renderHomework() {
+    if(!data.homework.some(h=>h.id===selectedHw))selectedHw=data.homework[0]?.id || '';
+    $('hw-select').replaceChildren(...data.homework.map(h=>{const o=el('option',h.name);o.value=h.id;return o;}));$('hw-select').value=selectedHw;
+    $$('[data-view]').forEach(n=>{n.classList.toggle('active',n.dataset.view===hwView);n.setAttribute('aria-pressed',n.dataset.view===hwView);});
+    $('homework-selector').hidden=hwView==='matrix';$('missing-box').hidden=hwView==='matrix'||!selectedHw||!data.students.length;
+    $('edit-records').checked=editingRecords;$('mark-all').hidden=!editingRecords||hwView==='matrix'||!selectedHw||!data.students.length;
+    const table=$('hw-table');table.replaceChildren();
+    const empty=!data.students.length||!data.homework.length;$('hw-empty').hidden=!empty;table.hidden=empty;
+    const showRate=$('show-rate').checked;$('rate').hidden=!showRate||empty;
+    const tasks=hwView==='matrix'?data.homework:data.homework.filter(h=>h.id===selectedHw);
+    let received=0;for(const h of tasks)for(const s of data.students)if(['submitted','late'].includes(C.getStatus(data,h.id,s.id)))received++;
+    const total=tasks.length*data.students.length;
+    $('rate').textContent=tr(`繳交率（含遲交）：${total?Math.round(received/total*100):0}%`,`Submission rate (including late): ${total?Math.round(received/total*100):0}%`);
+    const missing=data.students.filter(s=>C.getStatus(data,selectedHw,s.id)==='missing');
+    $('missing-list').replaceChildren(...missing.map(s=>el('span',s.name,'chip')));
+    if(!missing.length)$('missing-list').append(el('span',tr('沒有未交學生','No missing submissions'),'muted'));
+    if(empty)return;
+    const head=el('thead'),row=el('tr');row.append(el('th',tr('學生','Student')));tasks.forEach(h=>row.append(el('th',h.name)));head.append(row);table.append(head);
+    const body=el('tbody'),query=$('student-search').value.trim().toLocaleLowerCase();
+    data.students.forEach((s,i)=>{
+      if(query&&!s.name.toLocaleLowerCase().includes(query))return;
+      const row=el('tr');row.append(el('td',`${String(i+1).padStart(2,'0')}  ${s.name}`));
+      for(const h of tasks) {
+        const cell=el('td'),status=C.getStatus(data,h.id,s.id);
+        const badge=editingRecords?button(statusLabel(status),()=>{
+          if(!canEdit()||!editingRecords)return;
+          change(d=>C.setStatus(d,h.id,s.id,C.statuses[(C.statuses.indexOf(status)+1)%4]));renderHomework();
+        },`status ${status}`):el('span',statusLabel(status),`status ${status}`);
+        if(editingRecords)badge.setAttribute('aria-label',`${s.name} · ${h.name} · ${statusLabel(status)}`);
+        cell.append(badge);row.append(cell);
+      }body.append(row);
+    });
+    if(!body.children.length){const row=el('tr'),cell=el('td',tr('沒有符合的學生','No matching students'));cell.colSpan=tasks.length+1;row.append(cell);body.append(row);}table.append(body);
+  }
+  function renderPicker() {
+    $$('[data-picker]').forEach(n=>{n.disabled=drawing;n.classList.toggle('active',n.dataset.picker===pickerMode);n.setAttribute('aria-pressed',n.dataset.picker===pickerMode);});
+    $('shuffle-name').hidden=pickerMode!=='slot';$('wheel-box').hidden=pickerMode!=='wheel';
+    $('picked-name').textContent=pickedResult || '—';
+    $('picker-count').textContent=tr(`已抽 ${data.picked.length} · 未抽 ${data.students.length-data.picked.length}`,`Picked ${data.picked.length} · Remaining ${data.students.length-data.picked.length}`);
+    $('draw').disabled=drawing||!data.students.length||data.picked.length>=data.students.length||conflicted;
+    $('reset-picker').disabled=drawing||!data.picked.length;
+    $('picked-list').replaceChildren(...data.picked.map(id=>el('span',data.students.find(s=>s.id===id)?.name||'','chip')));
+    if(!data.students.length)$('picker-count').textContent=tr('請先在後台加入學生名單','Add a roster at the teacher desk first');
+    else if(data.picked.length===data.students.length)$('picker-count').textContent=tr('全班已抽完，開始新一輪吧。','Everyone has had a turn. Start a new round.');
+    if(pickerMode==='wheel'&&!drawing)drawWheel(finalWheel?.angle || 0,finalWheel?.winner || null);
+  }
+  function drawWheel(rotation, winner=null) {
+    const canvas=$('wheel'),ctx=canvas.getContext('2d');if(!ctx)return;
+    const candidates=data.students.filter(s=>!data.picked.includes(s.id)||s.id===winner),count=candidates.length;
+    ctx.clearRect(0,0,640,640);ctx.save();ctx.translate(320,320);ctx.rotate(rotation);
+    if(!count){ctx.fillStyle='#e4e5fa';ctx.beginPath();ctx.arc(0,0,300,0,Math.PI*2);ctx.fill();}
+    const colors=['#dadcf8','#eee7f8','#e0eee9','#f8edda','#e0eaf7'];
+    candidates.forEach((s,i)=>{
+      const a=i/count*Math.PI*2-Math.PI/2,b=(i+1)/count*Math.PI*2-Math.PI/2;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,300,a,b);ctx.closePath();ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();
+      ctx.save();ctx.rotate((a+b)/2);ctx.textAlign='right';ctx.fillStyle='#37405a';ctx.font=`700 ${count>25?16:count>15?21:27}px sans-serif`;ctx.fillText(s.name.length>8?s.name.slice(0,8)+'…':s.name,272,8);ctx.restore();
+    });ctx.restore();ctx.beginPath();ctx.arc(320,320,28,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+  }
+  function random() {const v=new Uint32Array(1);crypto.getRandomValues(v);return v[0]/4294967296;}
+  async function pick() {
+    if(drawing||conflicted)return;
+    const student=C.choose(data,random);if(!student)return;
+    const datasetId=data.id;finalWheel=null;drawing=true;pickedResult='';renderPicker();
+    const candidates=data.students.filter(s=>!data.picked.includes(s.id)),duration=matchMedia('(prefers-reduced-motion: reduce)').matches?0:2200;
+    const index=candidates.findIndex(s=>s.id===student.id),target=Math.PI*8-(index+.5)/candidates.length*Math.PI*2;
+    await new Promise(resolve=>{
+      const start=performance.now();function frame(now){const p=duration?Math.min(1,(now-start)/duration):1,ease=1-Math.pow(1-p,3);
+        if(pickerMode==='wheel')drawWheel(target*ease);
+        else $('shuffle-name').textContent=candidates[Math.floor(random()*candidates.length)].name;
+        if(p<1)requestAnimationFrame(frame);else resolve();}requestAnimationFrame(frame);
+    });
+    if(!conflicted&&datasetId===data.id) {
+      change(d=>d.picked.push(student.id));pickedResult=student.name;$('shuffle-name').textContent=student.name;
+      if(pickerMode==='wheel'){finalWheel={angle:target,winner:student.id};drawWheel(target,student.id);}
+    }
+    drawing=false;
+    renderPicker();
+  }
+  let timer={total:300,left:300,deadline:0,running:false,task:'',size:'28'};
+  let audioContext;
+  try {const saved=JSON.parse(sessionStorage.getItem(prefix+'timer')||'null');if(saved&&Number.isFinite(saved.total)&&saved.total>0&&saved.total<=10800&&Number.isFinite(saved.left)&&saved.left>=0&&Number.isFinite(saved.deadline))timer={...timer,...saved};}catch{}
+  if(timer.running){timer.left=C.remaining(timer.deadline,Date.now());if(!timer.left)timer.running=false;}
+  $('timer-task').value=timer.task;$('task-size').value=['28','40','56'].includes(timer.size)?timer.size:'28';$('timer-task').style.fontSize=$('task-size').value+'px';
+  function saveTimer(){try{sessionStorage.setItem(prefix+'timer',JSON.stringify(timer));}catch{}}
+  function updateTimer() {
+    if(timer.running){timer.left=C.remaining(timer.deadline,Date.now());if(!timer.left){timer.running=false;saveTimer();if($('timer-sound').checked)alarm();}}
+    $('timer-display').textContent=`${String(Math.floor(timer.left/60)).padStart(2,'0')}:${String(timer.left%60).padStart(2,'0')}`;
+    const percent=Math.min(100,Math.max(0,Math.round(timer.left/timer.total*100)));
+    $('timer-progress').style.width=percent+'%';$('timer-percent').textContent=percent+'%';
+    document.querySelector('.progress').setAttribute('aria-valuenow',percent);document.querySelector('.progress').classList.toggle('ending',percent<=20);
+    $('start-timer').disabled=timer.running||timer.left===0;$('pause-timer').disabled=!timer.running;
+    $('timer-message').textContent=timer.left===0?tr('時間到，辛苦了！','Time is up. Well done!'):timer.running?tr('專注進行中','Focus time'):'';
+  }
+  function setTimer(seconds){timer.total=seconds;timer.left=seconds;timer.running=false;timer.deadline=0;saveTimer();updateTimer();}
+  function alarm(){try{audioContext ||= new (window.AudioContext||window.webkitAudioContext)();const o=audioContext.createOscillator(),g=audioContext.createGain();o.connect(g);g.connect(audioContext.destination);o.frequency.value=660;g.gain.setValueAtTime(.15,audioContext.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+.7);o.start();o.stop(audioContext.currentTime+.7);}catch{}}
+  setInterval(updateTimer,200);
+  function download(content,name,type) {
+    const url=URL.createObjectURL(new Blob([content],{type})),a=el('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+  }
+  function jsonBackup() {return JSON.stringify(data,null,2);}
+  function htmlBackup(snapshot) {
+    const shell=cleanShell.cloneNode(true);shell.querySelector('#embedded-data').textContent=C.safeJSON(snapshot);
+    return '<!doctype html>\n'+shell.outerHTML;
+  }
+  function exportJSON(){download(jsonBackup(),`classroom-${C.date()}.json`,'application/json');exportedRevision=data.revision;toast(tr('已產生 JSON 下載；請確認檔案已存妥。','JSON download requested. Check that the file was saved.'));}
+  function exportHTML(){download(htmlBackup(C.clone(data)),`classroom-${C.date()}.html`,'text/html;charset=utf-8');exportedRevision=data.revision;toast(tr('已產生離線 HTML 下載；原檔不會自動覆寫。','Offline HTML download requested; the original file is not overwritten.'));}
+  async function writeUSB() {
+    if(!canEdit()||writing)return;
+    if(!window.showOpenFilePicker){toast(tr('此瀏覽器不支援直接寫入。請使用「下載離線 HTML」。','Direct writing is not supported. Use Download offline HTML.'));return;}
+    writing=true;$('write-file').disabled=true;
+    try {
+      if(!fileHandle) {
+        [fileHandle]=await window.showOpenFilePicker({multiple:false,types:[{description:'Classroom HTML',accept:{'text/html':['.html']}}]});
+        const original=await fileHandle.getFile(),content=await original.text();
+        if(!content.includes('id="embedded-data"')||!content.includes('tch-classroom-v4:')){fileHandle=null;throw new Error('wrong-file');}
+      }
+      if(!canEdit())return;
+      const permission={mode:'readwrite'};
+      if(await fileHandle.queryPermission(permission)!=='granted'&&await fileHandle.requestPermission(permission)!=='granted')throw new Error('permission');
+      const snapshot=C.clone(data),revision=snapshot.revision;
+      const stream=await fileHandle.createWritable();
+      try{await stream.write(htmlBackup(snapshot));await stream.close();}catch(e){try{await stream.abort();}catch{}throw e;}
+      exportedRevision=revision;
+      $('file-status').textContent=tr(`已寫入：${fileHandle.name} · 版本 ${revision}`,`Written: ${fileHandle.name} · revision ${revision}`)+(data.revision!==revision?tr('；寫入期間另有修改，請再更新一次。','; more edits were made during writing. Update again.'):'');
+      toast(tr('USB 檔案已完成寫入。','USB file written successfully.'));
+    } catch(e) {
+      $('file-status').textContent=tr('本次未完成寫入；請重試或下載備份。','This write did not complete. Retry or download a backup.');
+      if(e.name==='AbortError')toast(tr('已取消；本機資料保留。','Cancelled; local data is unchanged.'));
+      else {toast(e.message==='wrong-file'?tr('請選擇本系統匯出的 HTML，避免覆寫其他檔案。','Select an HTML exported by this system to avoid overwriting another file.'):tr('未能寫入檔案。請重新授權，或下載離線 HTML。','Could not write the file. Reauthorize or download offline HTML.'));fileHandle=null;}
+    } finally {writing=false;$('write-file').disabled=false;}
+  }
+  async function importBackup(file) {
+    if(!canEdit()||!file)return;
+    try {
+      if(file.size>10*1024*1024)throw new Error('too large');
+      const raw=await file.text(),candidate=C.migrate(JSON.parse(raw));
+      if(!await ask(tr('匯入並取代目前資料？','Import and replace current data?'),tr(`將載入 ${candidate.students.length} 位學生、${candidate.homework.length} 份習作。確認後會先下載目前資料的安全備份。`,`Load ${candidate.students.length} students and ${candidate.homework.length} tasks. A safety backup of current data will be downloaded first.`)))return;
+      if(!canEdit())return;
+      download(jsonBackup(),`classroom-before-import-${Date.now()}.json`,'application/json');
+      // A restore becomes an independent dataset, so an old cache cannot silently supersede it.
+      candidate.id=C.uid();data=candidate;C.touch(data);recoveryNotice='';persist();fileHandle=null;pickedResult='';selectedHw='';
+      applyLanguage();renderAdmin();toast(tr('備份已匯入，請確認資料。','Backup imported. Check your data.'));
+    }catch{toast(tr('匯入失敗：格式不正確或檔案過大。原資料未變更。','Import failed: invalid format or oversized file. Original data is unchanged.'));}
+  }
+  window.addEventListener('storage',e=>{
+    if(e.key!==prefix+data.id||!e.newValue)return;
+    try{const incoming=C.validate(JSON.parse(e.newValue));if(incoming.id===data.id&&JSON.stringify(incoming)!==JSON.stringify(data)) {
+      remoteData=incoming;conflicted=true;$('conflict-dialog').showModal();
+    }}catch{}
+  });
+  $('conflict-dialog').addEventListener('cancel',e=>e.preventDefault());
+  $('conflict-backup').onclick=exportJSON;
+  $('conflict-load').onclick=()=>{if(!remoteData)return;data=remoteData;remoteData=null;conflicted=false;$('conflict-dialog').close();pickedResult='';applyLanguage();renderAdmin();toast(tr('已載入另一視窗的資料。','Loaded data from the other window.'));};
+  window.addEventListener('beforeunload',e=>{if(storageError && data.revision!==exportedRevision){e.preventDefault();e.returnValue='';}});
+  $$('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+  $('edit-lesson').onclick=$('first-lesson').onclick=()=>switchTab('admin');
+  $('language').onclick=()=>{if(change(d=>{d.lang=['zh','en','bi'][(['zh','en','bi'].indexOf(d.lang)+1)%3];})){applyLanguage();if(admin)renderAdmin();}};
+  $('project').onclick=()=>{document.documentElement.classList.toggle('present');$('project').setAttribute('aria-pressed',document.documentElement.classList.contains('present'));};
+  $('previous').onclick=()=>{$('previous-panel').hidden=!$('previous-panel').hidden;renderPrevious();};
+  $('login').onsubmit=e=>{e.preventDefault();if($('password').value==='0926'){admin=true;$('password').value='';$('login-error').textContent='';renderAdmin();}else{$('login-error').textContent=tr('密碼不正確','Incorrect password');$('password').value='';}};
+  $('logout').onclick=()=>{admin=false;editingRecords=false;renderAdmin();renderHomework();};
+  $$('[data-lesson]').forEach(input=>input.addEventListener('input',()=>{if(!canEdit())return;change(d=>{d.lesson[input.dataset.lesson]=input.type==='checkbox'?input.checked:input.value;});renderLesson();}));
+  $('add-step').onclick=()=>{if(!canEdit())return;change(d=>d.lesson.flow.push({id:C.uid(),time:'',title:'',detail:''}));renderFlowEditor();renderLesson();$('flow-editor').lastElementChild?.querySelector('input')?.focus();};
+  $('save-local').onclick=()=>{if(!canEdit())return;persist();toast(storageError?tr('儲存失敗，請匯出備份。','Save failed. Export a backup.'):tr('課堂已存於此瀏覽器，前台已同步。USB 請另行更新。','Saved in this browser and reflected in lesson view. Update USB separately.'));};
+  $('save-preset').onclick=()=>{if(!canEdit())return;const name=$('preset-name').value.trim();if(!name){toast(tr('請輸入範本名稱','Enter a template name'));return;}change(d=>d.presets.push({id:C.uid(),name,flow:C.clone(d.lesson.flow)}));$('preset-name').value='';renderAdminLists();};
+  $('archive-lesson').onclick=()=>{if(!canEdit())return;change(d=>d.history.unshift({id:C.uid(),lesson:C.clone(d.lesson)}));renderAdminLists();renderLesson();toast(tr('目前課堂已封存。','Current lesson archived.'));};
+  $('new-lesson').onclick=async()=>{if(!canEdit()||!await ask(tr('開始新的一課？','Start a new lesson?'),tr('目前課堂會先封存，然後建立空白課堂。','The current lesson will be archived before creating a blank lesson.')))return;if(!canEdit())return;change(d=>{d.history.unshift({id:C.uid(),lesson:C.clone(d.lesson)});d.lesson=C.emptyLesson();});renderAdmin();renderLesson();};
+  $('import-roster').onclick=async()=>{if(!canEdit())return;try{const names=C.parseRoster($('roster-input').value);if(!names.length && !await ask(tr('清空學生名單？','Clear student roster?'),tr('所有學生的交收與抽點紀錄會移除。','All student submission and picking records will be removed.')))return;
+    else if(names.length && data.students.length && !await ask(tr('更新學生名單？','Update student roster?'),tr('會保留仍在名單內學生的紀錄，移除學生的紀錄將刪除。','Records for matching students will be kept. Removed students’ records will be deleted.')))return;
+    if(!canEdit())return;change(d=>C.replaceRoster(d,names));pickedResult='';renderAdminLists();renderHomework();renderPicker();toast(tr('學生名單已更新','Student roster updated'));
+  }catch{toast(tr('名單格式不正確；每行一位學生，最多 1000 位。','Invalid roster: one student per line, up to 1000 students.'));}};
+  $('roster-file').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!canEdit()||!file)return;if(file.size>1024*1024){toast(tr('名單檔案過大','Roster file is too large'));return;}try{$('roster-input').value=await file.text();toast(tr('已讀取，請檢查後按「更新學生名單」。','File read. Check the roster, then choose Update roster.'));}catch{toast(tr('未能讀取檔案','Could not read file'));}};
+  $('add-homework').onclick=()=>{if(!canEdit())return;const name=$('new-homework').value.trim();if(!name)return;if(data.homework.some(h=>h.name===name)){toast(tr('已有相同名稱的習作','A task with that name already exists'));return;}change(d=>{const h={id:C.uid(),name};d.homework.push(h);d.records[h.id]={};});$('new-homework').value='';renderAdminLists();renderHomework();};
+  $$('[data-view]').forEach(b=>b.onclick=()=>{hwView=b.dataset.view;renderHomework();});
+  $('hw-select').onchange=()=>{selectedHw=$('hw-select').value;renderHomework();};
+  $('student-search').oninput=renderHomework;$('show-rate').onchange=renderHomework;
+  $('edit-records').onchange=()=>{if(!canEdit()){$('edit-records').checked=false;toast(tr('請先解鎖後台，再編輯紀錄。','Unlock the teacher desk to edit records.'));switchTab('admin');return;}editingRecords=$('edit-records').checked;renderHomework();};
+  $('mark-all').onclick=async()=>{const hw=selectedHw;if(!canEdit()||!await ask(tr('全班標示為已交？','Mark all as submitted?'),tr('這會覆寫本習作的未交、遲交及重作狀態。','This replaces missing, late and redo statuses for this task.')))return;if(!canEdit()||!data.homework.some(h=>h.id===hw))return;change(d=>d.students.forEach(s=>C.setStatus(d,hw,s.id,'submitted')));renderHomework();};
+  $('copy-missing').onclick=async()=>{const names=data.students.filter(s=>C.getStatus(data,selectedHw,s.id)==='missing').map(s=>s.name).join('\n');try{await navigator.clipboard.writeText(names);toast(tr('已複製未交名單','Missing names copied'));}catch{toast(tr('無法存取剪貼簿，請直接選取名單複製。','Clipboard unavailable. Select the names and copy manually.'));}};
+  $$('[data-picker]').forEach(b=>b.onclick=()=>{if(drawing)return;pickerMode=b.dataset.picker;renderPicker();});$('draw').onclick=pick;
+  $('reset-picker').onclick=async()=>{if(drawing||conflicted||!await ask(tr('開始新一輪？','Start a new round?'),tr('會清空本輪已抽名單。','The picked list for this round will be cleared.')))return;if(conflicted)return;change(d=>d.picked=[]);pickedResult='';finalWheel=null;$('shuffle-name').textContent=tr('準備好了嗎？','Ready to join in?');renderPicker();};
+  $$('[data-minutes]').forEach(b=>b.onclick=()=>setTimer(Number(b.dataset.minutes)*60));
+  $('set-timer').onclick=()=>{const n=Number($('custom-minutes').value);if(!Number.isFinite(n)||n<1/60||n>180){toast(tr('請輸入 1 秒至 180 分鐘的時間','Enter a duration from 1 second to 180 minutes'));return;}setTimer(Math.round(n*60));};
+  $('start-timer').onclick=()=>{if(timer.running||!timer.left)return;if($('timer-sound').checked){try{audioContext ||= new (window.AudioContext||window.webkitAudioContext)();audioContext.resume().catch(()=>{});}catch{}}timer.deadline=Date.now()+timer.left*1000;timer.running=true;saveTimer();updateTimer();};
+  $('pause-timer').onclick=()=>{if(!timer.running)return;timer.left=C.remaining(timer.deadline,Date.now());timer.running=false;saveTimer();updateTimer();};
+  $('reset-timer').onclick=()=>setTimer(timer.total);
+  $('timer-task').oninput=()=>{timer.task=$('timer-task').value;saveTimer();};$('task-size').onchange=()=>{timer.size=$('task-size').value;$('timer-task').style.fontSize=timer.size+'px';saveTimer();};
+  $('export-json').onclick=()=>{if(canEdit())exportJSON();};$('export-html').onclick=()=>{if(canEdit())exportHTML();};$('write-file').onclick=writeUSB;
+  $('import-json').onchange=e=>{const file=e.target.files[0];e.target.value='';importBackup(file);};
+  applyLanguage();switchTab('lesson');
+  if(storageError||recoveryNotice)toast(tr('儲存需要注意，請到後台查看資料狀態。','Storage needs attention. Check the teacher desk.'));
+})();
+</script>
+</body></html>
