@@ -1,5 +1,14 @@
 {
-  "name": "tch-classroom", "version": "4.0.0", "private": true,
-  "scripts": {"build": "node scripts/build.mjs", "start": "python3 -m http.server 4173 --bind 0.0.0.0", "test": "node --test tests/core.test.cjs", "test:e2e": "playwright test"},
-  "devDependencies": {"@playwright/test": "1.58.2"}
+  "name": "tch-classroom",
+  "version": "4.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "python3 -m http.server 4173 --bind 0.0.0.0",
+    "test": "node --test tests/core.test.cjs",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2"
+  }
 }

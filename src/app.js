@@ -9,6 +9,7 @@
   const pointerKey = prefix + 'active:' + location.pathname;
   let data, storageError = '', recoveryNotice = '';
   let admin = false, tab = 'lesson', hwView = 'single', pickerMode = 'slot', selectedHw = '';
+  let adminSection = 'plan', rosterDraft = null, recordUndo = null;
   let editingRecords = false, conflicted = false, remoteData = null, exportedRevision = -1;
   let toastTimeout, fileHandle = null, writing = false, drawing = false, pickedResult = '', finalWheel = null;
   const tr = (zh,en) => data.lang === 'en' ? en : data.lang === 'bi' && zh !== en ? `${zh} / ${en}` : zh;
@@ -60,7 +61,22 @@
     $$('[data-ph]').forEach(n=>n.placeholder=translate(n.dataset.ph));
     $('language').textContent=data.lang==='zh'?'English':data.lang==='en'?'中英雙語':'繁體中文';
     renderLesson();renderPicker();renderHomework();updateTimer();updateSaveStatus();
-    if(admin)renderAdminLists();
+    if(admin){renderAdminLists();showAdminSection(adminSection);}
+    updatePresentationLabel();
+  }
+  function showAdminSection(name) {
+    if(!['plan','library','class','backup'].includes(name))return;
+    adminSection=name;
+    $$('.admin-section').forEach(n=>n.hidden=n.id!=='admin-'+name);
+    $$('[data-admin-section]').forEach(n=>{
+      const active=n.dataset.adminSection===name;
+      n.classList.toggle('active',active);n.setAttribute('aria-pressed',active);
+    });
+  }
+  function updatePresentationLabel() {
+    const active=document.documentElement.classList.contains('present');
+    $('project').textContent=active?tr('⛶ 一般模式','⛶ Normal view'):tr('⛶ 投影模式','⛶ Present');
+    $('project').setAttribute('aria-pressed',active);$('project').title=$('project').textContent;
   }
   function switchTab(name) {
     if(!['lesson','picker','timer','homework','admin'].includes(name))return;
@@ -103,9 +119,14 @@
     if(!admin)return;
     $$('[data-lesson]').forEach(n=>{const value=data.lesson[n.dataset.lesson];if(n.type==='checkbox')n.checked=value;else n.value=value;});
     renderFlowEditor();renderAdminLists();updateSaveStatus();
-    $('roster-input').value=data.students.map(s=>s.name).join('\n');
+    $('roster-input').value=rosterDraft ?? data.students.map(s=>s.name).join('\n');
+    updateOptionalFields();showAdminSection(adminSection);
     $('file-status').textContent=fileHandle?tr(`已連接：${fileHandle.name}；尚未代表已寫入最新修改。`,`Connected: ${fileHandle.name}; this does not mean the latest edits have been written.`):
       tr('USB 寫入需支援檔案選擇器的瀏覽器並獲授權；不支援時請使用下載。','USB writing requires a supported browser and permission. Use Download otherwise.');
+  }
+  function updateOptionalFields() {
+    document.querySelector('[data-lesson="announcement"]').hidden=!data.lesson.showAnnouncement;
+    document.querySelector('[data-lesson="materials"]').hidden=!data.lesson.showMaterials;
   }
   function renderFlowEditor() {
     const container=$('flow-editor');container.replaceChildren();
@@ -114,13 +135,13 @@
       const fields=el('div',undefined,'flow-edit-fields');
       for(const [key,label] of [['time',tr('時間','Time')],['title',tr('步驟標題','Step title')],['detail',tr('詳細說明','Details')]]) {
         const input=el(key==='detail'?'textarea':'input');input.value=step[key];input.setAttribute('aria-label',label);input.placeholder=label;input.dataset.field=key;
-        if(key==='detail'){input.rows=2;card.append(input);}else fields.append(input);
+        if(key==='detail'){input.rows=1;card.append(input);}else fields.append(input);
         input.addEventListener('input',()=>{if(!canEdit())return;change(()=>{step[key]=input.value;});renderLesson();});
       }
       card.prepend(fields);
       const actions=el('div',undefined,'row');actions.append(el('span',`#${index+1}`,'muted'));
-      const up=button(tr('↑ 上移','↑ Move up'),()=>moveStep(index,-1));up.disabled=index===0;
-      const down=button(tr('↓ 下移','↓ Move down'),()=>moveStep(index,1));down.disabled=index===data.lesson.flow.length-1;
+      const up=button('↑',()=>moveStep(index,-1));up.title=tr('上移','Move up');up.setAttribute('aria-label',tr('↑ 上移','↑ Move up'));up.disabled=index===0;
+      const down=button('↓',()=>moveStep(index,1));down.title=tr('下移','Move down');down.setAttribute('aria-label',tr('↓ 下移','↓ Move down'));down.disabled=index===data.lesson.flow.length-1;
       actions.append(up,down,button(tr('刪除','Delete'),async()=>{
         if(!canEdit())return;
         if((step.time||step.title||step.detail) && !await ask(tr('刪除此步驟？','Delete this step?'),tr('其他步驟和已輸入文字會保留。','Other steps and their text will be kept.')))return;
@@ -134,14 +155,14 @@
     $('preset-list').replaceChildren();data.presets.forEach(p=>{
       const row=el('div',undefined,'list-item');row.append(el('span',p.name),button(tr('套用','Apply'),async()=>{
         if(!canEdit()||!await ask(tr('套用流程範本？','Apply flow template?'),tr('這會取代目前流程步驟，主題及目標會保留。','This replaces the current flow steps; the topic and goals stay.')))return;
-        if(!canEdit())return;change(d=>{d.lesson.flow=C.clone(p.flow).map(s=>({...s,id:C.uid()}));});renderFlowEditor();renderLesson();
+        if(!canEdit())return;change(d=>{d.lesson.flow=C.clone(p.flow).map(s=>({...s,id:C.uid()}));});renderFlowEditor();renderLesson();showAdminSection('plan');toast(tr('已套用流程範本','Flow template applied'));
       }),button(tr('刪除','Delete'),async()=>{if(!canEdit()||!await ask(tr('刪除範本？','Delete template?'),p.name))return;if(!canEdit())return;change(d=>d.presets=d.presets.filter(x=>x.id!==p.id));renderAdminLists();}));$('preset-list').append(row);
     });
     if(!data.presets.length)$('preset-list').append(el('p',tr('把常用流程儲存為範本，下次一鍵套用。','Save a routine here to reuse it next time.'),'muted'));
     $('history-list').replaceChildren();data.history.forEach(h=>{
       const row=el('div',undefined,'list-item');row.append(el('span',`${h.lesson.date} · ${h.lesson.title || tr('未命名課堂','Untitled lesson')}`),button(tr('載入','Load'),async()=>{
         if(!canEdit()||!await ask(tr('載入歷史課堂？','Load archived lesson?'),tr('目前課堂會先自動封存，再載入此課。','The current lesson will be archived before loading this one.')))return;
-        if(!canEdit())return;change(d=>{d.history.unshift({id:C.uid(),lesson:C.clone(d.lesson)});d.lesson=C.clone(h.lesson);});renderAdmin();renderLesson();
+        if(!canEdit())return;change(d=>{d.history.unshift({id:C.uid(),lesson:C.clone(d.lesson)});d.lesson=C.clone(h.lesson);});renderAdmin();renderLesson();showAdminSection('plan');
       }),button(tr('刪除','Delete'),async()=>{if(!canEdit()||!await ask(tr('刪除歷史課堂？','Delete archived lesson?'),h.lesson.title))return;if(!canEdit())return;change(d=>d.history=d.history.filter(x=>x.id!==h.id));renderAdminLists();renderLesson();}));$('history-list').append(row);
     });
     $('homework-list').replaceChildren();data.homework.forEach(h=>{
@@ -152,13 +173,20 @@
     });
   }
   const statusLabel = status => translate({missing:'○ 未交|○ Missing',submitted:'✓ 已交|✓ Submitted',late:'◷ 遲交|◷ Late',redo:'↺ 重作|↺ Redo'}[status]);
+  function rememberRecords(hwId,students) {
+    recordUndo={datasetId:data.id,hwId,entries:students.map(s=>({id:s.id,status:C.getStatus(data,hwId,s.id)}))};
+  }
   function renderHomework() {
+    const scroller=document.querySelector('.table-scroll');
+    const scroll={top:scroller.scrollTop,left:scroller.scrollLeft};
+    const focused={studentId:document.activeElement?.dataset.studentId,hwId:document.activeElement?.dataset.hwId};
     if(!data.homework.some(h=>h.id===selectedHw))selectedHw=data.homework[0]?.id || '';
     $('hw-select').replaceChildren(...data.homework.map(h=>{const o=el('option',h.name);o.value=h.id;return o;}));$('hw-select').value=selectedHw;
     $$('[data-view]').forEach(n=>{n.classList.toggle('active',n.dataset.view===hwView);n.setAttribute('aria-pressed',n.dataset.view===hwView);});
-    $('homework-selector').hidden=hwView==='matrix';$('missing-box').hidden=hwView==='matrix'||!selectedHw||!data.students.length;
+    $('homework-selector').hidden=false;$('missing-box').hidden=!selectedHw||!data.students.length;
     $('edit-records').checked=editingRecords;$('mark-all').hidden=!editingRecords||hwView==='matrix'||!selectedHw||!data.students.length;
-    const table=$('hw-table');table.replaceChildren();
+    $('undo-record').hidden=!editingRecords||!recordUndo||recordUndo.datasetId!==data.id;
+    const table=$('hw-table');table.classList.toggle('single-view',hwView==='single');table.replaceChildren();
     const empty=!data.students.length||!data.homework.length;$('hw-empty').hidden=!empty;table.hidden=empty;
     const showRate=$('show-rate').checked;$('rate').hidden=!showRate||empty;
     const tasks=hwView==='matrix'?data.homework:data.homework.filter(h=>h.id===selectedHw);
@@ -166,8 +194,11 @@
     const total=tasks.length*data.students.length;
     $('rate').textContent=tr(`繳交率（含遲交）：${total?Math.round(received/total*100):0}%`,`Submission rate (including late): ${total?Math.round(received/total*100):0}%`);
     const missing=data.students.filter(s=>C.getStatus(data,selectedHw,s.id)==='missing');
+    $('missing-count').textContent=String(missing.length);
+    $('missing-task').textContent=data.homework.find(h=>h.id===selectedHw)?.name || '';
     $('missing-list').replaceChildren(...missing.map(s=>el('span',s.name,'chip')));
     if(!missing.length)$('missing-list').append(el('span',tr('沒有未交學生','No missing submissions'),'muted'));
+    $('record-count').textContent=tr(`${data.students.length} 位學生`,`${data.students.length} students`);
     if(empty)return;
     const head=el('thead'),row=el('tr');row.append(el('th',tr('學生','Student')));tasks.forEach(h=>row.append(el('th',h.name)));head.append(row);table.append(head);
     const body=el('tbody'),query=$('student-search').value.trim().toLocaleLowerCase();
@@ -178,13 +209,16 @@
         const cell=el('td'),status=C.getStatus(data,h.id,s.id);
         const badge=editingRecords?button(statusLabel(status),()=>{
           if(!canEdit()||!editingRecords)return;
+          rememberRecords(h.id,[s]);
           change(d=>C.setStatus(d,h.id,s.id,C.statuses[(C.statuses.indexOf(status)+1)%4]));renderHomework();
         },`status ${status}`):el('span',statusLabel(status),`status ${status}`);
-        if(editingRecords)badge.setAttribute('aria-label',`${s.name} · ${h.name} · ${statusLabel(status)}`);
+        if(editingRecords){badge.setAttribute('aria-label',`${s.name} · ${h.name} · ${statusLabel(status)}`);badge.dataset.studentId=s.id;badge.dataset.hwId=h.id;}
         cell.append(badge);row.append(cell);
       }body.append(row);
     });
     if(!body.children.length){const row=el('tr'),cell=el('td',tr('沒有符合的學生','No matching students'));cell.colSpan=tasks.length+1;row.append(cell);body.append(row);}table.append(body);
+    scroller.scrollTop=scroll.top;scroller.scrollLeft=scroll.left;
+    if(focused.studentId)[...table.querySelectorAll('button')].find(b=>b.dataset.studentId===focused.studentId&&b.dataset.hwId===focused.hwId)?.focus({preventScroll:true});
   }
   function renderPicker() {
     $$('[data-picker]').forEach(n=>{n.disabled=drawing;n.classList.toggle('active',n.dataset.picker===pickerMode);n.setAttribute('aria-pressed',n.dataset.picker===pickerMode);});
@@ -207,7 +241,7 @@
     candidates.forEach((s,i)=>{
       const a=i/count*Math.PI*2-Math.PI/2,b=(i+1)/count*Math.PI*2-Math.PI/2;
       ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,300,a,b);ctx.closePath();ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.stroke();
-      ctx.save();ctx.rotate((a+b)/2);ctx.textAlign='right';ctx.fillStyle='#37405a';ctx.font=`700 ${count>25?16:count>15?21:27}px sans-serif`;ctx.fillText(s.name.length>8?s.name.slice(0,8)+'…':s.name,272,8);ctx.restore();
+      ctx.save();ctx.rotate((a+b)/2);ctx.textAlign='right';ctx.fillStyle='#37405a';ctx.font=`700 ${count>25?16:count>15?21:27}px "M PLUS Rounded 1c", sans-serif`;ctx.fillText(s.name.length>8?s.name.slice(0,8)+'…':s.name,272,8);ctx.restore();
     });ctx.restore();ctx.beginPath();ctx.arc(320,320,28,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
   }
   function random() {const v=new Uint32Array(1);crypto.getRandomValues(v);return v[0]/4294967296;}
@@ -292,7 +326,7 @@
       if(!canEdit())return;
       download(jsonBackup(),`classroom-before-import-${Date.now()}.json`,'application/json');
       // A restore becomes an independent dataset, so an old cache cannot silently supersede it.
-      candidate.id=C.uid();data=candidate;C.touch(data);recoveryNotice='';persist();fileHandle=null;pickedResult='';selectedHw='';
+      candidate.id=C.uid();data=candidate;C.touch(data);recoveryNotice='';persist();fileHandle=null;pickedResult='';selectedHw='';rosterDraft=null;recordUndo=null;finalWheel=null;
       applyLanguage();renderAdmin();toast(tr('備份已匯入，請確認資料。','Backup imported. Check your data.'));
     }catch{toast(tr('匯入失敗：格式不正確或檔案過大。原資料未變更。','Import failed: invalid format or oversized file. Original data is unchanged.'));}
   }
@@ -304,43 +338,63 @@
   });
   $('conflict-dialog').addEventListener('cancel',e=>e.preventDefault());
   $('conflict-backup').onclick=exportJSON;
-  $('conflict-load').onclick=()=>{if(!remoteData)return;data=remoteData;remoteData=null;conflicted=false;$('conflict-dialog').close();pickedResult='';applyLanguage();renderAdmin();toast(tr('已載入另一視窗的資料。','Loaded data from the other window.'));};
+  $('conflict-load').onclick=()=>{if(!remoteData)return;data=remoteData;remoteData=null;conflicted=false;recordUndo=null;rosterDraft=null;$('conflict-dialog').close();pickedResult='';applyLanguage();renderAdmin();toast(tr('已載入另一視窗的資料。','Loaded data from the other window.'));};
   window.addEventListener('beforeunload',e=>{if(storageError && data.revision!==exportedRevision){e.preventDefault();e.returnValue='';}});
   $$('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
-  $('edit-lesson').onclick=$('first-lesson').onclick=()=>switchTab('admin');
+  $$('[data-admin-section]').forEach(b=>b.onclick=()=>showAdminSection(b.dataset.adminSection));
+  $('edit-lesson').onclick=$('first-lesson').onclick=()=>{showAdminSection('plan');switchTab('admin');};
+  $('preview-lesson').onclick=()=>switchTab('lesson');
+  $('setup-homework').onclick=()=>{showAdminSection('class');switchTab('admin');};
+  $('view-homework').onclick=()=>switchTab('homework');
+  $('roster-input').oninput=()=>{rosterDraft=$('roster-input').value;};
+  $('undo-record').onclick=()=>{
+    if(!canEdit()||!recordUndo||recordUndo.datasetId!==data.id)return;
+    const previous=recordUndo;
+    if(!data.homework.some(h=>h.id===previous.hwId)){recordUndo=null;renderHomework();return;}
+    change(d=>{for(const entry of previous.entries)if(d.students.some(s=>s.id===entry.id))C.setStatus(d,previous.hwId,entry.id,entry.status);});
+    recordUndo=null;renderHomework();toast(tr('已撤銷上次交收修改','Last record change undone'));
+  };
   $('language').onclick=()=>{if(change(d=>{d.lang=['zh','en','bi'][(['zh','en','bi'].indexOf(d.lang)+1)%3];})){applyLanguage();if(admin)renderAdmin();}};
-  $('project').onclick=()=>{document.documentElement.classList.toggle('present');$('project').setAttribute('aria-pressed',document.documentElement.classList.contains('present'));};
-  $('previous').onclick=()=>{$('previous-panel').hidden=!$('previous-panel').hidden;renderPrevious();};
+  $('project').onclick=()=>{document.documentElement.classList.toggle('present');updatePresentationLabel();};
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.querySelector('dialog[open]')){document.documentElement.classList.remove('present');updatePresentationLabel();}});
+  new ResizeObserver(()=>document.documentElement.style.setProperty('--header-height',document.querySelector('.app-header').offsetHeight+'px')).observe(document.querySelector('.app-header'));
+  $('previous').onclick=()=>{$('previous-panel').hidden=!$('previous-panel').hidden;$('previous').setAttribute('aria-expanded',!$('previous-panel').hidden);renderPrevious();};
   $('login').onsubmit=e=>{e.preventDefault();if($('password').value==='0926'){admin=true;$('password').value='';$('login-error').textContent='';renderAdmin();}else{$('login-error').textContent=tr('密碼不正確','Incorrect password');$('password').value='';}};
   $('logout').onclick=()=>{admin=false;editingRecords=false;renderAdmin();renderHomework();};
-  $$('[data-lesson]').forEach(input=>input.addEventListener('input',()=>{if(!canEdit())return;change(d=>{d.lesson[input.dataset.lesson]=input.type==='checkbox'?input.checked:input.value;});renderLesson();}));
+  $$('[data-lesson]').forEach(input=>input.addEventListener('input',()=>{if(!canEdit())return;change(d=>{d.lesson[input.dataset.lesson]=input.type==='checkbox'?input.checked:input.value;});updateOptionalFields();renderLesson();}));
   $('add-step').onclick=()=>{if(!canEdit())return;change(d=>d.lesson.flow.push({id:C.uid(),time:'',title:'',detail:''}));renderFlowEditor();renderLesson();$('flow-editor').lastElementChild?.querySelector('input')?.focus();};
+  $('add-step-top').onclick=()=>$('add-step').click();
   $('save-local').onclick=()=>{if(!canEdit())return;persist();toast(storageError?tr('儲存失敗，請匯出備份。','Save failed. Export a backup.'):tr('課堂已存於此瀏覽器，前台已同步。USB 請另行更新。','Saved in this browser and reflected in lesson view. Update USB separately.'));};
   $('save-preset').onclick=()=>{if(!canEdit())return;const name=$('preset-name').value.trim();if(!name){toast(tr('請輸入範本名稱','Enter a template name'));return;}change(d=>d.presets.push({id:C.uid(),name,flow:C.clone(d.lesson.flow)}));$('preset-name').value='';renderAdminLists();};
   $('archive-lesson').onclick=()=>{if(!canEdit())return;change(d=>d.history.unshift({id:C.uid(),lesson:C.clone(d.lesson)}));renderAdminLists();renderLesson();toast(tr('目前課堂已封存。','Current lesson archived.'));};
   $('new-lesson').onclick=async()=>{if(!canEdit()||!await ask(tr('開始新的一課？','Start a new lesson?'),tr('目前課堂會先封存，然後建立空白課堂。','The current lesson will be archived before creating a blank lesson.')))return;if(!canEdit())return;change(d=>{d.history.unshift({id:C.uid(),lesson:C.clone(d.lesson)});d.lesson=C.emptyLesson();});renderAdmin();renderLesson();};
   $('import-roster').onclick=async()=>{if(!canEdit())return;try{const names=C.parseRoster($('roster-input').value);if(!names.length && !await ask(tr('清空學生名單？','Clear student roster?'),tr('所有學生的交收與抽點紀錄會移除。','All student submission and picking records will be removed.')))return;
     else if(names.length && data.students.length && !await ask(tr('更新學生名單？','Update student roster?'),tr('會保留仍在名單內學生的紀錄，移除學生的紀錄將刪除。','Records for matching students will be kept. Removed students’ records will be deleted.')))return;
-    if(!canEdit())return;change(d=>C.replaceRoster(d,names));pickedResult='';renderAdminLists();renderHomework();renderPicker();toast(tr('學生名單已更新','Student roster updated'));
+    if(!canEdit())return;change(d=>C.replaceRoster(d,names));rosterDraft=null;recordUndo=null;pickedResult='';finalWheel=null;renderAdminLists();renderHomework();renderPicker();toast(tr('學生名單已更新','Student roster updated'));
   }catch{toast(tr('名單格式不正確；每行一位學生，最多 1000 位。','Invalid roster: one student per line, up to 1000 students.'));}};
-  $('roster-file').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!canEdit()||!file)return;if(file.size>1024*1024){toast(tr('名單檔案過大','Roster file is too large'));return;}try{$('roster-input').value=await file.text();toast(tr('已讀取，請檢查後按「更新學生名單」。','File read. Check the roster, then choose Update roster.'));}catch{toast(tr('未能讀取檔案','Could not read file'));}};
+  $('roster-file').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!canEdit()||!file)return;if(file.size>1024*1024){toast(tr('名單檔案過大','Roster file is too large'));return;}try{$('roster-input').value=await file.text();rosterDraft=$('roster-input').value;toast(tr('已讀取，請檢查後按「更新學生名單」。','File read. Check the roster, then choose Update roster.'));}catch{toast(tr('未能讀取檔案','Could not read file'));}};
   $('add-homework').onclick=()=>{if(!canEdit())return;const name=$('new-homework').value.trim();if(!name)return;if(data.homework.some(h=>h.name===name)){toast(tr('已有相同名稱的習作','A task with that name already exists'));return;}change(d=>{const h={id:C.uid(),name};d.homework.push(h);d.records[h.id]={};});$('new-homework').value='';renderAdminLists();renderHomework();};
   $$('[data-view]').forEach(b=>b.onclick=()=>{hwView=b.dataset.view;renderHomework();});
   $('hw-select').onchange=()=>{selectedHw=$('hw-select').value;renderHomework();};
   $('student-search').oninput=renderHomework;$('show-rate').onchange=renderHomework;
   $('edit-records').onchange=()=>{if(!canEdit()){$('edit-records').checked=false;toast(tr('請先解鎖後台，再編輯紀錄。','Unlock the teacher desk to edit records.'));switchTab('admin');return;}editingRecords=$('edit-records').checked;renderHomework();};
-  $('mark-all').onclick=async()=>{const hw=selectedHw;if(!canEdit()||!await ask(tr('全班標示為已交？','Mark all as submitted?'),tr('這會覆寫本習作的未交、遲交及重作狀態。','This replaces missing, late and redo statuses for this task.')))return;if(!canEdit()||!data.homework.some(h=>h.id===hw))return;change(d=>d.students.forEach(s=>C.setStatus(d,hw,s.id,'submitted')));renderHomework();};
+  $('mark-all').onclick=async()=>{const hw=selectedHw;if(!canEdit()||!await ask(tr('全班標示為已交？','Mark all as submitted?'),tr('這會覆寫本習作的未交、遲交及重作狀態。','This replaces missing, late and redo statuses for this task.')))return;if(!canEdit()||!data.homework.some(h=>h.id===hw))return;rememberRecords(hw,data.students);change(d=>d.students.forEach(s=>C.setStatus(d,hw,s.id,'submitted')));renderHomework();};
   $('copy-missing').onclick=async()=>{const names=data.students.filter(s=>C.getStatus(data,selectedHw,s.id)==='missing').map(s=>s.name).join('\n');try{await navigator.clipboard.writeText(names);toast(tr('已複製未交名單','Missing names copied'));}catch{toast(tr('無法存取剪貼簿，請直接選取名單複製。','Clipboard unavailable. Select the names and copy manually.'));}};
   $$('[data-picker]').forEach(b=>b.onclick=()=>{if(drawing)return;pickerMode=b.dataset.picker;renderPicker();});$('draw').onclick=pick;
   $('reset-picker').onclick=async()=>{if(drawing||conflicted||!await ask(tr('開始新一輪？','Start a new round?'),tr('會清空本輪已抽名單。','The picked list for this round will be cleared.')))return;if(conflicted)return;change(d=>d.picked=[]);pickedResult='';finalWheel=null;$('shuffle-name').textContent=tr('準備好了嗎？','Ready to join in?');renderPicker();};
-  $$('[data-minutes]').forEach(b=>b.onclick=()=>setTimer(Number(b.dataset.minutes)*60));
-  $('set-timer').onclick=()=>{const n=Number($('custom-minutes').value);if(!Number.isFinite(n)||n<1/60||n>180){toast(tr('請輸入 1 秒至 180 分鐘的時間','Enter a duration from 1 second to 180 minutes'));return;}setTimer(Math.round(n*60));};
+  async function requestTimer(seconds) {
+    if(timer.running&&!await ask(tr('重新設定計時？','Reset the running timer?'),tr('目前倒數會停止並以新時間重新設定。','The running countdown will stop and use the new duration.')))return;
+    setTimer(seconds);$('custom-minutes').value=String(Number((seconds/60).toFixed(4)));
+  }
+  $$('[data-minutes]').forEach(b=>b.onclick=()=>requestTimer(Number(b.dataset.minutes)*60));
+  $('set-timer').onclick=()=>{const n=Number($('custom-minutes').value);if(!Number.isFinite(n)||n<1/60||n>180){toast(tr('請輸入 1 秒至 180 分鐘的時間','Enter a duration from 1 second to 180 minutes'));return;}requestTimer(Math.round(n*60));};
   $('start-timer').onclick=()=>{if(timer.running||!timer.left)return;if($('timer-sound').checked){try{audioContext ||= new (window.AudioContext||window.webkitAudioContext)();audioContext.resume().catch(()=>{});}catch{}}timer.deadline=Date.now()+timer.left*1000;timer.running=true;saveTimer();updateTimer();};
   $('pause-timer').onclick=()=>{if(!timer.running)return;timer.left=C.remaining(timer.deadline,Date.now());timer.running=false;saveTimer();updateTimer();};
-  $('reset-timer').onclick=()=>setTimer(timer.total);
+  $('reset-timer').onclick=()=>requestTimer(timer.total);
   $('timer-task').oninput=()=>{timer.task=$('timer-task').value;saveTimer();};$('task-size').onchange=()=>{timer.size=$('task-size').value;$('timer-task').style.fontSize=timer.size+'px';saveTimer();};
   $('export-json').onclick=()=>{if(canEdit())exportJSON();};$('export-html').onclick=()=>{if(canEdit())exportHTML();};$('write-file').onclick=writeUSB;
   $('import-json').onchange=e=>{const file=e.target.files[0];e.target.value='';importBackup(file);};
   applyLanguage();switchTab('lesson');
+  document.fonts.ready.then(()=>{if(!drawing)renderPicker();});
   if(storageError||recoveryNotice)toast(tr('儲存需要注意，請到後台查看資料狀態。','Storage needs attention. Check the teacher desk.'));
 })();

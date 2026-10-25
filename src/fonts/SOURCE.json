@@ -1,0 +1,10 @@
+{
+  "family": "M PLUS Rounded 1c",
+  "source": "https://raw.githubusercontent.com/google/fonts/e7db6ca603fd4862010383ff17ffd6cc4ffac1c0/ofl/mplusrounded1c/",
+  "conversion": "Unmodified glyphs converted from upstream TTF to WOFF with fontTools.",
+  "license": "SIL Open Font License 1.1; copyright and license declaration retained in font name tables. Standard OFL text from https://raw.githubusercontent.com/google/fonts/e7db6ca603fd4862010383ff17ffd6cc4ffac1c0/ofl/mplus1/OFL.txt",
+  "files": {
+    "MPLUSRounded1c-Regular.woff": "5651de1762d440629d762930c388b093af40849fcc946ff94adc4b8824945ecf",
+    "MPLUSRounded1c-ExtraBold.woff": "935de66804581cb908484f3c5827d8b312aa50e4eb21f9e35ab79bea78af31c2"
+  }
+}

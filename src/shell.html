@@ -1,37 +1,107 @@
 <!doctype html>
 <html lang="zh-Hant">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#5456c9"><link rel="icon" href="data:,"><title>課堂管理系統 · Classroom</title><style>/*__CSS__*/</style></head>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6366f1"><link rel="icon" href="data:,">
+<title>課堂管理系統 · Classroom</title>
+<style>/*__FONTS__*/
+/*__CSS__*/</style>
+</head>
 <body>
-<header><div class="brand"><span class="brand-icon">▦</span><div><strong data-t="課堂管理系統|Classroom"></strong><small data-t="每一課，都從容開始。|A little more room to teach."></small></div></div><div class="header-actions"><button id="language" class="subtle">中 / EN</button><button id="project" class="subtle" data-t="⛶ 投影模式|⛶ Present"></button></div></header>
-<div class="workspace"><aside><p class="nav-label" data-t="教學工作台|TEACHING SPACE"></p><nav aria-label="Main navigation">
-<button data-tab="lesson"><span>▤</span><span data-t="課堂內容|Lesson"></span></button><button data-tab="picker"><span>✧</span><span data-t="互動點名|Random picker"></span></button><button data-tab="timer"><span>◷</span><span data-t="課堂計時器|Timer"></span></button><button data-tab="homework"><span>▦</span><span data-t="家課交收|Homework"></span></button><button data-tab="admin"><span>⚙</span><span data-t="後台管理|Teacher desk"></span></button>
-</nav><div class="aside-note"><span class="dot"></span><span data-t="離線也能安心備課|Made for offline teaching"></span></div></aside>
-<main>
+<header class="app-header">
+  <div class="brand">📚 <strong data-t="課堂管理系統|Classroom"></strong></div>
+  <nav aria-label="Main navigation">
+    <button data-tab="lesson"><span aria-hidden="true">📖</span><span data-t="課堂內容|Lesson"></span></button>
+    <button data-tab="picker"><span aria-hidden="true">🎲</span><span data-t="互動點名|Picker"></span></button>
+    <button data-tab="timer"><span aria-hidden="true">⏱</span><span data-t="計時器|Timer"></span></button>
+    <button data-tab="homework"><span aria-hidden="true">📋</span><span data-t="家課交收|Homework"></span></button>
+    <button data-tab="admin"><span aria-hidden="true">⚙</span><span data-t="後台管理|Teacher desk"></span></button>
+  </nav>
+  <div class="header-actions"><button id="language">English</button><button id="project" data-t="⛶ 投影模式|⛶ Present" aria-pressed="false"></button></div>
+</header>
+<div class="workspace"><main>
 <section id="lesson" class="page">
-<div class="page-heading"><div><p class="eyebrow" data-t="TODAY’S CLASS|TODAY’S CLASS"></p><h1 data-t="準備好，一起學習。|Let’s learn something new."></h1></div><div class="row"><button id="previous" data-t="← 上一課|← Previous lesson"></button><button id="edit-lesson" class="primary" data-t="編輯課堂|Edit lesson"></button></div></div>
-<div id="previous-panel" class="card" hidden></div>
-<div class="lesson-grid"><div class="card lesson-intro"><p class="eyebrow" id="lesson-date"></p><h2 id="lesson-title"></h2><p class="section-label" data-t="學習目標|LEARNING GOALS"></p><div id="lesson-goals" class="prose"></div><div id="materials-block" class="inset"><b data-t="準備器材 / 教具|Materials"></b><p id="lesson-materials" class="prose"></p></div><div id="announcement-block" class="inset warm"><b data-t="課後作業 / 公告|Homework & announcements"></b><p id="lesson-announcement" class="prose"></p></div></div>
-<div class="card"><div class="card-heading"><h2 data-t="課堂流程|Lesson flow"></h2><span class="pill" id="flow-count"></span></div><div id="lesson-flow"></div></div></div>
-<div id="lesson-empty" class="empty card" hidden><span class="empty-icon">✎</span><h2 data-t="從一份簡單的流程開始|Start with a simple lesson plan"></h2><p data-t="在後台加入主題與步驟，即可在這裡展示。|Add a topic and steps at the teacher desk to begin."></p><button id="first-lesson" class="primary" data-t="建立第一課|Create your first lesson"></button></div>
+  <div class="page-heading lesson-heading"><div class="lesson-title-area"><p id="lesson-date" class="date-badge"></p><h1 id="lesson-title"></h1></div><div class="row">
+    <button id="previous" data-t="⏮ 上一課|⏮ Previous lesson" aria-expanded="false"></button>
+    <button id="edit-lesson" class="primary" data-t="✎ 編輯課堂|✎ Edit lesson"></button>
+  </div></div>
+  <div id="previous-panel" class="card previous-panel" hidden></div>
+  <div class="lesson-grid">
+    <div class="card lesson-intro">
+      <div class="goals-block"><h3 data-t="🎯 學習目標|🎯 Learning goals"></h3><div id="lesson-goals" class="prose"></div></div>
+      <div id="materials-block" class="inset"><h3 data-t="🎒 準備器材 / 教具|🎒 Materials"></h3><p id="lesson-materials" class="prose"></p></div>
+      <div id="announcement-block" class="inset warm"><h3 data-t="📢 課後作業 / 公告|📢 Homework & announcements"></h3><p id="lesson-announcement" class="prose"></p></div>
+    </div>
+    <div class="card lesson-flow-card"><div class="card-heading"><h2 data-t="課堂流程安排|Lesson flow"></h2><span class="pill" id="flow-count"></span></div><div id="lesson-flow"></div></div>
+  </div>
+  <div id="lesson-empty" class="empty card" hidden><span class="empty-icon">✎</span><h2 data-t="尚未設定課堂|No lesson yet"></h2><p data-t="加入主題與流程，即可開始上課。|Add a topic and lesson steps to get started."></p><button id="first-lesson" class="primary" data-t="建立第一課|Create your first lesson"></button></div>
 </section>
-<section id="picker" class="page" hidden><div class="page-heading"><div><p class="eyebrow">CLASSROOM MOMENTS</p><h1 data-t="讓每個聲音，都被聽見。|Every voice deserves a turn."></h1></div><div class="segmented"><button data-picker="slot" data-t="跑馬燈|Name shuffle"></button><button data-picker="wheel" data-t="幸運輪盤|Lucky wheel"></button></div></div>
-<div class="picker-stage"><div class="picker-visual"><div id="shuffle-name" data-t="準備好了嗎？|Ready to join in?"></div><div id="wheel-box" hidden><span class="pointer">▼</span><canvas id="wheel" width="640" height="640" aria-label="Student wheel"></canvas></div></div><div class="picker-result"><p class="eyebrow" data-t="這一刻，輪到你|YOUR MOMENT"></p><div id="picked-name" aria-live="polite">—</div><p id="picker-count"></p><button id="draw" class="primary big" data-t="✧ 幸運抽點|✧ Pick a student"></button><button id="reset-picker" class="subtle" data-t="開始新一輪|Start a new round"></button></div></div><div class="card"><h3 data-t="本輪已抽學生|Picked this round"></h3><div id="picked-list" class="chips"></div></div>
+<section id="picker" class="page" hidden><div class="page-heading"><div><h1 data-t="🎲 互動點名|🎲 Random picker"></h1></div><div class="segmented"><button data-picker="slot" data-t="跑馬燈|Name shuffle"></button><button data-picker="wheel" data-t="幸運輪盤|Lucky wheel"></button></div></div>
+<div class="picker-stage"><div class="picker-visual"><div id="shuffle-name" data-t="準備好了嗎？|Ready to join in?"></div><div id="wheel-box" hidden><span class="pointer">▼</span><canvas id="wheel" width="640" height="640" aria-label="Student wheel"></canvas></div></div><div class="picker-result"><p class="eyebrow" data-t="抽點結果|Selected student"></p><div id="picked-name" aria-live="polite">—</div><p id="picker-count"></p><button id="draw" class="primary big" data-t="✧ 幸運抽點|✧ Pick a student"></button><button id="reset-picker" class="subtle" data-t="開始新一輪|Start a new round"></button></div></div><div class="card"><h3 data-t="本輪已抽學生|Picked this round"></h3><div id="picked-list" class="chips"></div></div>
 </section>
-<section id="timer" class="page" hidden><div class="page-heading"><div><p class="eyebrow">TIME TO FOCUS</p><h1 data-t="專注眼前，掌握節奏。|Find your focus."></h1></div><label class="row"><span data-t="任務字體|Task size"></span><select id="task-size"><option value="28" data-t="標準|Regular"></option><option value="40" data-t="大字|Large"></option><option value="56" data-t="特大|Extra large"></option></select></label></div>
-<div class="card timer-card"><label for="timer-task" class="section-label" data-t="當前課堂任務 / 工作說明|CURRENT TASK"></label><textarea id="timer-task" rows="2" aria-label="Current task"></textarea><div id="timer-display" role="timer">05:00</div><div class="progress" role="progressbar" aria-label="Remaining time" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="timer-progress"></div><strong id="timer-percent">100%</strong></div><p id="timer-message" role="status"></p><div class="row center" id="timer-presets"><button data-minutes="1">1</button><button data-minutes="3">3</button><button data-minutes="5">5</button><button data-minutes="10">10</button><button data-minutes="15">15</button><label class="row"><input id="custom-minutes" type="number" min="0.0167" max="180" step="any" value="5" aria-label="Minutes"><span data-t="分鐘|min"></span></label><button id="set-timer" data-t="設定|Set"></button></div><div class="row center timer-buttons"><button id="start-timer" class="primary" data-t="▶ 開始|▶ Start"></button><button id="pause-timer" data-t="Ⅱ 暫停|Ⅱ Pause"></button><button id="reset-timer" data-t="↺ 重設|↺ Reset"></button><label class="row"><input type="checkbox" id="timer-sound"><span data-t="完成音效|Completion sound"></span></label></div></div>
+<section id="timer" class="page" hidden><div class="page-heading"><div><h1 data-t="⏱ 課堂計時器|⏱ Classroom timer"></h1></div><label class="row"><span data-t="任務字體|Task size"></span><select id="task-size"><option value="28" data-t="標準|Regular"></option><option value="40" data-t="大字|Large"></option><option value="56" data-t="特大|Extra large"></option></select></label></div>
+<div class="card timer-card"><label for="timer-task" class="section-label" data-t="當前課堂任務 / 工作說明|CURRENT TASK"></label><textarea id="timer-task" rows="2" aria-label="Current task"></textarea><div id="timer-display" role="timer">05:00</div><div class="progress" role="progressbar" aria-label="Remaining time" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="timer-progress"></div><strong id="timer-percent">100%</strong></div><p id="timer-message" role="status"></p><div class="row center" id="timer-presets"><button data-minutes="1" data-t="1 分鐘|1 min"></button><button data-minutes="3" data-t="3 分鐘|3 min"></button><button data-minutes="5" data-t="5 分鐘|5 min"></button><button data-minutes="10" data-t="10 分鐘|10 min"></button><button data-minutes="15" data-t="15 分鐘|15 min"></button><label class="row"><input id="custom-minutes" type="number" min="0.0167" max="180" step="any" value="5" aria-label="Minutes"><span data-t="分鐘|min"></span></label><button id="set-timer" data-t="設定|Set"></button></div><div class="row center timer-buttons"><button id="start-timer" class="primary" data-t="▶ 開始|▶ Start"></button><button id="pause-timer" data-t="Ⅱ 暫停|Ⅱ Pause"></button><button id="reset-timer" data-t="↺ 重設|↺ Reset"></button><label class="row"><input type="checkbox" id="timer-sound"><span data-t="完成音效|Completion sound"></span></label></div></div>
 </section>
-<section id="homework" class="page" hidden><div class="page-heading"><div><p class="eyebrow">KEEP TRACK, WITH CARE</p><h1 data-t="交收進度，一目了然。|A clearer picture of progress."></h1></div><div class="segmented"><button data-view="single" data-t="單一習作|Single task"></button><button data-view="matrix" data-t="全班總覽|Class overview"></button></div></div>
-<div class="card"><div class="row spread"><label class="row" id="homework-selector"><span data-t="習作|Task"></span><select id="hw-select"></select></label><div class="row"><label class="row"><input id="show-rate" type="checkbox"><span data-t="顯示繳交率|Show submission rate"></span></label><label class="row"><input id="edit-records" type="checkbox"><span data-t="編輯紀錄|Edit records"></span></label></div></div><p id="rate" hidden></p><div class="legend"><span class="status submitted" data-t="✓ 已交|✓ Submitted"></span><span class="status missing" data-t="○ 未交|○ Missing"></span><span class="status late" data-t="◷ 遲交|◷ Late"></span><span class="status redo" data-t="↺ 重作|↺ Redo"></span></div><div id="missing-box" class="missing-box"><div class="row spread"><h3 data-t="待跟進 · 未交學生|To follow up · Missing"></h3><button id="copy-missing" data-t="複製名單|Copy names"></button></div><div id="missing-list" class="chips"></div></div><div class="row spread"><input id="student-search" type="search" data-ph="搜尋學生姓名|Search students" aria-label="Search students"><button id="mark-all" hidden data-t="全班標示已交|Mark all submitted"></button></div><div class="table-scroll"><table id="hw-table"></table></div><div id="hw-empty" class="empty" hidden><h3 data-t="尚未有學生或習作|No students or tasks yet"></h3><p data-t="請在後台匯入學生名單，並新增習作。|Import a roster and add a task at the teacher desk."></p></div></div>
+<section id="homework" class="page" hidden>
+  <div class="page-heading"><h1 data-t="📋 家課交收|📋 Homework"></h1><div class="segmented">
+    <button data-view="single" data-t="單一習作|Single task"></button><button data-view="matrix" data-t="全班總覽|Class overview"></button>
+  </div></div>
+  <div class="card homework-toolbar">
+    <div class="row"><label class="row" id="homework-selector"><span data-t="習作|Task"></span><select id="hw-select"></select></label><input id="student-search" type="search" data-ph="搜尋學生姓名|Search students" aria-label="Search students"></div>
+    <div class="row"><label class="row"><input id="show-rate" type="checkbox"><span data-t="繳交率|Submission rate"></span></label><label class="row"><input id="edit-records" type="checkbox"><span data-t="編輯紀錄|Edit records"></span></label><button id="undo-record" hidden data-t="↶ 撤銷|↶ Undo"></button><button id="mark-all" hidden data-t="全班已交|Mark all submitted"></button></div>
+    <p id="rate" hidden></p>
+  </div>
+  <div class="homework-grid">
+    <div class="card homework-records">
+      <div class="legend"><span class="status submitted" data-t="✓ 已交|✓ Submitted"></span><span class="status missing" data-t="○ 未交|○ Missing"></span><span class="status late" data-t="◷ 遲交|◷ Late"></span><span class="status redo" data-t="↺ 重作|↺ Redo"></span><span id="record-count" class="muted"></span></div>
+      <div class="table-scroll"><table id="hw-table"></table></div>
+      <div id="hw-empty" class="empty" hidden><h3 data-t="尚未有學生或習作|No students or tasks yet"></h3><p data-t="請在後台匯入學生名單，並新增習作。|Import a roster and add a task at the teacher desk."></p><button id="setup-homework" class="primary" data-t="管理名單與習作|Manage roster & tasks"></button></div>
+    </div>
+    <div id="missing-box" class="card missing-box"><div class="card-heading"><h3 data-t="未交學生|Missing submissions"></h3><span id="missing-count" class="pill"></span></div><p id="missing-task" class="muted"></p><div id="missing-list" class="chips"></div><button id="copy-missing" data-t="複製未交名單|Copy missing names"></button></div>
+  </div>
 </section>
-<section id="admin" class="page" hidden><div class="page-heading"><div><p class="eyebrow">YOUR TEACHER DESK</p><h1 data-t="備好下一課。|Make room for your next lesson."></h1></div><button id="logout" hidden data-t="鎖定後台|Lock teacher desk"></button></div>
-<form id="login" class="card login"><div class="empty-icon">⚿</div><h2 data-t="老師，歡迎回來|Welcome back, teacher"></h2><label for="password" data-t="請輸入管理密碼|Enter your management password"></label><input id="password" type="password" autocomplete="current-password" required><p id="login-error" class="error" role="alert"></p><button class="primary" data-t="解鎖後台|Unlock teacher desk"></button></form>
-<div id="admin-panel" hidden>
-<div class="save-panel card"><div><h3 data-t="資料與備份|Data & backups"></h3><p id="save-status" role="status"></p><p class="muted" data-t="自動儲存只保留在這個瀏覽器。轉電腦或使用 USB 前，請匯出備份。|Autosave stays in this browser. Export a backup before moving to another computer or USB."></p></div><div class="row"><button id="save-local" class="primary" data-t="儲存課堂|Save lesson"></button><button id="export-html" data-t="下載離線 HTML|Download offline HTML"></button><button id="export-json" data-t="匯出 JSON|Export JSON"></button><button id="write-file" data-t="連接 / 更新 USB HTML|Connect / update USB HTML"></button><label class="button" for="import-json" data-t="匯入備份|Import backup"></label><input id="import-json" type="file" accept=".json,application/json" hidden></div><p id="file-status" class="muted"></p><details><summary data-t="儲存與隱私說明|Storage & privacy"></summary><p data-t="這是離線工具，後台密碼只防誤觸，不會加密資料。HTML／JSON 備份含學生資料，請妥善保管，不要上傳到公開網站。瀏覽器可能要求重新授權 USB 寫入；取消授權不影響本機資料。|This offline tool uses a password to prevent accidental edits, not encryption. HTML/JSON backups contain student data. Keep them private. Browsers may ask again for USB write permission; cancelling leaves local data intact."></p></details></div>
-<div class="card"><div class="card-heading"><h2 data-t="課堂內容|Lesson content"></h2><button id="new-lesson" data-t="封存並建立新課|Archive & start new"></button></div><div class="form-grid"><label><span data-t="單元主題|Lesson topic"></span><input data-lesson="title" id="edit-title"></label><label><span data-t="課堂日期|Lesson date"></span><input data-lesson="date" id="edit-date" type="text"></label></div><label><span data-t="學習目標|Learning goals"></span><textarea data-lesson="objectives" id="edit-objectives" rows="3"></textarea></label><h3 data-t="流程步驟|Lesson steps"></h3><div id="flow-editor"></div><button id="add-step" data-t="＋ 新增流程步驟|＋ Add step"></button><div class="form-grid optional"><div><label class="row"><input data-lesson="showAnnouncement" type="checkbox"><span data-t="加入課後作業 / 公告|Include homework / announcements"></span></label><textarea data-lesson="announcement" rows="3" aria-label="Announcement"></textarea></div><div><label class="row"><input data-lesson="showMaterials" type="checkbox"><span data-t="加入器材 / 教具|Include materials"></span></label><textarea data-lesson="materials" rows="3" aria-label="Materials"></textarea></div></div><p class="muted" data-t="修改會即時同步至課堂內容。|Edits appear immediately in the lesson view."></p></div>
-<div class="form-grid"><div class="card"><h2 data-t="流程範本|Flow templates"></h2><div class="row"><input id="preset-name" data-ph="範本名稱|Template name" aria-label="Template name"><button id="save-preset" data-t="儲存範本|Save template"></button></div><div id="preset-list" class="item-list"></div></div><div class="card"><h2 data-t="課堂歷史|Lesson history"></h2><button id="archive-lesson" data-t="封存目前課堂|Archive current lesson"></button><div id="history-list" class="item-list"></div></div></div>
-<div class="card"><h2 data-t="學生名單|Student roster"></h2><p class="muted" data-t="每行一位學生；可貼上試算表的「學號、姓名」兩欄。相同姓名會依出現次序保留交收紀錄。|One student per line; paste number/name columns from a spreadsheet. Matching names retain records in occurrence order."></p><textarea id="roster-input" rows="5" aria-label="Student roster"></textarea><div class="row"><button id="import-roster" class="primary" data-t="更新學生名單|Update roster"></button><label class="button" for="roster-file" data-t="讀取 CSV / TXT|Read CSV / TXT"></label><input type="file" id="roster-file" accept=".csv,.txt,text/plain,text/csv" hidden><span id="roster-count"></span></div></div>
-<div class="card"><h2 data-t="習作管理|Homework tasks"></h2><div class="row"><input id="new-homework" data-ph="習作名稱|Task name" aria-label="New homework"><button id="add-homework" class="primary" data-t="新增習作|Add task"></button></div><div id="homework-list" class="item-list"></div></div>
-</div></section>
+<section id="admin" class="page" hidden>
+  <div class="page-heading"><h1 data-t="⚙ 後台管理|⚙ Teacher desk"></h1><button id="logout" hidden data-t="鎖定後台|Lock teacher desk"></button></div>
+  <form id="login" class="card login"><h2 data-t="老師登入|Teacher login"></h2><label for="password" data-t="請輸入管理密碼|Enter your management password"></label><input id="password" type="password" autocomplete="current-password" required><p id="login-error" class="error" role="alert"></p><button class="primary" data-t="解鎖後台|Unlock teacher desk"></button></form>
+  <div id="admin-panel" hidden>
+    <nav class="admin-nav" aria-label="Teacher desk sections">
+      <button data-admin-section="plan" data-t="✎ 課堂編輯|✎ Lesson editor"></button>
+      <button data-admin-section="library" data-t="▤ 範本與歷史|▤ Templates & history"></button>
+      <button data-admin-section="class" data-t="♙ 名單與習作|♙ Roster & tasks"></button>
+      <button data-admin-section="backup" data-t="↓ 儲存與備份|↓ Storage & backup"></button>
+    </nav>
+    <div id="admin-plan" class="admin-section">
+      <div class="editor-grid">
+        <div class="card lesson-settings"><h2 data-t="課堂資料|Lesson details"></h2>
+          <label><span data-t="單元主題|Lesson topic"></span><input data-lesson="title" id="edit-title"></label>
+          <label><span data-t="課堂日期|Lesson date"></span><input data-lesson="date" id="edit-date" type="text"></label>
+          <label><span data-t="學習目標|Learning goals"></span><textarea data-lesson="objectives" id="edit-objectives" rows="3"></textarea></label>
+          <div class="optional-field"><label class="row"><input data-lesson="showAnnouncement" type="checkbox"><span data-t="加入課後作業 / 公告|Include announcements"></span></label><textarea data-lesson="announcement" rows="2" aria-label="Announcement" hidden></textarea></div>
+          <div class="optional-field"><label class="row"><input data-lesson="showMaterials" type="checkbox"><span data-t="加入器材 / 教具|Include materials"></span></label><textarea data-lesson="materials" rows="2" aria-label="Materials" hidden></textarea></div>
+        </div>
+        <div class="card flow-editor-card"><div class="card-heading"><h2 data-t="流程步驟|Lesson steps"></h2><div class="row"><button id="add-step-top" class="primary" data-t="＋ 新增步驟|＋ Add step"></button><button id="new-lesson" data-t="新一課|New lesson"></button></div></div>
+          <div id="flow-editor"></div><button id="add-step" class="primary" data-t="＋ 新增流程步驟|＋ Add step"></button>
+        </div>
+      </div>
+    </div>
+    <div id="admin-library" class="admin-section" hidden><div class="form-grid">
+      <div class="card"><h2 data-t="流程範本|Flow templates"></h2><div class="row nowrap"><input id="preset-name" data-ph="範本名稱|Template name" aria-label="Template name"><button id="save-preset" data-t="儲存目前流程|Save current flow"></button></div><div id="preset-list" class="item-list"></div></div>
+      <div class="card"><div class="card-heading"><h2 data-t="課堂歷史|Lesson history"></h2><button id="archive-lesson" data-t="封存目前課堂|Archive current lesson"></button></div><div id="history-list" class="item-list"></div></div>
+    </div></div>
+    <div id="admin-class" class="admin-section" hidden><div class="class-editor-grid">
+      <div class="card"><div class="card-heading"><h2 data-t="學生名單|Student roster"></h2><span id="roster-count" class="pill"></span></div><p class="muted" data-t="每行一人；可貼上試算表的「學號、姓名」兩欄。|One name per line; paste number/name columns from a spreadsheet."></p><textarea id="roster-input" rows="10" aria-label="Student roster"></textarea><div class="row"><button id="import-roster" class="primary" data-t="更新學生名單|Update roster"></button><label class="button" for="roster-file" data-t="讀取 CSV / TXT|Read CSV / TXT"></label><input type="file" id="roster-file" accept=".csv,.txt,text/plain,text/csv" hidden></div><p class="muted" data-t="相同姓名會依出現次序保留紀錄；移除學生前請備份。|Matching names retain records in occurrence order. Back up before removing students."></p></div>
+      <div class="card"><div class="card-heading"><h2 data-t="習作管理|Homework tasks"></h2><button id="view-homework" data-t="查看交收|View records"></button></div><div class="row nowrap"><input id="new-homework" data-ph="習作名稱|Task name" aria-label="New homework"><button id="add-homework" class="primary" data-t="新增|Add"></button></div><div id="homework-list" class="item-list"></div></div>
+    </div></div>
+    <div id="admin-backup" class="admin-section" hidden><div class="card save-panel">
+      <h2 data-t="儲存與備份|Storage & backup"></h2><div class="backup-grid">
+        <div><h3 data-t="在這台電腦繼續使用|Continue on this computer"></h3><p data-t="每次修改都會自動儲存在目前瀏覽器，前台即時更新。|Edits autosave in this browser and appear immediately in the lesson view."></p><p class="muted" data-t="清除瀏覽資料或更換電腦前，請先匯出備份。|Export a backup before clearing browser data or changing computers."></p></div>
+        <div><h3 data-t="帶到另一台電腦 / USB|Move to another computer / USB"></h3><button id="write-file" class="primary" data-t="連接 / 更新 USB HTML|Connect / update USB HTML"></button><p id="file-status" class="muted"></p><div class="row"><button id="export-json" data-t="匯出 JSON 備份|Export JSON backup"></button><label class="button" for="import-json" data-t="匯入備份|Import backup"></label><input id="import-json" type="file" accept=".json,application/json" hidden></div></div>
+      </div>
+      <details><summary data-t="儲存與隱私說明|Storage & privacy"></summary><p data-t="後台密碼只防誤觸，不會加密資料。HTML／JSON 備份含學生資料，請妥善保管，不要上傳到公開網站。瀏覽器可能要求重新授權 USB 寫入；取消授權不影響本機資料。|The password prevents accidental edits, not data access. Keep HTML/JSON backups private. Browsers may ask again for USB write permission; cancelling leaves local data intact."></p></details>
+    </div></div>
+    <div class="admin-actionbar"><div><p id="save-status" role="status"></p><small data-t="本機自動儲存 · USB 請另行更新|Local autosave · update USB separately"></small></div><div class="row"><button id="preview-lesson" data-t="預覽課堂|Preview lesson"></button><button id="save-local" class="primary" data-t="儲存課堂|Save lesson"></button><button id="export-html" data-t="下載離線 HTML|Download offline HTML"></button></div></div>
+  </div>
+</section>
 </main></div>
 <div id="toast" role="status" hidden></div>
 <dialog id="confirm-dialog"><form method="dialog"><h2 id="confirm-title"></h2><p id="confirm-text" class="prose"></p><div class="row end"><button value="cancel" data-t="取消|Cancel"></button><button value="ok" class="primary" data-t="確認|Confirm"></button></div></form></dialog>
