@@ -1077,6 +1077,7 @@ let appData;
                 if(fileWriteBusy||isPicking||!isAdminLoggedIn||currentClassKey!==importTarget)return;
                 const parsed = /\.html?$/i.test(file.name) ? new DOMParser().parseFromString(text, 'text/html').getElementById('embedded-data')?.textContent : text;
                 const decoded=JSON.parse(parsed);
+                if(decoded.rosterImportVersion===1){importSchoolRosters(decoded);return;}
                 if(decoded.workspaceVersion===1){importWholeBook(decoded);return;}
                 const imported = validateOriginalData(decoded);
                 if (!confirm(L('匯入會取代目前資料。確認後會先下載目前資料的 JSON 備份。', 'Import replaces current data. A safety JSON backup will be downloaded first.'))) return;

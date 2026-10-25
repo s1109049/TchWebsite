@@ -134,3 +134,10 @@ test('whole-book JSON imports restore all classes and malformed books do not cha
 test('replacing a roster after drawing resets its pool and exported data stays valid',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await open(page);await login(page);await roster(page,'Old A\nOld B');await page.locator('#btn-picker').click();await page.locator('#btn-pick-student').click();await expect(page.locator('#picker-remaining')).toHaveText('1');await page.locator('#btn-admin').click();await roster(page,'New A\nNew B\nNew C');expect(await page.evaluate(()=>validateClassBook(captureAllData()).classes[currentClassKey]._pickerRemaining)).toEqual(['New A','New B','New C']);await page.reload();await enter(page);await page.locator('#btn-picker').click();await expect(page.locator('#picker-remaining')).toHaveText('3');
 });
+test('roster-only import maps the same class to both subjects without replacing lesson or homework data',async({page})=>{
+ await open(page);await login(page);await page.locator('#edit-title').fill('保留課堂');await roster(page,'1\t學生甲');await page.locator('#new-hw-name').fill('保留習作');await page.locator('#btn-add-hw').click();await page.locator('#btn-homework').click();await page.locator('#hw-table-body button').first().click();await page.locator('#btn-admin').click();
+ const payload={rosterImportVersion:1,rosters:{S1D:['1 學生甲','2 學生乙'],S3B:['1 學生丙']}};
+ await page.locator('input[type=file]').setInputFiles({name:'rosters.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(payload))});await expect(page.locator('#file-save-status')).toContainText('已更新 4 個班科');await expect(page.locator('#edit-title')).toHaveValue('保留課堂');
+ expect(await page.evaluate(()=>appData.submissions['保留習作']['1 學生甲'])).toBe('submitted');await choose(page,'CL:S1D');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生甲','2 學生乙']);await choose(page,'公經社:S3B');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生丙']);
+ await page.reload();await choose(page,'中國歷史:S1D');await expect(page.locator('#display-title')).toHaveText('保留課堂');
+});

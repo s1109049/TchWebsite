@@ -1991,6 +1991,7 @@ button:disabled { cursor:not-allowed; opacity:.55; }
                 if(fileWriteBusy||isPicking||!isAdminLoggedIn||currentClassKey!==importTarget)return;
                 const parsed = /\.html?$/i.test(file.name) ? new DOMParser().parseFromString(text, 'text/html').getElementById('embedded-data')?.textContent : text;
                 const decoded=JSON.parse(parsed);
+                if(decoded.rosterImportVersion===1){importSchoolRosters(decoded);return;}
                 if(decoded.workspaceVersion===1){importWholeBook(decoded);return;}
                 const imported = validateOriginalData(decoded);
                 if (!confirm(L('匯入會取代目前資料。確認後會先下載目前資料的 JSON 備份。', 'Import replaces current data. A safety JSON backup will be downloaded first.'))) return;
@@ -2516,6 +2517,37 @@ function batchAddFlow() {
     });
     if(appData.lesson.flow.length+rows.length>500){alert('流程最多 500 個步驟。');return;}
     appData.lesson.flow.push(...rows);document.getElementById('batch-flow-text').value='';markDirty();renderFlowEditList();renderLessonTab();
+}
+// A roster-only import never replaces lesson plans, templates, or homework tasks.
+function importSchoolRosters(raw) {
+    if(!classBook||!raw.rosters||typeof raw.rosters!=='object')throw Error('rosters');
+    const updates=[];
+    for(const def of classDefinitions){
+        if(!Object.hasOwn(raw.rosters,def.className))continue;
+        const names=raw.rosters[def.className];
+        if(!Array.isArray(names)||!names.length||names.length>2000||!names.every(s=>typeof s==='string'&&/^\d+ \S/.test(s)))throw Error('roster');
+        const numbers=names.map(s=>s.split(' ')[0]);if(new Set(numbers).size!==numbers.length)throw Error('numbers');
+        updates.push({def,names});
+    }
+    if(!updates.length)throw Error('empty');
+    if(!confirm('將更新 '+updates.length+' 個班科的學生名單，保留課堂、範本、歷史及習作。先下載目前的完整備份，是否繼續？'))return;
+    downloadFile(JSON.stringify(captureAllData(),null,2),'before-roster-import.json','application/json');
+    for(const {def,names} of updates){
+        const data=classBook.classes[def.key];
+        // Normalize a pre-existing tab/multiple-space between number and name.
+        const canonical=s=>s.trim().replace(/^(\d+)\s+/, '$1 ');
+        for(const task of data.homeworks){
+            const old=data.submissions[task]||{},next={};
+            for(const name of names){
+                const match=Object.keys(old).find(k=>canonical(k)===canonical(name));
+                if(match!==undefined)next[name]=old[match];
+            }data.submissions[task]=next;
+        }
+        data.students=[...names];data._pickerRemaining=[...names];data._storage.revision++;
+    }
+    appData=classBook.classes[currentClassKey];markDirty();resetPickerHistory(false);
+    renderAdminTab();renderHomeworkTab();renderLessonTab();
+    setFileStatus('已更新 '+updates.length+' 個班科名單，課堂與習作保留。請儲存原檔。');
 }
 </script>
 
