@@ -1,7 +1,8 @@
 const {test,expect}=require('@playwright/test');
 const fs=require('node:fs/promises');
-async function login(page){await page.locator('#btn-admin').click();await expect(page.locator('#admin-login-card')).toBeVisible();await page.locator('#admin-password-input').fill('0926');await page.locator('#btn-login-unlock').click();await expect(page.locator('#admin-panel')).toBeVisible();}
-async function open(page){await page.route('https://fonts.**',r=>r.abort());await page.goto('/');}
+async function enter(page){if(await page.locator('#class-home').isVisible())await page.locator('[data-class-key="中國歷史:S1D"]').click();}
+async function login(page){await enter(page);await page.locator('#btn-admin').click();await expect(page.locator('#admin-login-card')).toBeVisible();await page.locator('#admin-password-input').fill('0926');await page.locator('#btn-login-unlock').click();await expect(page.locator('#admin-panel')).toBeVisible();}
+async function open(page){await page.route('https://fonts.**',r=>r.abort());await page.goto('/');await enter(page);}
 async function addStep(page,title='課堂活動',detail='說明'){
  await page.locator('#btn-add-step').click();await page.locator('.flow-title-input').last().fill(title);await page.locator('.flow-detail-input').last().fill(detail);
 }
@@ -29,7 +30,7 @@ test('an exported HTML opens locked and can still edit/save in a fresh storage c
  await open(page);await login(page);await addStep(page,'開啟後仍可編輯','</script><b>不是程式</b>');
  const download=page.waitForEvent('download');await page.locator('#btn-download-copy').click();const text=await fs.readFile(await (await download).path(),'utf8');
  const context=await browser.newContext(),fresh=await context.newPage();fresh.on('dialog',d=>d.accept());await context.route('https://**',r=>r.abort());await context.route('http://fresh.test/**',r=>r.fulfill({contentType:'text/html',body:text}));await fresh.goto('http://fresh.test/');
- await fresh.locator('#btn-admin').click();await expect(fresh.locator('#admin-login-card')).toBeVisible();await expect(fresh.locator('#admin-panel')).toBeHidden();await fresh.locator('#admin-password-input').fill('0926');await fresh.locator('#btn-login-unlock').click();await expect(fresh.locator('.flow-title-input')).toHaveValue('開啟後仍可編輯');await fresh.locator('.flow-title-input').fill('再次修改');await fresh.locator('#btn-lesson').click();await expect(fresh.locator('#display-flow-list')).toContainText('再次修改');await expect(fresh.locator('#display-flow-list')).toContainText('</script><b>不是程式</b>');await context.close();
+ await enter(fresh);await fresh.locator('#btn-admin').click();await expect(fresh.locator('#admin-login-card')).toBeVisible();await expect(fresh.locator('#admin-panel')).toBeHidden();await fresh.locator('#admin-password-input').fill('0926');await fresh.locator('#btn-login-unlock').click();await expect(fresh.locator('.flow-title-input')).toHaveValue('開啟後仍可編輯');await fresh.locator('.flow-title-input').fill('再次修改');await fresh.locator('#btn-lesson').click();await expect(fresh.locator('#display-flow-list')).toContainText('再次修改');await expect(fresh.locator('#display-flow-list')).toContainText('</script><b>不是程式</b>');await context.close();
 });
 test('both save buttons overwrite the same file, select only once and never download another HTML',async({page})=>{
  await setupMemoryFile(page);let downloads=0;page.on('download',()=>downloads++);await open(page);await login(page);await addStep(page,'第一次');await page.locator('#btn-save-lesson-content').click();await expect(page.locator('#file-save-status')).toContainText('已更新原檔');
@@ -70,7 +71,7 @@ test('wheel and claw animations disable re-entry and mode switches until a clear
 });
 test('language, timer, history and templates remain available in the original five tabs',async({page})=>{
  await open(page);await login(page);await addStep(page,'範本步驟');await page.locator('#preset-name-input').fill('教學範本');await page.locator('#btn-save-preset').click();await expect(page.locator('#preset-list-container')).toContainText('教學範本');await page.locator('#edit-title').fill('歷史課堂');await page.locator('#btn-archive-lesson').click();await page.locator('#btn-lesson').click();await page.locator('#btn-view-prev-lesson').click();await expect(page.locator('#prev-lesson-details')).toContainText('歷史課堂');
- await page.locator('#btn-timer').click();await page.locator('button[onclick="setTimerPreset(1)"]').click();await expect(page.locator('#timer-display')).toHaveText('01:00');await page.locator('#btn-timer-start').click();await expect(page.locator('#timer-display')).not.toHaveText('01:00');await page.locator('#btn-timer-pause').click();await page.locator('.lang-btn').click();await expect(page.locator('#txt-tab-lesson')).toContainText('Lesson');await page.locator('.lang-btn').click();await page.locator('#btn-picker').click();await expect(page.locator('[data-picker-mode="claw"]')).toContainText('夾公仔 /');
+ await page.locator('#btn-timer').click();await page.locator('button[onclick="setTimerPreset(1)"]').click();await expect(page.locator('#timer-display')).toHaveText('01:00');await page.locator('#btn-timer-start').click();await expect(page.locator('#timer-display')).not.toHaveText('01:00');await page.locator('#btn-timer-pause').click();await page.locator('button[onclick="toggleLanguage()"]').click();await expect(page.locator('#txt-tab-lesson')).toContainText('Lesson');await page.locator('button[onclick="toggleLanguage()"]').click();await page.locator('#btn-picker').click();await expect(page.locator('[data-picker-mode="claw"]')).toContainText('夾公仔 /');
  await expect(page.locator('main > section')).toHaveCount(5);
 });
 test('invalid imports preserve current content and the download fallback never pretends to overwrite',async({page})=>{
@@ -94,4 +95,42 @@ test('imports into both blank templates and personalized HTML receive separate i
  await page.locator('input[type=file]').setInputFiles({name:'class-b.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(imported))});await expect(page.locator('#edit-title')).toHaveValue('另一班');expect(await page.evaluate(()=>appData._storage.id)).not.toBe(previousId);await page.reload();await login(page);await expect(page.locator('.flow-title-input')).toHaveValue('另一班流程');
  const personalized=await page.evaluate(()=>buildHTMLSnapshot(appData));await page.route('http://personalized.test/**',r=>r.fulfill({contentType:'text/html',body:personalized}));await page.goto('http://personalized.test/');await login(page);
  imported.lesson.flow[0].title='第三班流程';await page.locator('input[type=file]').setInputFiles({name:'class-c.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(imported))});await expect(page.locator('.flow-title-input')).toHaveValue('第三班流程');await page.reload();await login(page);await expect(page.locator('.flow-title-input')).toHaveValue('第三班流程');
+});
+async function choose(page,key){if(!await page.locator('#class-home').isVisible())await page.locator('#class-home-button').click();await page.locator(`[data-class-key="${key}"]`).click();}
+test('all eleven class-subject combinations keep lessons, students and homework separate after reload',async({page})=>{
+ await page.route('https://**',r=>r.abort());await page.goto('/');await expect(page.locator('[data-class-key]')).toHaveCount(11);
+ const keys=await page.locator('[data-class-key]').evaluateAll(nodes=>nodes.map(n=>n.dataset.classKey));
+ expect(keys).toContain('中國歷史:S1D');expect(keys).toContain('CL:S1D');expect(keys).toContain('公經社:S3B');expect(keys).toContain('CL:S3B');
+ for(let i=0;i<keys.length;i++){
+  await choose(page,keys[i]);await page.locator('#btn-admin').click();await expect(page.locator('#admin-panel')).toBeHidden();await login(page);
+  await page.locator('#edit-title').fill('課堂-'+i);await addStep(page,'步驟-'+i);await roster(page,'學生-'+i);await page.locator('#new-hw-name').fill('功課-'+i);await page.locator('#btn-add-hw').click();
+ }
+ await page.reload();
+ for(let i=0;i<keys.length;i++){
+  await choose(page,keys[i]);await expect(page.locator('#display-title')).toHaveText('課堂-'+i);await expect(page.locator('#display-flow-list')).toContainText('步驟-'+i);
+  await page.locator('#btn-homework').click();await expect(page.locator('#hw-table-body')).toContainText('學生-'+i);await expect(page.locator('#hw-select')).toContainText('功課-'+i);
+  expect(await page.evaluate(()=>appData.students.length)).toBe(1);
+ }
+});
+test('the claw machine shows every remaining student and keeps the round when returning to a class',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await open(page);await login(page);const names=Array.from({length:35},(_,i)=>'學生'+String(i+1).padStart(2,'0'));await roster(page,names.join('\n'));await page.locator('#btn-picker').click();await page.locator('[data-picker-mode="claw"]').click();await expect(page.locator('.claw-toy')).toHaveCount(35);expect(await page.locator('.claw-toy > span').allTextContents()).toEqual(Array.from({length:35},(_,i)=>String(i+1).padStart(2,'0')));
+ expect((await page.locator('.claw-toy small').allTextContents()).sort()).toEqual([...names].sort());
+ await page.locator('#btn-pick-student').click();await expect(page.locator('#picker-remaining')).toHaveText('34');const winner=await page.locator('#picker-display').evaluate(e=>e.firstChild.nodeValue);
+ await choose(page,'CL:S1D');await expect(page.locator('#picker-remaining')).toHaveText('0');await choose(page,'中國歷史:S1D');await page.locator('#btn-picker').click();await page.locator('[data-picker-mode="claw"]').click();await expect(page.locator('.claw-toy')).toHaveCount(34);expect(await page.locator('.claw-toy small').allTextContents()).not.toContain(winner);
+ await page.reload();await enter(page);await page.locator('#btn-picker').click();await expect(page.locator('#picker-remaining')).toHaveText('34');
+});
+test('quick flow steps, duplication, reordering and pasted spreadsheet rows remain editable',async({page})=>{
+ await open(page);await login(page);await page.getByRole('button',{name:'回顧 5 分鐘',exact:true}).click();await expect(page.locator('.flow-title-input')).toHaveValue('課前回顧');await page.getByRole('button',{name:'複製步驟',exact:true}).click();await page.locator('.flow-title-input').last().fill('複製後修改');await page.getByRole('button',{name:'上移步驟',exact:true}).last().click();await expect(page.locator('.flow-title-input').first()).toHaveValue('複製後修改');
+ await page.locator('.flow-batch summary').click();await page.locator('#batch-flow-text').fill('10 分鐘\t活動一\t分組討論\n5 分鐘 | 總結 | 重點\n只填標題');await page.getByRole('button',{name:'加入以上步驟',exact:true}).click();await expect(page.locator('.flow-title-input')).toHaveCount(5);await page.locator('.flow-detail-input').nth(2).fill('即時修改');await page.locator('#btn-lesson').click();await expect(page.locator('#display-flow-list')).toContainText('即時修改');await page.reload();await login(page);await expect(page.locator('.flow-title-input').last()).toHaveValue('只填標題');
+});
+test('a complete HTML export restores multiple classes in a fresh browser',async({page,browser})=>{
+ await open(page);await login(page);await page.locator('#edit-title').fill('中史課');await choose(page,'CL:S1D');await login(page);await page.locator('#edit-title').fill('CL課');const pending=page.waitForEvent('download');await page.locator('#btn-download-copy').click();const content=await fs.readFile(await (await pending).path(),'utf8');
+ const context=await browser.newContext();await context.route('https://**',r=>r.abort());await context.route('http://book.test/**',r=>r.fulfill({contentType:'text/html',body:content}));const fresh=await context.newPage();await fresh.goto('http://book.test/');await expect(fresh.locator('[data-class-key]')).toHaveCount(11);await choose(fresh,'中國歷史:S1D');await expect(fresh.locator('#display-title')).toHaveText('中史課');await choose(fresh,'CL:S1D');await expect(fresh.locator('#display-title')).toHaveText('CL課');await context.close();
+});
+test('whole-book JSON imports restore all classes and malformed books do not change data',async({page})=>{
+ await open(page);await login(page);await page.locator('#edit-title').fill('必須保留');const book=await page.evaluate(()=>captureAllData());const bad=JSON.parse(JSON.stringify(book));delete bad.classes['CL:S1D'];await page.locator('input[type=file]').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(bad))});await expect(page.locator('#edit-title')).toHaveValue('必須保留');await expect(page.locator('#file-save-status')).toContainText('匯入失敗');
+ book.classes['CL:S1D'].lesson.title='整本復原';await page.locator('input[type=file]').setInputFiles({name:'all.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(book))});await expect(page.locator('#class-home')).toBeVisible();await choose(page,'CL:S1D');await expect(page.locator('#display-title')).toHaveText('整本復原');await page.reload();await choose(page,'CL:S1D');await expect(page.locator('#display-title')).toHaveText('整本復原');
+});
+test('replacing a roster after drawing resets its pool and exported data stays valid',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await open(page);await login(page);await roster(page,'Old A\nOld B');await page.locator('#btn-picker').click();await page.locator('#btn-pick-student').click();await expect(page.locator('#picker-remaining')).toHaveText('1');await page.locator('#btn-admin').click();await roster(page,'New A\nNew B\nNew C');expect(await page.evaluate(()=>validateClassBook(captureAllData()).classes[currentClassKey]._pickerRemaining)).toEqual(['New A','New B','New C']);await page.reload();await enter(page);await page.locator('#btn-picker').click();await expect(page.locator('#picker-remaining')).toHaveText('3');
 });

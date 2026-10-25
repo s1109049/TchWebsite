@@ -2,7 +2,7 @@ import {readFileSync,writeFileSync} from 'node:fs';
 let html=readFileSync('src/shell.html','utf8');
 const data=JSON.parse(readFileSync('src/default-data.json','utf8'));
 html=html.replace('/*__DATA__*/',()=>JSON.stringify(data,null,2).replace(/</g,'\\u003c'));
-const app=readFileSync('src/app.js','utf8')+'\n'+readFileSync('src/extensions.js','utf8');
+const app=readFileSync('src/app.js','utf8')+'\n'+readFileSync('src/extensions.js','utf8')+'\n'+readFileSync('src/classes.js','utf8');
 if(/<\/script/i.test(app))throw new Error('Unsafe script terminator');
 html=html.replace('/*__CSS__*/',()=>readFileSync('src/style.css','utf8'));
 html=html.replace('/*__APP__*/',()=>app);

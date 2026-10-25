@@ -7,6 +7,7 @@
     <style>/*__CSS__*/</style>
 </head>
 <body>
+<div id="class-home" hidden></div>
 
     <!-- 頂部未儲存紅條警告（僅在後台切換時顯示） -->
     <div id="unsaved-banner" style="display:none;">⚠️ 注意：課堂紀錄已變更！下課前請點擊「後台管理 ➔ 下載最新 HTML 檔」以帶走最新資料！</div>
@@ -14,7 +15,7 @@
     <!-- 頂部導覽列 -->
     <header>
         <div class="header-container">
-            <div class="logo-title">
+            <div class="logo-title"><button id="class-home-button" class="lang-btn" hidden>⌂ 選班</button><small id="current-class"></small>
                 🏫 <span id="txt-app-title">課堂管理系統</span>
             </div>
             <div class="header-controls">
@@ -283,7 +284,7 @@
 
                     <div style="margin-bottom: 18px;">
                         <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-flow">課堂流程步驟</label>
-                        <div id="edit-flow-container" style="margin-top: 10px;"></div>
+                        <div class="flow-shortcuts"><span>快速加入：</span><button type="button" class="btn btn-secondary" onclick="addQuickFlow('課前回顧',5)">回顧 5 分鐘</button><button type="button" class="btn btn-secondary" onclick="addQuickFlow('講解',15)">講解 15 分鐘</button><button type="button" class="btn btn-secondary" onclick="addQuickFlow('課堂練習',10)">練習 10 分鐘</button><button type="button" class="btn btn-secondary" onclick="addQuickFlow('總結',5)">總結 5 分鐘</button></div><details class="flow-batch"><summary>貼上多個流程步驟</summary><p>每行：時間 | 標題 | 詳情；亦可貼上試算表三欄。只貼標題也可以。</p><textarea id="batch-flow-text" rows="3" aria-label="批次流程"></textarea><button type="button" class="btn btn-secondary" onclick="batchAddFlow()">加入以上步驟</button></details><div id="edit-flow-container" style="margin-top: 10px;"></div>
                         <button onclick="addFlowStep()" class="btn btn-secondary" style="font-size: 16px; margin-top: 10px;" id="btn-add-step">➕ 新增流程步驟</button>
                     </div>
 

@@ -1,23 +1,260 @@
 {
-  "lang": "zh",
-  "lesson": {
-    "title": "",
-    "date": "",
-    "objectives": "",
-    "flow": [],
-    "announcement": "",
-    "materials": "",
-    "showAnnouncement": true,
-    "showMaterials": true
-  },
-  "historyLessons": [],
-  "flowPresets": [],
-  "students": [],
-  "homeworks": [],
-  "submissions": {},
-  "_storage": {
-    "id": "original-layout-template-v1",
-    "revision": 0,
-    "updatedAt": 0
+  "workspaceVersion": 1,
+  "id": "class-book-template-v1",
+  "revision": 0,
+  "classes": {
+    "中國歷史:S1D": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-中國歷史:S1D",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S1D": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S1D",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S2A": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S2A",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S2B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S2B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S2C": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S2C",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S3B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S3B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S3C": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S3C",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S3D": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S3D",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "公經社:S3A": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-公經社:S3A",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "公經社:S3B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-公經社:S3B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "公社:S4B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-公社:S4B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    }
   }
 }

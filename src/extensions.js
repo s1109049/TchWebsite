@@ -40,11 +40,18 @@ function validateOriginalData(raw) {
         if(records!==undefined&&(!records||typeof records!=='object'||Array.isArray(records)))throw new Error('records');
         for(const status of Object.values(records||{}))if(!['submitted','missing','late','redo'].includes(status))throw new Error('status');
     }
+    if(data._pickerRemaining!==undefined){
+        if(!Array.isArray(data._pickerRemaining))throw Error('picker');
+        const counts=new Map();data.students.forEach(s=>counts.set(s,(counts.get(s)||0)+1));
+        for(const name of data._pickerRemaining){if(!counts.get(name))throw Error('picker');counts.set(name,counts.get(name)-1);}
+    }
+    if(data._timerState&&(!Number.isSafeInteger(data._timerState.total)||data._timerState.total<=0||!Number.isSafeInteger(data._timerState.left)||data._timerState.left<0||data._timerState.left>data._timerState.total))throw Error('timer');
     return data;
 }
-function dataStorageKey(data=appData) {return storagePrefix+data._storage.id+':'+location.pathname;}
+function dataStorageKey(data=appData) {return storagePrefix+(classBook?classBook.id:data._storage.id)+':'+location.pathname;}
 function loadInitialData() {
     const raw=document.getElementById('embedded-data').textContent;
+    const decoded=JSON.parse(raw);if(decoded.workspaceVersion===1)return loadClassBook(decoded);
     let embedded;
     try {embedded=validateOriginalData(JSON.parse(raw));}
     catch {localRecoveryWarning=true;embedded={lang:'zh',lesson:{title:'',date:'',objectives:'',announcement:'',materials:'',flow:[]},historyLessons:[],flowPresets:[],students:[],homeworks:[],submissions:{}};}
@@ -75,6 +82,7 @@ function loadInitialData() {
     return embedded;
 }
 function persistLocalData() {
+    if(classBook){persistClassBook();return;}
     try {localStorage.setItem(dataStorageKey(),JSON.stringify(appData));localStorage.setItem(storageRootKey,appData._storage.id);localSaveFailed=false;}
     catch {localSaveFailed=true;setFileStatus(L('本機備份失敗，請先儲存原檔或下載副本，避免關閉後遺失。','Local backup failed. Save the original file or download a copy before closing.'),true);}
 }
@@ -99,6 +107,7 @@ function setFileStatus(message,error=false) {
 function applyExtensionLabels() {
     const labels={
         'btn-save-html':L('💾 儲存並更新原檔','💾 Save & update original'),
+        'btn-export-json':classBook?L('📄 匯出全部班科備份','📄 Back up all classes'):L('📄 匯出 JSON','📄 Export JSON'),
         'btn-download-copy':L('📥 下載副本','📥 Download copy'),
         'btn-reconnect':L('📂 重新選擇原檔','📂 Reconnect original'),
         'btn-import-json':L('📂 匯入舊 HTML / JSON','📂 Import old HTML / JSON'),
@@ -111,9 +120,11 @@ function applyExtensionLabels() {
     for(const button of document.querySelectorAll('[data-picker-mode]'))button.textContent=({slot:L('🎰 跑馬燈','🎰 Shuffle'),wheel:L('🎡 輪盤','🎡 Wheel'),claw:L('🧸 夾公仔','🧸 Claw machine')})[button.dataset.pickerMode];
 }
 function setSaveButtonsDisabled(value) {
+    document.getElementById('class-home-button').disabled=value||isPicking;
     for(const id of ['btn-save-html','btn-save-lesson-content','btn-download-copy','btn-reconnect'])document.getElementById(id).disabled=value;
 }
 function buildHTMLSnapshot(snapshot) {
+    if(classBook&&snapshot.workspaceVersion!==1)snapshot=captureAllData();
     const shell=pristineHTML.cloneNode(true);
     shell.querySelector('#embedded-data').textContent='\n'+safeOriginalJSON(snapshot)+'\n';
     shell.querySelector('#admin-panel').style.display='none';
@@ -169,7 +180,7 @@ async function chooseOriginalFile() {
     const dom=new DOMParser().parseFromString(await file.text(),'text/html');
     const script=dom.getElementById('embedded-data');
     if(!script)throw new Error('wrong-file');
-    validateOriginalData(JSON.parse(script.textContent));
+    const candidate=JSON.parse(script.textContent);if(candidate.workspaceVersion===1)validateClassBook(candidate);else validateOriginalData(candidate);
     if(!confirm(L('將用目前課堂及紀錄更新「'+handle.name+'」。請確認已匯入要保留的舊資料。是否連接此檔案？',
         'Current data will update "'+handle.name+'". Import any old data you want to keep first. Connect this file?'))){setFileStatus(L('已取消連接，沒有覆寫檔案。','Connection cancelled. No file was overwritten.'));return null;}
     await rememberFileHandle(handle);
@@ -196,6 +207,7 @@ function secureRandomIndex(length) {
 function setPickerControlsDisabled(disabled) {
     document.querySelectorAll('[data-picker-mode]').forEach(b=>b.disabled=disabled);
     document.getElementById('btn-reset-picker').disabled=disabled;
+    document.getElementById('class-home-button').disabled=disabled||fileWriteBusy;
 }
 function switchPickerMode(mode) {
     if(isPicking||!['slot','wheel','claw'].includes(mode))return;
@@ -207,7 +219,7 @@ function renderPickerMode() {
     document.getElementById('wheel-stage').hidden=pickerMode!=='wheel';document.getElementById('claw-stage').hidden=pickerMode!=='claw';
     for(const b of document.querySelectorAll('[data-picker-mode]')){const active=b.dataset.pickerMode===pickerMode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active);}
     if(!isPicking&&pickerMode==='wheel')drawStudentWheel(wheelFinish?.candidates||uncalledStudents,wheelFinish?.angle||0);
-    if(!isPicking&&pickerMode==='claw')prepareClawToys(uncalledStudents.slice(0,9));
+    if(!isPicking&&pickerMode==='claw')prepareClawToys(uncalledStudents);
 }
 function animatePicker(duration,draw) {
     return new Promise(resolve=>{
@@ -228,20 +240,25 @@ function drawStudentWheel(candidates,angle=0) {
 }
 function prepareClawToys(candidates) {
     const container=document.getElementById('claw-toys');container.replaceChildren();
-    candidates.slice(0,9).forEach((name,i)=>{
-        const toy=document.createElement('div');toy.className='claw-toy';toy.style.left=(16.67+(i%3)*33.33)+'%';toy.style.top=(65+Math.floor(i/3)*75)+'px';
-        const emoji=document.createElement('span');emoji.textContent=['🧸','🐰','🐼','🐻','🐱','🐶','🐸','🦊','🐨'][i];
+    const columns=Math.min(7,Math.max(3,Math.ceil(Math.sqrt(candidates.length)))) ;
+    const rows=Math.max(1,Math.ceil(candidates.length/columns));
+    container.style.setProperty('--toy-cols',columns);container.style.height=(rows*68+36)+'px';
+    candidates.forEach((name,i)=>{
+        const toy=document.createElement('div');toy.className='claw-toy';toy.style.left=((i%columns+.5)/columns*100)+'%';toy.style.top=(48+Math.floor(i/columns)*68)+'px';toy.style.width=(100/columns)+'%';
+        const emoji=document.createElement('span');emoji.textContent=String(i+1).padStart(2,'0');emoji.style.backgroundColor=['#fbcfe8','#fde68a','#a7f3d0','#bfdbfe','#ddd6fe','#fed7aa'][i%6];
         const label=document.createElement('small');label.textContent=name;toy.append(emoji,label);container.appendChild(toy);
     });
     const arm=document.getElementById('claw-arm');arm.style.left='50%';arm.style.setProperty('--depth','15px');arm.classList.remove('closed');document.getElementById('claw-prize').style.visibility='hidden';
 }
 async function animateClaw(selected,index,candidates,reduced) {
-    const shown=candidates.slice(0,9);let target=shown.indexOf(selected);
+    const shown=[...candidates];let target=index;
     if(target<0){shown[shown.length-1]=selected;target=shown.length-1;}
     prepareClawToys(shown);
     const toy=document.getElementById('claw-toys').children[target],arm=document.getElementById('claw-arm'),prize=document.getElementById('claw-prize');
     prize.textContent=toy.querySelector('span').textContent;
-    const x=16.67+(target%3)*33.33,depth=35+Math.floor(target/3)*75;
+    const columns=Math.min(7,Math.max(3,Math.ceil(Math.sqrt(shown.length)))) ;
+    const x=(target%columns+.5)/columns*100,depth=25+Math.floor(target/columns)*68;
+    toy.scrollIntoView({block:'nearest',inline:'nearest'});
     await animatePicker(reduced?0:4200,p=>{
         let left=x,d=15;
         if(p<.22){const t=p/.22;left=50+(x-50)*(1-Math.pow(1-t,3));}

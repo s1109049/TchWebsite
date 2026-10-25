@@ -265,9 +265,37 @@ button:disabled { cursor:not-allowed; opacity:.55; }
 @media(prefers-reduced-motion:reduce) {
     .picker-display-card.rolling,.picker-display-card.winner-celebrate,.confetti-particle { animation:none !important; }
 }
+/* Class selection is outside the existing five-page classroom. */
+#class-home { width:min(1200px,100%); margin:auto; padding:38px 24px; }
+#class-home h1 { color:#4338ca; font-size:34px; margin-bottom:12px; }
+#class-home > p { color:#64748b; margin-bottom:28px; }
+.class-subject h2 { color:#4338ca; font-size:25px; margin-bottom:14px; }
+.class-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; }
+.class-choice { text-align:left; padding:20px; border:2px solid #c7d2fe; background:#eef2ff; border-radius:16px; cursor:pointer; color:#312e81; }
+.class-choice:hover { background:#e0e7ff; border-color:#818cf8; }
+.class-choice strong { display:block; font-size:30px; }
+.class-choice span { display:block; font-size:16px; margin-top:6px; }
+#current-class { font-size:18px; background:#ffffff25; padding:4px 10px; border-radius:8px; }
+.flow-shortcuts { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:12px 0; }
+.flow-shortcuts .btn { padding:6px 10px; font-size:16px; }
+.flow-batch { font-size:17px; margin:12px 0; }
+.flow-edit-row { flex-wrap:wrap; padding:12px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; }
+.flow-edit-row .flow-detail-input { flex:1 1 280px; }
+.flow-edit-row .btn { padding:6px 10px; font-size:16px; }
+.claw-playfield { height:auto; max-height:520px; overflow:auto; }
+#claw-toys { position:relative; min-height:120px; }
+#claw-arm { pointer-events:none; }
+.claw-toy small { white-space:normal; font-size:12px; line-height:1.2; }
+.claw-toy > span { border-radius:50%; background:#fbcfe8; width:38px; height:38px; margin:auto; border:2px solid #f472b6; font-size:27px; }
+@media(max-width:600px){#class-home{padding:24px 14px}.class-grid{grid-template-columns:1fr 1fr}.class-choice{padding:14px}.class-choice strong{font-size:24px}#current-class{font-size:15px}}
+/* Keep the original dirty banner from covering the sticky navigation. */
+#unsaved-banner { position:static; }
+.claw-toy > span { font-size:18px; font-weight:900; line-height:34px; color:#831843; }
+#claw-prize { width:36px; height:36px; border:2px solid #f472b6; border-radius:50%; background:#fbcfe8; font-size:18px; font-weight:900; line-height:32px; color:#831843; }
 </style>
 </head>
 <body>
+<div id="class-home" hidden></div>
 
     <!-- 頂部未儲存紅條警告（僅在後台切換時顯示） -->
     <div id="unsaved-banner" style="display:none;">⚠️ 注意：課堂紀錄已變更！下課前請點擊「後台管理 ➔ 下載最新 HTML 檔」以帶走最新資料！</div>
@@ -275,7 +303,7 @@ button:disabled { cursor:not-allowed; opacity:.55; }
     <!-- 頂部導覽列 -->
     <header>
         <div class="header-container">
-            <div class="logo-title">
+            <div class="logo-title"><button id="class-home-button" class="lang-btn" hidden>⌂ 選班</button><small id="current-class"></small>
                 🏫 <span id="txt-app-title">課堂管理系統</span>
             </div>
             <div class="header-controls">
@@ -544,7 +572,7 @@ button:disabled { cursor:not-allowed; opacity:.55; }
 
                     <div style="margin-bottom: 18px;">
                         <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-flow">課堂流程步驟</label>
-                        <div id="edit-flow-container" style="margin-top: 10px;"></div>
+                        <div class="flow-shortcuts"><span>快速加入：</span><button type="button" class="btn btn-secondary" onclick="addQuickFlow('課前回顧',5)">回顧 5 分鐘</button><button type="button" class="btn btn-secondary" onclick="addQuickFlow('講解',15)">講解 15 分鐘</button><button type="button" class="btn btn-secondary" onclick="addQuickFlow('課堂練習',10)">練習 10 分鐘</button><button type="button" class="btn btn-secondary" onclick="addQuickFlow('總結',5)">總結 5 分鐘</button></div><details class="flow-batch"><summary>貼上多個流程步驟</summary><p>每行：時間 | 標題 | 詳情；亦可貼上試算表三欄。只貼標題也可以。</p><textarea id="batch-flow-text" rows="3" aria-label="批次流程"></textarea><button type="button" class="btn btn-secondary" onclick="batchAddFlow()">加入以上步驟</button></details><div id="edit-flow-container" style="margin-top: 10px;"></div>
                         <button onclick="addFlowStep()" class="btn btn-secondary" style="font-size: 16px; margin-top: 10px;" id="btn-add-step">➕ 新增流程步驟</button>
                     </div>
 
@@ -624,26 +652,263 @@ button:disabled { cursor:not-allowed; opacity:.55; }
 
     <!-- 📦 嵌入式 JSON 資料庫 -->
     <script id="embedded-data" type="application/json">{
-  "lang": "zh",
-  "lesson": {
-    "title": "",
-    "date": "",
-    "objectives": "",
-    "flow": [],
-    "announcement": "",
-    "materials": "",
-    "showAnnouncement": true,
-    "showMaterials": true
-  },
-  "historyLessons": [],
-  "flowPresets": [],
-  "students": [],
-  "homeworks": [],
-  "submissions": {},
-  "_storage": {
-    "id": "original-layout-template-v1",
-    "revision": 0,
-    "updatedAt": 0
+  "workspaceVersion": 1,
+  "id": "class-book-template-v1",
+  "revision": 0,
+  "classes": {
+    "中國歷史:S1D": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-中國歷史:S1D",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S1D": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S1D",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S2A": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S2A",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S2B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S2B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S2C": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S2C",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S3B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S3B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S3C": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S3C",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S3D": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S3D",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "公經社:S3A": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-公經社:S3A",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "公經社:S3B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-公經社:S3B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "公社:S4B": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-公社:S4B",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    }
   }
 }</script>
 
@@ -654,6 +919,8 @@ button:disabled { cursor:not-allowed; opacity:.55; }
         let soundEnabled = true;
         const pristineHTML = document.documentElement.cloneNode(true);
         const storagePrefix = 'tch-original-repair-v1:';
+        const classDefinitions = [{"key": "中國歷史:S1D", "className": "S1D", "subject": "中國歷史"}, {"key": "CL:S1D", "className": "S1D", "subject": "CL"}, {"key": "CL:S2A", "className": "S2A", "subject": "CL"}, {"key": "CL:S2B", "className": "S2B", "subject": "CL"}, {"key": "CL:S2C", "className": "S2C", "subject": "CL"}, {"key": "CL:S3B", "className": "S3B", "subject": "CL"}, {"key": "CL:S3C", "className": "S3C", "subject": "CL"}, {"key": "CL:S3D", "className": "S3D", "subject": "CL"}, {"key": "公經社:S3A", "className": "S3A", "subject": "公經社"}, {"key": "公經社:S3B", "className": "S3B", "subject": "公經社"}, {"key": "公社:S4B", "className": "S4B", "subject": "公社"}];
+        let classBook=null,currentClassKey=null;
         let originalFileHandle = null, fileHandleReady = Promise.resolve(), fileWriteBusy = false;
         let lessonEditorReady = false, pickerMode = 'slot', wheelFinish = null;
         let localSaveFailed = false, localRecoveryWarning = false, templateDocument = false, storageRootKey = '';
@@ -1224,9 +1491,10 @@ button:disabled { cursor:not-allowed; opacity:.55; }
             }
         }
 
-        function resetPickerHistory() {
+        function resetPickerHistory(reset=true) {
             if (isPicking) return;
-            uncalledStudents=[...appData.students];wheelFinish=null;
+            uncalledStudents=!reset&&Array.isArray(appData._pickerRemaining)?[...appData._pickerRemaining]:[...appData.students];
+            if(reset){appData._pickerRemaining=[...uncalledStudents];markDirty();}wheelFinish=null;
             const display=document.getElementById('picker-display');display.className='picker-display-card';
             display.textContent=L('準備抽點','Ready');
             updatePickerCount();renderPickerMode();
@@ -1253,6 +1521,7 @@ button:disabled { cursor:not-allowed; opacity:.55; }
                 else if(pickerMode==='claw') await animateClaw(selected,index,candidates,reduced);
                 else await animatePicker(reduced?0:2400,()=>{display.textContent=candidates[secureRandomIndex(candidates.length)];});
                 uncalledStudents.splice(index,1);
+                appData._pickerRemaining=[...uncalledStudents];markDirty();
                 display.textContent=selected;display.className='picker-display-card winner-celebrate';
                 if (pickerMode==='wheel') wheelFinish={candidates,angle};
                 playWinFanfare();triggerConfettiBurst();
@@ -1688,12 +1957,13 @@ button:disabled { cursor:not-allowed; opacity:.55; }
                     await originalFileHandle.requestPermission(permission) !== 'granted') {
                     throw new Error('permission');
                 }
-                const snapshot = JSON.parse(JSON.stringify(appData));
+                const snapshot = captureAllData();
+                const writtenRevision = classBook ? classBook.revision : appData._storage.revision;
                 const stream = await originalFileHandle.createWritable();
                 try { await stream.write(buildHTMLSnapshot(snapshot)); await stream.close(); }
                 catch (error) { try { await stream.abort(); } catch {} throw error; }
                 await rememberFileHandle(originalFileHandle);
-                if (appData._storage.revision === snapshot._storage.revision) clearDirty();
+                if ((classBook ? classBook.revision : appData._storage.revision) === writtenRevision) clearDirty();
                 setFileStatus(L('已更新原檔：', 'Original file updated: ') + originalFileHandle.name +
                     (isDirty ? L('；寫入期間有新修改，請再按儲存。','; more edits were made during writing. Save again.') : ' ✓'));
             } catch (error) {
@@ -1707,7 +1977,7 @@ button:disabled { cursor:not-allowed; opacity:.55; }
         function exportDataJson() {
             if (!isAdminLoggedIn) return;
             syncAllInputsToData();
-            downloadFile(JSON.stringify(appData, null, 2), 'data.json', 'application/json;charset=utf-8');
+            downloadFile(JSON.stringify(captureAllData(), null, 2), 'data.json', 'application/json;charset=utf-8');
             setFileStatus(L('已產生 JSON 下載，請確認已存妥；原 HTML 尚未因此更新。','JSON download requested. Check the download; this does not update the original HTML.'));
         }
         async function importDataJson(event) {
@@ -1716,11 +1986,15 @@ button:disabled { cursor:not-allowed; opacity:.55; }
             if (!file || !isAdminLoggedIn || fileWriteBusy || isPicking) return;
             try {
                 if (file.size > 20*1024*1024) throw new Error('size');
+                const importTarget=currentClassKey;
                 const text = await file.text();
+                if(fileWriteBusy||isPicking||!isAdminLoggedIn||currentClassKey!==importTarget)return;
                 const parsed = /\.html?$/i.test(file.name) ? new DOMParser().parseFromString(text, 'text/html').getElementById('embedded-data')?.textContent : text;
-                const imported = validateOriginalData(JSON.parse(parsed));
+                const decoded=JSON.parse(parsed);
+                if(decoded.workspaceVersion===1){importWholeBook(decoded);return;}
+                const imported = validateOriginalData(decoded);
                 if (!confirm(L('匯入會取代目前資料。確認後會先下載目前資料的 JSON 備份。', 'Import replaces current data. A safety JSON backup will be downloaded first.'))) return;
-                downloadFile(JSON.stringify(appData,null,2),'before-import-data.json','application/json');
+                downloadFile(JSON.stringify(captureAllData(),null,2),'before-import-data.json','application/json');
                 const metadata = {...appData._storage,id:newStorageId()};
                 appData = imported;
                 appData._storage = metadata;
@@ -1751,13 +2025,20 @@ button:disabled { cursor:not-allowed; opacity:.55; }
                 });
                 const remove=document.createElement('button');remove.textContent='🗑️';remove.className='btn btn-secondary';
                 remove.style.cssText='padding:6px 14px;color:#dc2626;';remove.setAttribute('aria-label',L('刪除步驟','Delete step'));
-                remove.onclick=()=>removeFlowStep(index);row.appendChild(remove);container.appendChild(row);
+                remove.onclick=()=>removeFlowStep(index);row.appendChild(remove);
+                for(const [label,action] of [['↑',()=>moveFlowStep(index,-1)],['↓',()=>moveFlowStep(index,1)],['複製',()=>duplicateFlowStep(index)]]){
+                    const b=document.createElement('button');b.className='btn btn-secondary';b.textContent=label;b.type='button';b.onclick=action;b.setAttribute('aria-label',label==='複製'?'複製步驟':label==='↑'?'上移步驟':'下移步驟');
+                    b.disabled=label==='↑'?index===0:label==='↓'?index===appData.lesson.flow.length-1:false;row.appendChild(b);
+                }
+                row.classList.add('flow-edit-row');container.appendChild(row);
             });
         }
         function addFlowStep() {
             if (!isAdminLoggedIn) return;
+            if(appData.lesson.flow.length>=500){alert('流程最多 500 個步驟。');return;}
             appData.lesson.flow.push({time:'',title:'',detail:''});
             markDirty();renderFlowEditList();renderLessonTab();
+            document.querySelectorAll('.flow-title-input')[appData.lesson.flow.length-1]?.focus();
         }
         function removeFlowStep(index) {
             if (!isAdminLoggedIn) return;
@@ -1771,6 +2052,7 @@ button:disabled { cursor:not-allowed; opacity:.55; }
             if (names.length > 0 && confirm(appData.lang === 'zh' ? `確定匯入 ${names.length} 位學生？` : `Import ${names.length} students?`)) {
                 appData.students = names;
                 uncalledStudents = [...names];
+                appData._pickerRemaining=[...names];
                 markDirty();
                 renderAdminStudentList();
                 updatePickerCount();
@@ -1833,9 +2115,10 @@ button:disabled { cursor:not-allowed; opacity:.55; }
             document.getElementById('admin-login-card').style.display='block';
             document.getElementById('admin-password-input').value='';
             document.getElementById('login-error').style.display='none';
-            wireLessonFields();resetPickerHistory();
+            wireLessonFields();resetPickerHistory(false);
             applyLanguageUI();renderLessonTab();updateTimerDisplay();switchTab('lesson');
             fileHandleReady=restoreFileHandle();
+            initializeClassHome();
             if(localRecoveryWarning||localSaveFailed)setFileStatus(L('本機備份無法使用；目前顯示 HTML 內的資料，請先匯出備份。','Local backup unavailable. The HTML data is shown; export a backup.'),true);
         };
 
@@ -1881,11 +2164,18 @@ function validateOriginalData(raw) {
         if(records!==undefined&&(!records||typeof records!=='object'||Array.isArray(records)))throw new Error('records');
         for(const status of Object.values(records||{}))if(!['submitted','missing','late','redo'].includes(status))throw new Error('status');
     }
+    if(data._pickerRemaining!==undefined){
+        if(!Array.isArray(data._pickerRemaining))throw Error('picker');
+        const counts=new Map();data.students.forEach(s=>counts.set(s,(counts.get(s)||0)+1));
+        for(const name of data._pickerRemaining){if(!counts.get(name))throw Error('picker');counts.set(name,counts.get(name)-1);}
+    }
+    if(data._timerState&&(!Number.isSafeInteger(data._timerState.total)||data._timerState.total<=0||!Number.isSafeInteger(data._timerState.left)||data._timerState.left<0||data._timerState.left>data._timerState.total))throw Error('timer');
     return data;
 }
-function dataStorageKey(data=appData) {return storagePrefix+data._storage.id+':'+location.pathname;}
+function dataStorageKey(data=appData) {return storagePrefix+(classBook?classBook.id:data._storage.id)+':'+location.pathname;}
 function loadInitialData() {
     const raw=document.getElementById('embedded-data').textContent;
+    const decoded=JSON.parse(raw);if(decoded.workspaceVersion===1)return loadClassBook(decoded);
     let embedded;
     try {embedded=validateOriginalData(JSON.parse(raw));}
     catch {localRecoveryWarning=true;embedded={lang:'zh',lesson:{title:'',date:'',objectives:'',announcement:'',materials:'',flow:[]},historyLessons:[],flowPresets:[],students:[],homeworks:[],submissions:{}};}
@@ -1916,6 +2206,7 @@ function loadInitialData() {
     return embedded;
 }
 function persistLocalData() {
+    if(classBook){persistClassBook();return;}
     try {localStorage.setItem(dataStorageKey(),JSON.stringify(appData));localStorage.setItem(storageRootKey,appData._storage.id);localSaveFailed=false;}
     catch {localSaveFailed=true;setFileStatus(L('本機備份失敗，請先儲存原檔或下載副本，避免關閉後遺失。','Local backup failed. Save the original file or download a copy before closing.'),true);}
 }
@@ -1940,6 +2231,7 @@ function setFileStatus(message,error=false) {
 function applyExtensionLabels() {
     const labels={
         'btn-save-html':L('💾 儲存並更新原檔','💾 Save & update original'),
+        'btn-export-json':classBook?L('📄 匯出全部班科備份','📄 Back up all classes'):L('📄 匯出 JSON','📄 Export JSON'),
         'btn-download-copy':L('📥 下載副本','📥 Download copy'),
         'btn-reconnect':L('📂 重新選擇原檔','📂 Reconnect original'),
         'btn-import-json':L('📂 匯入舊 HTML / JSON','📂 Import old HTML / JSON'),
@@ -1952,9 +2244,11 @@ function applyExtensionLabels() {
     for(const button of document.querySelectorAll('[data-picker-mode]'))button.textContent=({slot:L('🎰 跑馬燈','🎰 Shuffle'),wheel:L('🎡 輪盤','🎡 Wheel'),claw:L('🧸 夾公仔','🧸 Claw machine')})[button.dataset.pickerMode];
 }
 function setSaveButtonsDisabled(value) {
+    document.getElementById('class-home-button').disabled=value||isPicking;
     for(const id of ['btn-save-html','btn-save-lesson-content','btn-download-copy','btn-reconnect'])document.getElementById(id).disabled=value;
 }
 function buildHTMLSnapshot(snapshot) {
+    if(classBook&&snapshot.workspaceVersion!==1)snapshot=captureAllData();
     const shell=pristineHTML.cloneNode(true);
     shell.querySelector('#embedded-data').textContent='\n'+safeOriginalJSON(snapshot)+'\n';
     shell.querySelector('#admin-panel').style.display='none';
@@ -2010,7 +2304,7 @@ async function chooseOriginalFile() {
     const dom=new DOMParser().parseFromString(await file.text(),'text/html');
     const script=dom.getElementById('embedded-data');
     if(!script)throw new Error('wrong-file');
-    validateOriginalData(JSON.parse(script.textContent));
+    const candidate=JSON.parse(script.textContent);if(candidate.workspaceVersion===1)validateClassBook(candidate);else validateOriginalData(candidate);
     if(!confirm(L('將用目前課堂及紀錄更新「'+handle.name+'」。請確認已匯入要保留的舊資料。是否連接此檔案？',
         'Current data will update "'+handle.name+'". Import any old data you want to keep first. Connect this file?'))){setFileStatus(L('已取消連接，沒有覆寫檔案。','Connection cancelled. No file was overwritten.'));return null;}
     await rememberFileHandle(handle);
@@ -2037,6 +2331,7 @@ function secureRandomIndex(length) {
 function setPickerControlsDisabled(disabled) {
     document.querySelectorAll('[data-picker-mode]').forEach(b=>b.disabled=disabled);
     document.getElementById('btn-reset-picker').disabled=disabled;
+    document.getElementById('class-home-button').disabled=disabled||fileWriteBusy;
 }
 function switchPickerMode(mode) {
     if(isPicking||!['slot','wheel','claw'].includes(mode))return;
@@ -2048,7 +2343,7 @@ function renderPickerMode() {
     document.getElementById('wheel-stage').hidden=pickerMode!=='wheel';document.getElementById('claw-stage').hidden=pickerMode!=='claw';
     for(const b of document.querySelectorAll('[data-picker-mode]')){const active=b.dataset.pickerMode===pickerMode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active);}
     if(!isPicking&&pickerMode==='wheel')drawStudentWheel(wheelFinish?.candidates||uncalledStudents,wheelFinish?.angle||0);
-    if(!isPicking&&pickerMode==='claw')prepareClawToys(uncalledStudents.slice(0,9));
+    if(!isPicking&&pickerMode==='claw')prepareClawToys(uncalledStudents);
 }
 function animatePicker(duration,draw) {
     return new Promise(resolve=>{
@@ -2069,20 +2364,25 @@ function drawStudentWheel(candidates,angle=0) {
 }
 function prepareClawToys(candidates) {
     const container=document.getElementById('claw-toys');container.replaceChildren();
-    candidates.slice(0,9).forEach((name,i)=>{
-        const toy=document.createElement('div');toy.className='claw-toy';toy.style.left=(16.67+(i%3)*33.33)+'%';toy.style.top=(65+Math.floor(i/3)*75)+'px';
-        const emoji=document.createElement('span');emoji.textContent=['🧸','🐰','🐼','🐻','🐱','🐶','🐸','🦊','🐨'][i];
+    const columns=Math.min(7,Math.max(3,Math.ceil(Math.sqrt(candidates.length)))) ;
+    const rows=Math.max(1,Math.ceil(candidates.length/columns));
+    container.style.setProperty('--toy-cols',columns);container.style.height=(rows*68+36)+'px';
+    candidates.forEach((name,i)=>{
+        const toy=document.createElement('div');toy.className='claw-toy';toy.style.left=((i%columns+.5)/columns*100)+'%';toy.style.top=(48+Math.floor(i/columns)*68)+'px';toy.style.width=(100/columns)+'%';
+        const emoji=document.createElement('span');emoji.textContent=String(i+1).padStart(2,'0');emoji.style.backgroundColor=['#fbcfe8','#fde68a','#a7f3d0','#bfdbfe','#ddd6fe','#fed7aa'][i%6];
         const label=document.createElement('small');label.textContent=name;toy.append(emoji,label);container.appendChild(toy);
     });
     const arm=document.getElementById('claw-arm');arm.style.left='50%';arm.style.setProperty('--depth','15px');arm.classList.remove('closed');document.getElementById('claw-prize').style.visibility='hidden';
 }
 async function animateClaw(selected,index,candidates,reduced) {
-    const shown=candidates.slice(0,9);let target=shown.indexOf(selected);
+    const shown=[...candidates];let target=index;
     if(target<0){shown[shown.length-1]=selected;target=shown.length-1;}
     prepareClawToys(shown);
     const toy=document.getElementById('claw-toys').children[target],arm=document.getElementById('claw-arm'),prize=document.getElementById('claw-prize');
     prize.textContent=toy.querySelector('span').textContent;
-    const x=16.67+(target%3)*33.33,depth=35+Math.floor(target/3)*75;
+    const columns=Math.min(7,Math.max(3,Math.ceil(Math.sqrt(shown.length)))) ;
+    const x=(target%columns+.5)/columns*100,depth=25+Math.floor(target/columns)*68;
+    toy.scrollIntoView({block:'nearest',inline:'nearest'});
     await animatePicker(reduced?0:4200,p=>{
         let left=x,d=15;
         if(p<.22){const t=p/.22;left=50+(x-50)*(1-Math.pow(1-t,3));}
@@ -2093,6 +2393,129 @@ async function animateClaw(selected,index,candidates,reduced) {
         arm.style.left=left+'%';arm.style.setProperty('--depth',d+'px');
         if(p>=.48){arm.classList.add('closed');prize.style.visibility='visible';toy.style.opacity='0';}
     });
+}
+
+function validateClassBook(raw) {
+    if(!raw||raw.workspaceVersion!==1||typeof raw.id!=='string'||!Number.isSafeInteger(raw.revision)||raw.revision<0||!raw.classes)throw Error('workspace');
+    const copy=JSON.parse(JSON.stringify(raw));
+    if(Object.keys(copy.classes).length!==classDefinitions.length)throw Error('classes');
+    for(const def of classDefinitions){
+        const data=validateOriginalData(copy.classes[def.key]);
+        data._storage={id:typeof data._storage?.id==='string'?data._storage.id:newStorageId(),revision:Number.isSafeInteger(data._storage?.revision)?data._storage.revision:0,updatedAt:Number.isFinite(data._storage?.updatedAt)?data._storage.updatedAt:0};
+        if(data._pickerRemaining!==undefined){
+            if(!Array.isArray(data._pickerRemaining))throw Error('picker');
+            const counts=new Map();data.students.forEach(s=>counts.set(s,(counts.get(s)||0)+1));
+            for(const name of data._pickerRemaining){if(!counts.get(name))throw Error('picker');counts.set(name,counts.get(name)-1);}
+        }
+        if(data._timerState&&(!Number.isSafeInteger(data._timerState.total)||data._timerState.total<=0||!Number.isSafeInteger(data._timerState.left)||data._timerState.left<0||data._timerState.left>data._timerState.total))throw Error('timer');
+        copy.classes[def.key]=data;
+    }
+    return copy;
+}
+function loadClassBook(raw) {
+    const embedded=validateClassBook(raw);
+    storageRootKey=storagePrefix+'book-active:'+embedded.id+':'+location.pathname;
+    try {
+        const id=localStorage.getItem(storageRootKey)||embedded.id;
+        const text=localStorage.getItem(storagePrefix+id+':'+location.pathname);
+        if(text){const cached=validateClassBook(JSON.parse(text));if(cached.id===id&&(id!==embedded.id||cached.revision>embedded.revision)){classBook=cached;isDirty=true;}}
+    }catch{localRecoveryWarning=true;}
+    if(!classBook){classBook=embedded;if(classBook.id==='class-book-template-v1')classBook.id=newStorageId();}
+    currentClassKey=null;
+    return classBook.classes[classDefinitions[0].key];
+}
+function captureAllData() {
+    if(classBook&&currentClassKey){appData._timerState={total:timerTotalSeconds,left:timerRemainingSeconds};classBook.classes[currentClassKey]=appData;}
+    return JSON.parse(JSON.stringify(classBook||appData));
+}
+function persistClassBook() {
+    if(currentClassKey)classBook.classes[currentClassKey]=appData;
+    classBook.revision++;
+    try{localStorage.setItem(dataStorageKey(),JSON.stringify(classBook));localStorage.setItem(storageRootKey,classBook.id);localSaveFailed=false;}
+    catch{localSaveFailed=true;setFileStatus(L('本機儲存失敗，請立即匯出全班別備份。','Local save failed. Export a full backup now.'),true);}
+}
+function initializeClassHome() {
+    if(!classBook)return;
+    const home=document.getElementById('class-home');home.replaceChildren();
+    const title=document.createElement('h1');title.textContent='課堂管理系統 · 選擇班別';home.appendChild(title);
+    const note=document.createElement('p');note.textContent='按科目及班別進入；同班不同科的資料分開保存。';home.appendChild(note);
+    for(const subject of [...new Set(classDefinitions.map(d=>d.subject))]){
+        const group=document.createElement('div');group.className='class-subject card';
+        const h=document.createElement('h2');h.textContent=subject;group.appendChild(h);
+        const grid=document.createElement('div');grid.className='class-grid';
+        for(const def of classDefinitions.filter(d=>d.subject===subject)){
+            const b=document.createElement('button');b.className='class-choice';b.dataset.classKey=def.key;
+            const strong=document.createElement('strong');strong.textContent=def.className;
+            const detail=document.createElement('span');const d=classBook.classes[def.key];detail.textContent=`${subject} · ${d.students.length} 位學生 · ${d.lesson.flow.length} 個流程步驟`;
+            b.append(strong,detail);b.onclick=()=>selectClass(def.key);grid.appendChild(b);
+        }group.appendChild(grid);home.appendChild(group);
+    }
+    showClassHome();
+    document.getElementById('class-home-button').onclick=()=>showClassHome();
+    document.getElementById('timer-task-input').addEventListener('input',()=>{if(currentClassKey){appData._timerTask=document.getElementById('timer-task-input').value;markDirty();}});
+}
+function showClassHome() {
+    if(!classBook||isPicking||fileWriteBusy)return;
+    if(currentClassKey){syncAllInputsToData();classBook.classes[currentClassKey]=appData;}
+    if(currentClassKey){appData._timerState={total:timerTotalSeconds,left:timerRemainingSeconds};persistClassBook();}
+    pauseTimer();
+    document.getElementById('class-home').hidden=false;
+    document.querySelector('header').hidden=true;document.querySelector('main').hidden=true;
+    document.getElementById('unsaved-banner').style.display='none';
+    // Refresh counts without duplicating event listeners.
+    document.querySelectorAll('[data-class-key]').forEach(b=>{const d=classBook.classes[b.dataset.classKey];const def=classDefinitions.find(c=>c.key===b.dataset.classKey);b.querySelector('span').textContent=`${def.subject} · ${d.students.length} 位學生 · ${d.lesson.flow.length} 個流程步驟`;});
+}
+function selectClass(key) {
+    if(!classBook||!classBook.classes[key]||isPicking||fileWriteBusy)return;
+    if(currentClassKey){syncAllInputsToData();appData._timerState={total:timerTotalSeconds,left:timerRemainingSeconds};classBook.classes[currentClassKey]=appData;}
+    currentClassKey=key;appData=classBook.classes[key];
+    isAdminLoggedIn=false;lessonEditorReady=false;
+    document.getElementById('admin-panel').style.display='none';document.getElementById('admin-login-card').style.display='block';
+    document.getElementById('admin-password-input').value='';document.getElementById('login-error').style.display='none';
+    document.getElementById('batch-flow-text').value='';
+    document.getElementById('import-students-text').value='';document.getElementById('new-hw-name').value='';document.getElementById('preset-name-input').value='';
+    document.getElementById('prev-lesson-card').style.display='none';
+    pauseTimer();timerTotalSeconds=appData._timerState?.total||300;timerRemainingSeconds=appData._timerState?.left??timerTotalSeconds;updateTimerDisplay();document.getElementById('timer-task-input').value=appData._timerTask||'';
+    resetPickerHistory(false);currentHwViewMode='single';switchHwViewMode('single');
+    document.getElementById('chk-show-rate').checked=false;
+    applyLanguageUI();renderLessonTab();renderHomeworkTab();switchTab('lesson');
+    const def=classDefinitions.find(d=>d.key===key);document.getElementById('current-class').textContent=def.className+' · '+def.subject;
+    document.getElementById('class-home').hidden=true;document.querySelector('header').hidden=false;document.querySelector('main').hidden=false;
+    document.getElementById('class-home-button').hidden=false;
+}
+function importWholeBook(raw) {
+    const candidate=validateClassBook(raw);
+    if(!confirm('這會取代全部 11 個班科的資料。確認後先下載目前的完整備份，是否繼續？'))return;
+    downloadFile(JSON.stringify(captureAllData(),null,2),'before-import-all-classes.json','application/json');
+    const previous=currentClassKey||classDefinitions[0].key;
+    candidate.id=newStorageId();candidate.revision=classBook?classBook.revision:0;
+    classBook=candidate;currentClassKey=previous;appData=classBook.classes[previous];persistClassBook();isDirty=true;
+    originalFileHandle=null;initializeClassHome();
+}
+function moveFlowStep(index,direction) {
+    if(!isAdminLoggedIn)return;const target=index+direction;if(target<0||target>=appData.lesson.flow.length)return;
+    [appData.lesson.flow[index],appData.lesson.flow[target]]=[appData.lesson.flow[target],appData.lesson.flow[index]];
+    markDirty();renderFlowEditList();renderLessonTab();document.querySelectorAll('.flow-title-input')[target]?.focus();
+}
+function duplicateFlowStep(index) {
+    if(!isAdminLoggedIn)return;
+    if(appData.lesson.flow.length>=500){alert('流程最多 500 個步驟。');return;}
+    appData.lesson.flow.splice(index+1,0,JSON.parse(JSON.stringify(appData.lesson.flow[index])));
+    markDirty();renderFlowEditList();renderLessonTab();document.querySelectorAll('.flow-title-input')[index+1]?.focus();
+}
+function addQuickFlow(title,minutes) {
+    if(!isAdminLoggedIn)return;if(appData.lesson.flow.length>=500){alert('流程最多 500 個步驟。');return;}appData.lesson.flow.push({time:minutes+' 分鐘',title,detail:''});
+    markDirty();renderFlowEditList();renderLessonTab();document.querySelectorAll('.flow-detail-input')[appData.lesson.flow.length-1]?.focus();
+}
+function batchAddFlow() {
+    if(!isAdminLoggedIn)return;
+    const text=document.getElementById('batch-flow-text').value.trim();if(!text)return;
+    const rows=text.split(/\r?\n/).filter(s=>s.trim()).map(line=>{
+        const parts=line.split(/\t|\|/).map(s=>s.trim());
+        return parts.length===1?{time:'',title:parts[0],detail:''}:{time:parts[0],title:parts[1],detail:parts.slice(2).join(' | ')};
+    });
+    if(appData.lesson.flow.length+rows.length>500){alert('流程最多 500 個步驟。');return;}
+    appData.lesson.flow.push(...rows);document.getElementById('batch-flow-text').value='';markDirty();renderFlowEditList();renderLessonTab();
 }
 </script>
 

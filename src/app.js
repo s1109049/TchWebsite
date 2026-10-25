@@ -5,6 +5,8 @@ let appData;
         let soundEnabled = true;
         const pristineHTML = document.documentElement.cloneNode(true);
         const storagePrefix = 'tch-original-repair-v1:';
+        const classDefinitions = [{"key": "中國歷史:S1D", "className": "S1D", "subject": "中國歷史"}, {"key": "CL:S1D", "className": "S1D", "subject": "CL"}, {"key": "CL:S2A", "className": "S2A", "subject": "CL"}, {"key": "CL:S2B", "className": "S2B", "subject": "CL"}, {"key": "CL:S2C", "className": "S2C", "subject": "CL"}, {"key": "CL:S3B", "className": "S3B", "subject": "CL"}, {"key": "CL:S3C", "className": "S3C", "subject": "CL"}, {"key": "CL:S3D", "className": "S3D", "subject": "CL"}, {"key": "公經社:S3A", "className": "S3A", "subject": "公經社"}, {"key": "公經社:S3B", "className": "S3B", "subject": "公經社"}, {"key": "公社:S4B", "className": "S4B", "subject": "公社"}];
+        let classBook=null,currentClassKey=null;
         let originalFileHandle = null, fileHandleReady = Promise.resolve(), fileWriteBusy = false;
         let lessonEditorReady = false, pickerMode = 'slot', wheelFinish = null;
         let localSaveFailed = false, localRecoveryWarning = false, templateDocument = false, storageRootKey = '';
@@ -575,9 +577,10 @@ let appData;
             }
         }
 
-        function resetPickerHistory() {
+        function resetPickerHistory(reset=true) {
             if (isPicking) return;
-            uncalledStudents=[...appData.students];wheelFinish=null;
+            uncalledStudents=!reset&&Array.isArray(appData._pickerRemaining)?[...appData._pickerRemaining]:[...appData.students];
+            if(reset){appData._pickerRemaining=[...uncalledStudents];markDirty();}wheelFinish=null;
             const display=document.getElementById('picker-display');display.className='picker-display-card';
             display.textContent=L('準備抽點','Ready');
             updatePickerCount();renderPickerMode();
@@ -604,6 +607,7 @@ let appData;
                 else if(pickerMode==='claw') await animateClaw(selected,index,candidates,reduced);
                 else await animatePicker(reduced?0:2400,()=>{display.textContent=candidates[secureRandomIndex(candidates.length)];});
                 uncalledStudents.splice(index,1);
+                appData._pickerRemaining=[...uncalledStudents];markDirty();
                 display.textContent=selected;display.className='picker-display-card winner-celebrate';
                 if (pickerMode==='wheel') wheelFinish={candidates,angle};
                 playWinFanfare();triggerConfettiBurst();
@@ -1039,12 +1043,13 @@ let appData;
                     await originalFileHandle.requestPermission(permission) !== 'granted') {
                     throw new Error('permission');
                 }
-                const snapshot = JSON.parse(JSON.stringify(appData));
+                const snapshot = captureAllData();
+                const writtenRevision = classBook ? classBook.revision : appData._storage.revision;
                 const stream = await originalFileHandle.createWritable();
                 try { await stream.write(buildHTMLSnapshot(snapshot)); await stream.close(); }
                 catch (error) { try { await stream.abort(); } catch {} throw error; }
                 await rememberFileHandle(originalFileHandle);
-                if (appData._storage.revision === snapshot._storage.revision) clearDirty();
+                if ((classBook ? classBook.revision : appData._storage.revision) === writtenRevision) clearDirty();
                 setFileStatus(L('已更新原檔：', 'Original file updated: ') + originalFileHandle.name +
                     (isDirty ? L('；寫入期間有新修改，請再按儲存。','; more edits were made during writing. Save again.') : ' ✓'));
             } catch (error) {
@@ -1058,7 +1063,7 @@ let appData;
         function exportDataJson() {
             if (!isAdminLoggedIn) return;
             syncAllInputsToData();
-            downloadFile(JSON.stringify(appData, null, 2), 'data.json', 'application/json;charset=utf-8');
+            downloadFile(JSON.stringify(captureAllData(), null, 2), 'data.json', 'application/json;charset=utf-8');
             setFileStatus(L('已產生 JSON 下載，請確認已存妥；原 HTML 尚未因此更新。','JSON download requested. Check the download; this does not update the original HTML.'));
         }
         async function importDataJson(event) {
@@ -1067,11 +1072,15 @@ let appData;
             if (!file || !isAdminLoggedIn || fileWriteBusy || isPicking) return;
             try {
                 if (file.size > 20*1024*1024) throw new Error('size');
+                const importTarget=currentClassKey;
                 const text = await file.text();
+                if(fileWriteBusy||isPicking||!isAdminLoggedIn||currentClassKey!==importTarget)return;
                 const parsed = /\.html?$/i.test(file.name) ? new DOMParser().parseFromString(text, 'text/html').getElementById('embedded-data')?.textContent : text;
-                const imported = validateOriginalData(JSON.parse(parsed));
+                const decoded=JSON.parse(parsed);
+                if(decoded.workspaceVersion===1){importWholeBook(decoded);return;}
+                const imported = validateOriginalData(decoded);
                 if (!confirm(L('匯入會取代目前資料。確認後會先下載目前資料的 JSON 備份。', 'Import replaces current data. A safety JSON backup will be downloaded first.'))) return;
-                downloadFile(JSON.stringify(appData,null,2),'before-import-data.json','application/json');
+                downloadFile(JSON.stringify(captureAllData(),null,2),'before-import-data.json','application/json');
                 const metadata = {...appData._storage,id:newStorageId()};
                 appData = imported;
                 appData._storage = metadata;
@@ -1102,13 +1111,20 @@ let appData;
                 });
                 const remove=document.createElement('button');remove.textContent='🗑️';remove.className='btn btn-secondary';
                 remove.style.cssText='padding:6px 14px;color:#dc2626;';remove.setAttribute('aria-label',L('刪除步驟','Delete step'));
-                remove.onclick=()=>removeFlowStep(index);row.appendChild(remove);container.appendChild(row);
+                remove.onclick=()=>removeFlowStep(index);row.appendChild(remove);
+                for(const [label,action] of [['↑',()=>moveFlowStep(index,-1)],['↓',()=>moveFlowStep(index,1)],['複製',()=>duplicateFlowStep(index)]]){
+                    const b=document.createElement('button');b.className='btn btn-secondary';b.textContent=label;b.type='button';b.onclick=action;b.setAttribute('aria-label',label==='複製'?'複製步驟':label==='↑'?'上移步驟':'下移步驟');
+                    b.disabled=label==='↑'?index===0:label==='↓'?index===appData.lesson.flow.length-1:false;row.appendChild(b);
+                }
+                row.classList.add('flow-edit-row');container.appendChild(row);
             });
         }
         function addFlowStep() {
             if (!isAdminLoggedIn) return;
+            if(appData.lesson.flow.length>=500){alert('流程最多 500 個步驟。');return;}
             appData.lesson.flow.push({time:'',title:'',detail:''});
             markDirty();renderFlowEditList();renderLessonTab();
+            document.querySelectorAll('.flow-title-input')[appData.lesson.flow.length-1]?.focus();
         }
         function removeFlowStep(index) {
             if (!isAdminLoggedIn) return;
@@ -1122,6 +1138,7 @@ let appData;
             if (names.length > 0 && confirm(appData.lang === 'zh' ? `確定匯入 ${names.length} 位學生？` : `Import ${names.length} students?`)) {
                 appData.students = names;
                 uncalledStudents = [...names];
+                appData._pickerRemaining=[...names];
                 markDirty();
                 renderAdminStudentList();
                 updatePickerCount();
@@ -1184,8 +1201,9 @@ let appData;
             document.getElementById('admin-login-card').style.display='block';
             document.getElementById('admin-password-input').value='';
             document.getElementById('login-error').style.display='none';
-            wireLessonFields();resetPickerHistory();
+            wireLessonFields();resetPickerHistory(false);
             applyLanguageUI();renderLessonTab();updateTimerDisplay();switchTab('lesson');
             fileHandleReady=restoreFileHandle();
+            initializeClassHome();
             if(localRecoveryWarning||localSaveFailed)setFileStatus(L('本機備份無法使用；目前顯示 HTML 內的資料，請先匯出備份。','Local backup unavailable. The HTML data is shown; export a backup.'),true);
         };
