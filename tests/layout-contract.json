@@ -1,0 +1,11 @@
+{
+  "originalCssSha256": "1f95cb47cb46baaa6ef027627f0978296e1f08d48ff95af7654f774917a06455",
+  "sectionIds": [
+    "tab-lesson",
+    "tab-picker",
+    "tab-timer",
+    "tab-homework",
+    "tab-admin"
+  ],
+  "cardCount": 8
+}

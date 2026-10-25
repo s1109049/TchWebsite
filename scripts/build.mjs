@@ -1,16 +1,10 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 let html=readFileSync('src/shell.html','utf8');
-const fontFaces = [['Regular',400],['ExtraBold',800]].map(([name,weight]) => {
-  const font=readFileSync(`src/fonts/MPLUSRounded1c-${name}.woff`).toString('base64');
-  return `@font-face{font-family:'M PLUS Rounded 1c';font-style:normal;font-weight:${weight};font-display:swap;src:url(data:font/woff;base64,${font}) format('woff');}`;
-}).join('\n');
-html=html.replace('/*__FONTS__*/',()=>fontFaces+'\n/* M PLUS Rounded 1c · Copyright 2016 The Rounded M+ Project Authors. SIL Open Font License 1.1. See font-license below. */');
-// The complete license travels with every self-contained HTML export.
-html=html.replace('</head>',()=>`<script type="text/plain" id="font-license">${readFileSync('src/fonts/OFL.txt','utf8')}</script>\n</head>`);
-for (const [marker,file] of [['CSS','style.css'],['CORE','core.js'],['APP','app.js']]) {
-  const source=readFileSync(`src/${file}`,'utf8');
-  if (marker!=='CSS' && /<\/script/i.test(source)) throw new Error('Unsafe inline script terminator');
-  html=html.replace(`/*__${marker}__*/`,()=>source);
-}
+const data=JSON.parse(readFileSync('src/default-data.json','utf8'));
+html=html.replace('/*__DATA__*/',()=>JSON.stringify(data,null,2).replace(/</g,'\\u003c'));
+const app=readFileSync('src/app.js','utf8')+'\n'+readFileSync('src/extensions.js','utf8');
+if(/<\/script/i.test(app))throw new Error('Unsafe script terminator');
+html=html.replace('/*__CSS__*/',()=>readFileSync('src/style.css','utf8'));
+html=html.replace('/*__APP__*/',()=>app);
 writeFileSync('index.html',html);
-console.log('Built standalone offline index.html');
+console.log('Built repaired original-layout index.html');

@@ -1,0 +1,23 @@
+{
+  "lang": "zh",
+  "lesson": {
+    "title": "",
+    "date": "",
+    "objectives": "",
+    "flow": [],
+    "announcement": "",
+    "materials": "",
+    "showAnnouncement": true,
+    "showMaterials": true
+  },
+  "historyLessons": [],
+  "flowPresets": [],
+  "students": [],
+  "homeworks": [],
+  "submissions": {},
+  "_storage": {
+    "id": "original-layout-template-v1",
+    "revision": 0,
+    "updatedAt": 0
+  }
+}

@@ -1,111 +1,369 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#6366f1"><link rel="icon" href="data:,">
-<title>課堂管理系統 · Classroom</title>
-<style>/*__FONTS__*/
-/*__CSS__*/</style>
+<!DOCTYPE html>
+<html lang="zh-TW"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課堂管理系統</title>
+    <!-- 引入 Google 官方圓體字型 -->
+    <style>/*__CSS__*/</style>
 </head>
 <body>
-<header class="app-header">
-  <div class="brand">📚 <strong data-t="課堂管理系統|Classroom"></strong></div>
-  <nav aria-label="Main navigation">
-    <button data-tab="lesson"><span aria-hidden="true">📖</span><span data-t="課堂內容|Lesson"></span></button>
-    <button data-tab="picker"><span aria-hidden="true">🎲</span><span data-t="互動點名|Picker"></span></button>
-    <button data-tab="timer"><span aria-hidden="true">⏱</span><span data-t="計時器|Timer"></span></button>
-    <button data-tab="homework"><span aria-hidden="true">📋</span><span data-t="家課交收|Homework"></span></button>
-    <button data-tab="admin"><span aria-hidden="true">⚙</span><span data-t="後台管理|Teacher desk"></span></button>
-  </nav>
-  <div class="header-actions"><button id="language">English</button><button id="project" data-t="⛶ 投影模式|⛶ Present" aria-pressed="false"></button></div>
-</header>
-<div class="workspace"><main>
-<section id="lesson" class="page">
-  <div class="page-heading lesson-heading"><div class="lesson-title-area"><p id="lesson-date" class="date-badge"></p><h1 id="lesson-title"></h1></div><div class="row">
-    <button id="previous" data-t="⏮ 上一課|⏮ Previous lesson" aria-expanded="false"></button>
-    <button id="edit-lesson" class="primary" data-t="✎ 編輯課堂|✎ Edit lesson"></button>
-  </div></div>
-  <div id="previous-panel" class="card previous-panel" hidden></div>
-  <div class="lesson-grid">
-    <div class="card lesson-intro">
-      <div class="goals-block"><h3 data-t="🎯 學習目標|🎯 Learning goals"></h3><div id="lesson-goals" class="prose"></div></div>
-      <div id="materials-block" class="inset"><h3 data-t="🎒 準備器材 / 教具|🎒 Materials"></h3><p id="lesson-materials" class="prose"></p></div>
-      <div id="announcement-block" class="inset warm"><h3 data-t="📢 課後作業 / 公告|📢 Homework & announcements"></h3><p id="lesson-announcement" class="prose"></p></div>
-    </div>
-    <div class="card lesson-flow-card"><div class="card-heading"><h2 data-t="課堂流程安排|Lesson flow"></h2><span class="pill" id="flow-count"></span></div><div id="lesson-flow"></div></div>
-  </div>
-  <div id="lesson-empty" class="empty card" hidden><span class="empty-icon">✎</span><h2 data-t="尚未設定課堂|No lesson yet"></h2><p data-t="加入主題與流程，即可開始上課。|Add a topic and lesson steps to get started."></p><button id="first-lesson" class="primary" data-t="建立第一課|Create your first lesson"></button></div>
-</section>
-<section id="picker" class="page" hidden><div class="page-heading"><div><h1 data-t="🎲 互動點名|🎲 Random picker"></h1></div><div class="segmented"><button data-picker="slot" data-t="跑馬燈|Name shuffle"></button><button data-picker="wheel" data-t="幸運輪盤|Lucky wheel"></button></div></div>
-<div class="picker-stage"><div class="picker-visual"><div id="shuffle-name" data-t="準備好了嗎？|Ready to join in?"></div><div id="wheel-box" hidden><span class="pointer">▼</span><canvas id="wheel" width="640" height="640" aria-label="Student wheel"></canvas></div></div><div class="picker-result"><p class="eyebrow" data-t="抽點結果|Selected student"></p><div id="picked-name" aria-live="polite">—</div><p id="picker-count"></p><button id="draw" class="primary big" data-t="✧ 幸運抽點|✧ Pick a student"></button><button id="reset-picker" class="subtle" data-t="開始新一輪|Start a new round"></button></div></div><div class="card"><h3 data-t="本輪已抽學生|Picked this round"></h3><div id="picked-list" class="chips"></div></div>
-</section>
-<section id="timer" class="page" hidden><div class="page-heading"><div><h1 data-t="⏱ 課堂計時器|⏱ Classroom timer"></h1></div><label class="row"><span data-t="任務字體|Task size"></span><select id="task-size"><option value="28" data-t="標準|Regular"></option><option value="40" data-t="大字|Large"></option><option value="56" data-t="特大|Extra large"></option></select></label></div>
-<div class="card timer-card"><label for="timer-task" class="section-label" data-t="當前課堂任務 / 工作說明|CURRENT TASK"></label><textarea id="timer-task" rows="2" aria-label="Current task"></textarea><div id="timer-display" role="timer">05:00</div><div class="progress" role="progressbar" aria-label="Remaining time" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="timer-progress"></div><strong id="timer-percent">100%</strong></div><p id="timer-message" role="status"></p><div class="row center" id="timer-presets"><button data-minutes="1" data-t="1 分鐘|1 min"></button><button data-minutes="3" data-t="3 分鐘|3 min"></button><button data-minutes="5" data-t="5 分鐘|5 min"></button><button data-minutes="10" data-t="10 分鐘|10 min"></button><button data-minutes="15" data-t="15 分鐘|15 min"></button><label class="row"><input id="custom-minutes" type="number" min="0.0167" max="180" step="any" value="5" aria-label="Minutes"><span data-t="分鐘|min"></span></label><button id="set-timer" data-t="設定|Set"></button></div><div class="row center timer-buttons"><button id="start-timer" class="primary" data-t="▶ 開始|▶ Start"></button><button id="pause-timer" data-t="Ⅱ 暫停|Ⅱ Pause"></button><button id="reset-timer" data-t="↺ 重設|↺ Reset"></button><label class="row"><input type="checkbox" id="timer-sound"><span data-t="完成音效|Completion sound"></span></label></div></div>
-</section>
-<section id="homework" class="page" hidden>
-  <div class="page-heading"><h1 data-t="📋 家課交收|📋 Homework"></h1><div class="segmented">
-    <button data-view="single" data-t="單一習作|Single task"></button><button data-view="matrix" data-t="全班總覽|Class overview"></button>
-  </div></div>
-  <div class="card homework-toolbar">
-    <div class="row"><label class="row" id="homework-selector"><span data-t="習作|Task"></span><select id="hw-select"></select></label><input id="student-search" type="search" data-ph="搜尋學生姓名|Search students" aria-label="Search students"></div>
-    <div class="row"><label class="row"><input id="show-rate" type="checkbox"><span data-t="繳交率|Submission rate"></span></label><label class="row"><input id="edit-records" type="checkbox"><span data-t="編輯紀錄|Edit records"></span></label><button id="undo-record" hidden data-t="↶ 撤銷|↶ Undo"></button><button id="mark-all" hidden data-t="全班已交|Mark all submitted"></button></div>
-    <p id="rate" hidden></p>
-  </div>
-  <div class="homework-grid">
-    <div class="card homework-records">
-      <div class="legend"><span class="status submitted" data-t="✓ 已交|✓ Submitted"></span><span class="status missing" data-t="○ 未交|○ Missing"></span><span class="status late" data-t="◷ 遲交|◷ Late"></span><span class="status redo" data-t="↺ 重作|↺ Redo"></span><span id="record-count" class="muted"></span></div>
-      <div class="table-scroll"><table id="hw-table"></table></div>
-      <div id="hw-empty" class="empty" hidden><h3 data-t="尚未有學生或習作|No students or tasks yet"></h3><p data-t="請在後台匯入學生名單，並新增習作。|Import a roster and add a task at the teacher desk."></p><button id="setup-homework" class="primary" data-t="管理名單與習作|Manage roster & tasks"></button></div>
-    </div>
-    <div id="missing-box" class="card missing-box"><div class="card-heading"><h3 data-t="未交學生|Missing submissions"></h3><span id="missing-count" class="pill"></span></div><p id="missing-task" class="muted"></p><div id="missing-list" class="chips"></div><button id="copy-missing" data-t="複製未交名單|Copy missing names"></button></div>
-  </div>
-</section>
-<section id="admin" class="page" hidden>
-  <div class="page-heading"><h1 data-t="⚙ 後台管理|⚙ Teacher desk"></h1><button id="logout" hidden data-t="鎖定後台|Lock teacher desk"></button></div>
-  <form id="login" class="card login"><h2 data-t="老師登入|Teacher login"></h2><label for="password" data-t="請輸入管理密碼|Enter your management password"></label><input id="password" type="password" autocomplete="current-password" required><p id="login-error" class="error" role="alert"></p><button class="primary" data-t="解鎖後台|Unlock teacher desk"></button></form>
-  <div id="admin-panel" hidden>
-    <nav class="admin-nav" aria-label="Teacher desk sections">
-      <button data-admin-section="plan" data-t="✎ 課堂編輯|✎ Lesson editor"></button>
-      <button data-admin-section="library" data-t="▤ 範本與歷史|▤ Templates & history"></button>
-      <button data-admin-section="class" data-t="♙ 名單與習作|♙ Roster & tasks"></button>
-      <button data-admin-section="backup" data-t="↓ 儲存與備份|↓ Storage & backup"></button>
-    </nav>
-    <div id="admin-plan" class="admin-section">
-      <div class="editor-grid">
-        <div class="card lesson-settings"><h2 data-t="課堂資料|Lesson details"></h2>
-          <label><span data-t="單元主題|Lesson topic"></span><input data-lesson="title" id="edit-title"></label>
-          <label><span data-t="課堂日期|Lesson date"></span><input data-lesson="date" id="edit-date" type="text"></label>
-          <label><span data-t="學習目標|Learning goals"></span><textarea data-lesson="objectives" id="edit-objectives" rows="3"></textarea></label>
-          <div class="optional-field"><label class="row"><input data-lesson="showAnnouncement" type="checkbox"><span data-t="加入課後作業 / 公告|Include announcements"></span></label><textarea data-lesson="announcement" rows="2" aria-label="Announcement" hidden></textarea></div>
-          <div class="optional-field"><label class="row"><input data-lesson="showMaterials" type="checkbox"><span data-t="加入器材 / 教具|Include materials"></span></label><textarea data-lesson="materials" rows="2" aria-label="Materials" hidden></textarea></div>
+
+    <!-- 頂部未儲存紅條警告（僅在後台切換時顯示） -->
+    <div id="unsaved-banner" style="display:none;">⚠️ 注意：課堂紀錄已變更！下課前請點擊「後台管理 ➔ 下載最新 HTML 檔」以帶走最新資料！</div>
+
+    <!-- 頂部導覽列 -->
+    <header>
+        <div class="header-container">
+            <div class="logo-title">
+                🏫 <span id="txt-app-title">課堂管理系統</span>
+            </div>
+            <div class="header-controls">
+                <button onclick="toggleLanguage()" class="lang-btn">🌐 <span id="txt-lang-toggle">English</span></button>
+                <nav>
+                    <button onclick="switchTab('lesson')" id="btn-lesson" class="nav-btn active">📖 <span id="txt-tab-lesson">課堂內容</span></button>
+                    <button onclick="switchTab('picker')" id="btn-picker" class="nav-btn">🎲 <span id="txt-tab-picker">互動點名</span></button>
+                    <button onclick="switchTab('timer')" id="btn-timer" class="nav-btn">⏱️ <span id="txt-tab-timer">課堂計時器</span></button>
+                    <button onclick="switchTab('homework')" id="btn-homework" class="nav-btn">📋 <span id="txt-tab-hw">家課交收</span></button>
+                    <button onclick="switchTab('admin')" id="btn-admin" class="nav-btn">⚙️ <span id="txt-tab-admin">後台管理</span></button>
+                </nav>
+            </div>
         </div>
-        <div class="card flow-editor-card"><div class="card-heading"><h2 data-t="流程步驟|Lesson steps"></h2><div class="row"><button id="add-step-top" class="primary" data-t="＋ 新增步驟|＋ Add step"></button><button id="new-lesson" data-t="新一課|New lesson"></button></div></div>
-          <div id="flow-editor"></div><button id="add-step" class="primary" data-t="＋ 新增流程步驟|＋ Add step"></button>
-        </div>
-      </div>
-    </div>
-    <div id="admin-library" class="admin-section" hidden><div class="form-grid">
-      <div class="card"><h2 data-t="流程範本|Flow templates"></h2><div class="row nowrap"><input id="preset-name" data-ph="範本名稱|Template name" aria-label="Template name"><button id="save-preset" data-t="儲存目前流程|Save current flow"></button></div><div id="preset-list" class="item-list"></div></div>
-      <div class="card"><div class="card-heading"><h2 data-t="課堂歷史|Lesson history"></h2><button id="archive-lesson" data-t="封存目前課堂|Archive current lesson"></button></div><div id="history-list" class="item-list"></div></div>
-    </div></div>
-    <div id="admin-class" class="admin-section" hidden><div class="class-editor-grid">
-      <div class="card"><div class="card-heading"><h2 data-t="學生名單|Student roster"></h2><span id="roster-count" class="pill"></span></div><p class="muted" data-t="每行一人；可貼上試算表的「學號、姓名」兩欄。|One name per line; paste number/name columns from a spreadsheet."></p><textarea id="roster-input" rows="10" aria-label="Student roster"></textarea><div class="row"><button id="import-roster" class="primary" data-t="更新學生名單|Update roster"></button><label class="button" for="roster-file" data-t="讀取 CSV / TXT|Read CSV / TXT"></label><input type="file" id="roster-file" accept=".csv,.txt,text/plain,text/csv" hidden></div><p class="muted" data-t="相同姓名會依出現次序保留紀錄；移除學生前請備份。|Matching names retain records in occurrence order. Back up before removing students."></p></div>
-      <div class="card"><div class="card-heading"><h2 data-t="習作管理|Homework tasks"></h2><button id="view-homework" data-t="查看交收|View records"></button></div><div class="row nowrap"><input id="new-homework" data-ph="習作名稱|Task name" aria-label="New homework"><button id="add-homework" class="primary" data-t="新增|Add"></button></div><div id="homework-list" class="item-list"></div></div>
-    </div></div>
-    <div id="admin-backup" class="admin-section" hidden><div class="card save-panel">
-      <h2 data-t="儲存與備份|Storage & backup"></h2><div class="backup-grid">
-        <div><h3 data-t="在這台電腦繼續使用|Continue on this computer"></h3><p data-t="每次修改都會自動儲存在目前瀏覽器，前台即時更新。|Edits autosave in this browser and appear immediately in the lesson view."></p><p class="muted" data-t="清除瀏覽資料或更換電腦前，請先匯出備份。|Export a backup before clearing browser data or changing computers."></p></div>
-        <div><h3 data-t="帶到另一台電腦 / USB|Move to another computer / USB"></h3><button id="write-file" class="primary" data-t="連接 / 更新 USB HTML|Connect / update USB HTML"></button><p id="file-status" class="muted"></p><div class="row"><button id="export-json" data-t="匯出 JSON 備份|Export JSON backup"></button><label class="button" for="import-json" data-t="匯入備份|Import backup"></label><input id="import-json" type="file" accept=".json,application/json" hidden></div></div>
-      </div>
-      <details><summary data-t="儲存與隱私說明|Storage & privacy"></summary><p data-t="後台密碼只防誤觸，不會加密資料。HTML／JSON 備份含學生資料，請妥善保管，不要上傳到公開網站。瀏覽器可能要求重新授權 USB 寫入；取消授權不影響本機資料。|The password prevents accidental edits, not data access. Keep HTML/JSON backups private. Browsers may ask again for USB write permission; cancelling leaves local data intact."></p></details>
-    </div></div>
-    <div class="admin-actionbar"><div><p id="save-status" role="status"></p><small data-t="本機自動儲存 · USB 請另行更新|Local autosave · update USB separately"></small></div><div class="row"><button id="preview-lesson" data-t="預覽課堂|Preview lesson"></button><button id="save-local" class="primary" data-t="儲存課堂|Save lesson"></button><button id="export-html" data-t="下載離線 HTML|Download offline HTML"></button></div></div>
-  </div>
-</section>
-</main></div>
-<div id="toast" role="status" hidden></div>
-<dialog id="confirm-dialog"><form method="dialog"><h2 id="confirm-title"></h2><p id="confirm-text" class="prose"></p><div class="row end"><button value="cancel" data-t="取消|Cancel"></button><button value="ok" class="primary" data-t="確認|Confirm"></button></div></form></dialog>
-<dialog id="conflict-dialog"><h2 data-t="另一個視窗有新版本|Another window has newer data"></h2><p data-t="為避免覆蓋，編輯已暫停。先下載目前版本備份，再載入另一視窗的版本。|Editing is paused to avoid overwriting data. Download this version first, then load the other window’s version."></p><div class="row"><button id="conflict-backup" data-t="下載目前備份|Back up this version"></button><button id="conflict-load" class="primary" data-t="載入新版本|Load newer version"></button></div></dialog>
-<script id="embedded-data" type="application/json">null</script>
-<script>/*__CORE__*/</script><script>/*__APP__*/</script>
+    </header>
+
+    <!-- 主要內容區 -->
+    <main>
+
+        <!-- ==================== 分頁一：課堂內容 ==================== -->
+        <section id="tab-lesson" class="tab-panel active">
+
+            <div id="prev-lesson-card" style="display: none; background-color: #f8fafc; border: 2px solid #818cf8; border-radius: 24px; padding: 28px; margin-bottom: 28px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 14px; margin-bottom: 18px;">
+                    <h3 style="color: #4338ca; font-size: 26px; font-weight: 800;" id="txt-prev-lesson-header">⏮️ 上一課內容回顧</h3>
+                    <button onclick="togglePreviousLessonBox()" class="btn btn-secondary" style="padding: 6px 16px; font-size: 16px;">✕ <span id="txt-close-prev">關閉</span></button>
+                </div>
+                <div id="prev-lesson-details"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <span class="date-badge" id="display-date"></span>
+                        <h2 class="card-title" id="display-title"></h2>
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button onclick="togglePreviousLessonBox()" class="btn btn-primary" id="btn-view-prev-lesson">⏮️ 查看上一課</button>
+                        <button onclick="switchTab('admin')" class="btn btn-secondary" id="btn-edit-lesson">✏️ 編輯內容</button>
+                    </div>
+                </div>
+
+                <div style="background-color: #fffbeb; border-left: 8px solid #f59e0b; padding: 20px; border-radius: 16px; margin-bottom: 28px;">
+                    <h3 style="color: #b45309; font-weight: bold; font-size: 22px; margin-bottom: 6px;" id="txt-obj-title">🎯 課堂學習目標</h3>
+                    <div id="display-objectives" style="color: #92400e; white-space: pre-line; font-size: 22px;"></div>
+                </div>
+
+                <div style="margin-bottom: 28px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 16px;">
+                        <h3 style="font-size: 24px; font-weight: bold;" id="txt-flow-title">⏳ 課堂流程安排</h3>
+                    </div>
+                    <div id="display-flow-list"></div>
+                </div>
+
+                <div id="display-extra-blocks" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; border-top: 2px solid #f1f5f9; padding-top: 20px;">
+                    <div id="block-announcement" style="background-color: rgb(240, 249, 255); padding: 20px; border-radius: 16px; display: block;">
+                        <h4 style="color: #0369a1; font-weight: bold; font-size: 20px; margin-bottom: 6px;" id="txt-ann-title">📢 課後作業 / 公告</h4>
+                        <p id="display-announcement" style="color: #0c4a6e; whitespace: pre-line; font-size: 20px;"></p>
+                    </div>
+                    <div id="block-materials" style="background-color: rgb(236, 253, 245); padding: 20px; border-radius: 16px; display: none;">
+                        <h4 style="color: #047857; font-weight: bold; font-size: 20px; margin-bottom: 6px;" id="txt-mat-title">🎒 課堂準備器材 / 教具</h4>
+                        <p id="display-materials" style="color: #064e3b; whitespace: pre-line; font-size: 20px;"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 分頁二：獨立課堂互動點名 ==================== -->
+        <section id="tab-picker" class="tab-panel">
+            <div class="picker-box-arcade">
+                <div>
+                    <span style="background: rgba(255,255,255,0.25); padding: 8px 20px; border-radius: 20px; font-size: 18px; font-weight: bold; letter-spacing: 1px;" id="txt-picker-tag">🎰 課堂幸運輪盤</span>
+                    <h2 style="font-size: 38px; font-weight: 800; margin-top: 12px; text-shadow: 0 2px 4px rgba(0,0,0,0.15);" id="txt-picker-title">隨機點名回答問題</h2>
+                    <p style="font-size: 20px; opacity: 0.95; margin-top: 8px;"><span id="txt-picker-remaining">防重複機制：剩餘</span> <strong id="picker-remaining" style="color: #fef08a; font-size: 28px;">0</strong> <span id="txt-picker-unit">人未被抽中</span></p>
+                </div>
+
+                <div class="picker-mode-controls" role="group" aria-label="點名模式">
+<button type="button" class="view-mode-btn active" onclick="switchPickerMode('slot')" data-picker-mode="slot" aria-pressed="true">🎰 跑馬燈</button>
+<button type="button" class="view-mode-btn" onclick="switchPickerMode('wheel')" data-picker-mode="wheel" aria-pressed="false">🎡 輪盤</button>
+<button type="button" class="view-mode-btn" onclick="switchPickerMode('claw')" data-picker-mode="claw" aria-pressed="false">🧸 夾公仔</button>
+</div><div id="picker-play-area" data-mode="slot"><div id="picker-game" style="display:none;" aria-hidden="true">
+<div id="wheel-stage" hidden><div class="wheel-pointer">▼</div><canvas id="student-wheel" width="720" height="720"></canvas></div>
+<div id="claw-stage" hidden><div class="claw-machine-title">🧸 <span id="claw-title">幸運夾公仔機</span> 🧸</div><div class="claw-playfield"><div id="claw-arm"><div class="claw-cable"></div><div class="claw-grip"><i></i><i></i><span id="claw-prize">🧸</span></div></div><div id="claw-toys"></div></div><div class="claw-exit">★</div></div>
+</div><div id="picker-display" class="picker-display-card" role="status" aria-live="polite">準備抽點</div>
+
+                </div><div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+                    <button onclick="pickRandomStudent()" class="btn btn-arcade-pick" id="btn-pick-student">🎲 幸運抽點</button>
+                    <div style="display: flex; gap: 12px;">
+                        <button onclick="resetPickerHistory()" class="btn btn-secondary" style="font-size: 16px; padding: 8px 18px; background: rgba(255,255,255,0.25); color:white; border:none;" id="btn-reset-picker">🔄 重置名單</button>
+                        <button onclick="toggleSound()" class="btn btn-secondary" style="font-size: 16px; padding: 8px 18px; background: rgba(255,255,255,0.25); color:white; border:none;" id="btn-sound-toggle">🔊 音效: 開</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 分頁三：獨立課堂計時器 ==================== -->
+        <section id="tab-timer" class="tab-panel">
+            <div class="card" style="text-align: center;">
+                <h2 class="card-title" style="margin-bottom: 16px;" id="txt-timer-title">⏱️ 課堂活動計時器</h2>
+
+                <div style="background-color: #f8fafc; border: 2px solid #cbd5e1; border-radius: 18px; padding: 20px; margin-bottom: 24px;">
+                    <label style="font-weight: bold; font-size: 20px; color: #334155; display: block; margin-bottom: 8px;" id="lbl-timer-task">📝 當前課堂任務 / 工作說明：</label>
+                    <input type="text" id="timer-task-input" placeholder="" style="text-align: center; font-size: 22px; font-weight: bold; color: #4338ca;">
+                </div>
+
+                <div id="timer-display" class="timer-display ended">00:00</div>
+
+                <div class="progress-bar-container">
+                    <div id="timer-progress-fill" class="progress-bar-fill" style="width: 0%; background: linear-gradient(90deg, rgb(239, 68, 68), rgb(220, 38, 38));"></div>
+                    <span id="timer-progress-text" class="progress-bar-text">0% 剩餘</span>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+                    <span style="align-self: center; font-weight: bold; font-size: 18px;" id="txt-preset-label">快捷時間：</span>
+                    <button onclick="setTimerPreset(1)" class="preset-btn">1 分鐘</button>
+                    <button onclick="setTimerPreset(3)" class="preset-btn">3 分鐘</button>
+                    <button onclick="setTimerPreset(5)" class="preset-btn">5 分鐘</button>
+                    <button onclick="setTimerPreset(10)" class="preset-btn">10 分鐘</button>
+                    <button onclick="setTimerPreset(15)" class="preset-btn">15 分鐘</button>
+                </div>
+
+                <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="number" id="timer-min-input" min="0" max="99" style="width: 90px; text-align: center; font-size: 20px; font-weight: bold; margin:0;" onchange="setCustomTimer()"> <span style="font-weight: bold;" id="txt-unit-min">分</span>
+                        <input type="number" id="timer-sec-input" min="0" max="59" style="width: 90px; text-align: center; font-size: 20px; font-weight: bold; margin:0;" onchange="setCustomTimer()"> <span style="font-weight: bold;" id="txt-unit-sec">秒</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                    <button onclick="startTimer()" class="btn btn-success" style="font-size: 22px; padding: 14px 36px;" id="btn-timer-start">▶️ 開始計時</button>
+                    <button onclick="pauseTimer()" class="btn btn-warning" style="font-size: 22px; padding: 14px 36px;" id="btn-timer-pause">⏸️ 暫停</button>
+                    <button onclick="resetTimer()" class="btn btn-secondary" style="font-size: 22px; padding: 14px 36px;" id="btn-timer-reset">🔄 重置</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 分頁四：家課交收情況 ==================== -->
+        <section id="tab-homework" class="tab-panel">
+            <div class="card">
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 18px; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button onclick="switchHwViewMode('single')" id="btn-hw-view-single" class="view-mode-btn active">📋 <span id="txt-view-single">單一習作檢視</span></button>
+                        <button onclick="switchHwViewMode('matrix')" id="btn-hw-view-matrix" class="view-mode-btn">📊 <span id="txt-view-matrix">全班功課總覽</span></button>
+                    </div>
+                    <div style="font-size: 18px; font-weight: bold; display: flex; gap: 14px; align-items: center;">
+                        <label id="matrix-rate-toggle" style="display:none; cursor:pointer; font-size:16px; background:#e0e7ff; color:#4338ca; padding:6px 14px; border-radius:12px;">
+                            <input type="checkbox" id="chk-show-rate" onchange="renderHomeworkMatrix()"> <span id="txt-toggle-rate">顯示總繳交率</span>
+                        </label>
+                        <span style="background: #f1f5f9; padding: 8px 16px; border-radius: 12px;"><span id="txt-stat-total">總人數</span>：<strong id="stat-total">0</strong></span>
+                    </div>
+                </div>
+
+                <div id="hw-view-single">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: center; gap: 14px;">
+                            <label style="font-weight: bold; font-size: 22px;" id="txt-select-hw-label">選擇習作：</label>
+                            <select id="hw-select" onchange="renderHomeworkTable()" style="width: auto; min-width: 280px; font-weight: bold; font-size: 20px;"></select>
+                        </div>
+                        <div style="display: flex; gap: 14px; font-size: 18px; font-weight: bold;">
+                            <span style="background: #d1fae5; color: #065f46; padding: 8px 16px; border-radius: 12px;"><span id="txt-stat-submitted">已繳交</span>：<strong id="stat-submitted">0</strong></span>
+                            <span style="background: #ffe4e6; color: #9f1239; padding: 8px 16px; border-radius: 12px;"><span id="txt-stat-missing">未繳交</span>：<strong id="stat-missing">0</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="missing-students-box">
+                        <div class="missing-students-title">
+                            <span id="txt-missing-box-title">⚠️ 未交功課學生名單</span>
+                            <button onclick="copyMissingList()" class="btn btn-secondary" style="font-size: 15px; padding: 6px 14px;" id="btn-copy-missing">📋 複製名單</button>
+                        </div>
+                        <div id="missing-students-list" class="missing-tag-list"></div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 16px;">
+                        <button onclick="markAllAsSubmitted()" class="btn btn-primary" style="font-size: 16px; padding: 8px 18px;" id="btn-mark-all">全選標示為已交</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 80px; text-align: center;">#</th>
+                                    <th id="th-student-name">學生姓名</th>
+                                    <th style="width: 240px; text-align: center;" id="th-hw-status">繳交狀態</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hw-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="hw-view-matrix" style="display: none;">
+                    <div class="table-responsive">
+                        <table style="border: 1px solid #e2e8f0;">
+                            <thead id="hw-matrix-head"></thead>
+                            <tbody id="hw-matrix-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== 分頁五：後台管理 ==================== -->
+        <section id="tab-admin" class="tab-panel">
+
+            <div id="admin-login-card" class="card" style="max-width: 540px; margin: 40px auto; text-align: center; display: block;">
+                <div style="font-size: 56px; margin-bottom: 14px;">🔒</div>
+                <h2 style="font-size: 28px; font-weight: bold; margin-bottom: 12px;" id="txt-admin-login-title">後台管理驗證</h2>
+                <form onsubmit="handleAdminLogin(event)">
+                    <input type="password" id="admin-password-input" placeholder="請輸入管理密碼" style="text-align: center; font-weight: bold; font-size: 20px;">
+                    <p id="login-error" style="color: #dc2626; font-size: 16px; margin-top: 10px; display: none;">密碼錯誤！請重新輸入。</p>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px; justify-content: center; font-size: 20px;" id="btn-login-unlock">解鎖進入後台</button>
+                </form>
+            </div>
+
+            <div id="admin-panel" style="display:none;">
+
+                <div class="save-banner">
+                    <h3 style="color: #0369a1; font-size: 24px; font-weight: bold; margin-bottom: 10px;" id="txt-save-banner-title">💾 USB 資料儲存中心</h3>
+                    <p style="color: #0c4a6e; font-size: 18px; margin-bottom: 18px;" id="txt-save-banner-desc">
+                        點擊下方按鈕即可匯出包含最新資料的網頁檔或數據檔：
+                    </p>
+                    <div style="display: flex; justify-content: center; gap: 18px; flex-wrap: wrap;">
+                        <button onclick="saveSelfToHTML()" class="btn btn-success" style="font-size: 20px; padding: 14px 28px;" id="btn-save-html">
+                            💾 下載最新 HTML 檔 (蓋過 USB 檔)
+                        </button>
+                        <button onclick="exportDataJson()" class="btn btn-primary" style="font-size: 20px; padding: 14px 28px;" id="btn-export-json">
+                            📄 僅導出 data.json
+                        </button>
+                    <button onclick="downloadHTMLCopy()" class="btn btn-secondary" id="btn-download-copy">📥 下載副本</button><button onclick="reconnectOriginalFile()" class="btn btn-secondary" id="btn-reconnect">📂 重新選擇原檔</button></div>
+                    <p id="file-save-status" role="status" style="font-size:17px; color:#0c4a6e; margin-top:14px;"></p><div style="margin-top: 18px; border-top: 1px dashed #7dd3fc; padding-top: 14px;">
+                        <label class="btn btn-secondary" style="font-size: 16px; cursor: pointer;">
+                            <span id="btn-import-json">📂 匯入 USB 內的 data.json 檔</span>
+                            <input type="file" accept=".json,.html,.htm" onchange="importDataJson(event)" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 24px; font-weight: bold; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;" id="txt-edit-lesson-title">✏️ 編輯課堂內容與儲存歷史</h3>
+
+                    <div style="display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; background: #f8fafc; padding: 16px; border-radius: 16px; border: 1px solid #e2e8f0;">
+                        <button onclick="archiveCurrentLesson()" class="btn btn-success" style="font-size: 17px;" id="btn-archive-lesson">📥 封存當前課堂至歷史紀錄</button>
+                    </div>
+
+                    <div id="history-lessons-container" style="margin-bottom: 24px;">
+                        <label style="font-weight: bold; font-size: 16px;" id="txt-history-list-label">📜 歷年課堂紀錄庫 (點擊一鍵載入)：</label>
+                        <div id="history-lessons-list" style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;"></div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 18px;">
+                        <div>
+                            <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-title">課堂單元主題</label>
+                            <input type="text" id="edit-title" oninput="markDirty()">
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-date">上課日期</label>
+                            <input type="text" id="edit-date" oninput="markDirty()">
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 18px;">
+                        <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-obj">課堂學習目標</label>
+                        <textarea id="edit-objectives" rows="2" oninput="markDirty()"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 18px;">
+                        <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-flow">課堂流程步驟</label>
+                        <div id="edit-flow-container" style="margin-top: 10px;"></div>
+                        <button onclick="addFlowStep()" class="btn btn-secondary" style="font-size: 16px; margin-top: 10px;" id="btn-add-step">➕ 新增流程步驟</button>
+                    </div>
+
+                    <!-- 補充開關設定區 -->
+                    <div style="background-color: #f8fafc; border: 1px solid #cbd5e1; padding: 18px; border-radius: 16px; margin-bottom: 18px;">
+                        <label style="font-weight: bold; font-size: 18px; color: #4338ca; display: block; margin-bottom: 10px;">⚙️ 課堂補充區塊顯示設定：</label>
+                        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                            <label style="font-weight: bold; font-size: 16px; cursor: pointer;">
+                                <input type="checkbox" id="edit-show-ann" onchange="markDirty()"> 📢 顯示「課後作業 / 公告」
+                            </label>
+                            <label style="font-weight: bold; font-size: 16px; cursor: pointer;">
+                                <input type="checkbox" id="edit-show-mat" onchange="markDirty()"> 🎒 顯示「準備器材 / 教具」
+                            </label>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px;">
+                        <div>
+                            <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-ann">課後作業 / 公告內容</label>
+                            <textarea id="edit-announcement" rows="2" oninput="markDirty()"></textarea>
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; font-size: 16px;" id="lbl-edit-mat">準備器材 / 教具內容</label>
+                            <textarea id="edit-materials" rows="2" oninput="markDirty()"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 2px solid #f1f5f9; padding-top: 20px; text-align: right;">
+                        <button onclick="saveLessonChanges()" class="btn btn-primary" style="font-size: 20px; padding: 12px 32px;" id="btn-save-lesson-content">
+                            💾 儲存並更新課堂內容
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 24px; font-weight: bold; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;" id="txt-flow-preset-title">💾 課堂流程範本庫</h3>
+                    <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+                        <input type="text" id="preset-name-input" placeholder="輸入此流程範本名稱 (例如：測驗課流程)" style="max-width: 360px; margin-top:0;">
+                        <button onclick="saveCurrentFlowAsPreset()" class="btn btn-primary" style="flex-shrink: 0;" id="btn-save-preset">儲存目前流程為範本</button>
+                    </div>
+                    <div>
+                        <label style="font-weight: bold; font-size: 16px;" id="txt-load-preset-label">快速載入已儲存範本：</label>
+                        <div id="preset-list-container" style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px;"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 24px; font-weight: bold; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;" id="txt-student-mgmt-title">👥 學生名單管理</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+                        <div>
+                            <label style="font-weight: bold; font-size: 16px;" id="lbl-batch-import">批次匯入學生名單 (一行一個姓名)</label>
+                            <textarea id="import-students-text" rows="6" placeholder="陳大文
+林小明
+張美麗"></textarea>
+                            <button onclick="batchImportStudents()" class="btn btn-success" style="margin-top: 10px; font-size: 16px;" id="btn-import-students">匯入並替換名單</button>
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; font-size: 16px;"><span id="txt-student-list-label">目前學生名單</span> (<span id="admin-student-count">0</span> 人)</label>
+                            <div id="admin-student-list" style="max-height: 240px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px; margin-top: 8px; background: #f8fafc;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 24px; font-weight: bold; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;" id="txt-hw-mgmt-title">📚 習作項目管理</h3>
+                    <div style="display: flex; gap: 14px; max-width: 520px; margin-bottom: 20px;">
+                        <input type="text" id="new-hw-name" placeholder="輸入新習作名稱" style="margin-top:0;">
+                        <button onclick="addNewHomework()" class="btn btn-primary" style="flex-shrink: 0;" id="btn-add-hw">新增習作</button>
+                    </div>
+                    <div id="admin-hw-list" style="display: flex; flex-wrap: wrap; gap: 12px;"></div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 📦 嵌入式 JSON 資料庫 -->
+    <script id="embedded-data" type="application/json">/*__DATA__*/</script>
+
+    <script>/*__APP__*/</script>
+
 </body></html>

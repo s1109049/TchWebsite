@@ -1,11 +1,11 @@
 {
   "name": "tch-classroom",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "private": true,
   "scripts": {
     "build": "node scripts/build.mjs",
     "start": "python3 -m http.server 4173 --bind 0.0.0.0",
-    "test": "node --test tests/core.test.cjs",
+    "test": "node --test tests/layout-contract.test.cjs && playwright test",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
