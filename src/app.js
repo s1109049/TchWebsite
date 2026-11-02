@@ -5,7 +5,7 @@ let appData;
         let soundEnabled = true;
         const pristineHTML = document.documentElement.cloneNode(true);
         const storagePrefix = 'tch-original-repair-v1:';
-        const classDefinitions = [{"key": "中國歷史:S1D", "className": "S1D", "subject": "中國歷史"}, {"key": "CL:S1D", "className": "S1D", "subject": "CL"}, {"key": "CL:S2A", "className": "S2A", "subject": "CL"}, {"key": "CL:S2B", "className": "S2B", "subject": "CL"}, {"key": "CL:S2C", "className": "S2C", "subject": "CL"}, {"key": "CL:S3B", "className": "S3B", "subject": "CL"}, {"key": "CL:S3C", "className": "S3C", "subject": "CL"}, {"key": "CL:S3D", "className": "S3D", "subject": "CL"}, {"key": "公經社:S3A", "className": "S3A", "subject": "公經社"}, {"key": "公經社:S3B", "className": "S3B", "subject": "公經社"}, {"key": "公社:S4B", "className": "S4B", "subject": "公社"}];
+        const classDefinitions = [{"key": "中國歷史:S1D", "className": "S1D", "subject": "中國歷史"}, {"key": "CL:S1D", "className": "S1D", "subject": "CL"}, {"key": "CL:S2B", "className": "S2B", "subject": "CL"}, {"key": "CL:S2C", "className": "S2C", "subject": "CL"}, {"key": "CL:S2D", "className": "S2D", "subject": "CL"}, {"key": "CL:S3B", "className": "S3B", "subject": "CL"}, {"key": "CL:S3C", "className": "S3C", "subject": "CL"}, {"key": "CL:S3D", "className": "S3D", "subject": "CL"}, {"key": "公經社:S3A", "className": "S3A", "subject": "公經社"}, {"key": "公經社:S3B", "className": "S3B", "subject": "公經社"}, {"key": "公社:S4B", "className": "S4B", "subject": "公社"}];
         let classBook=null,currentClassKey=null;
         let originalFileHandle = null, fileHandleReady = Promise.resolve(), fileWriteBusy = false;
         let lessonEditorReady = false, pickerMode = 'slot', wheelFinish = null;

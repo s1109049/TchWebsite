@@ -702,29 +702,6 @@ button:disabled { cursor:not-allowed; opacity:.55; }
         "updatedAt": 0
       }
     },
-    "CL:S2A": {
-      "lang": "zh",
-      "lesson": {
-        "title": "",
-        "date": "",
-        "objectives": "",
-        "flow": [],
-        "announcement": "",
-        "materials": "",
-        "showAnnouncement": true,
-        "showMaterials": true
-      },
-      "historyLessons": [],
-      "flowPresets": [],
-      "students": [],
-      "homeworks": [],
-      "submissions": {},
-      "_storage": {
-        "id": "class-CL:S2A",
-        "revision": 0,
-        "updatedAt": 0
-      }
-    },
     "CL:S2B": {
       "lang": "zh",
       "lesson": {
@@ -767,6 +744,29 @@ button:disabled { cursor:not-allowed; opacity:.55; }
       "submissions": {},
       "_storage": {
         "id": "class-CL:S2C",
+        "revision": 0,
+        "updatedAt": 0
+      }
+    },
+    "CL:S2D": {
+      "lang": "zh",
+      "lesson": {
+        "title": "",
+        "date": "",
+        "objectives": "",
+        "flow": [],
+        "announcement": "",
+        "materials": "",
+        "showAnnouncement": true,
+        "showMaterials": true
+      },
+      "historyLessons": [],
+      "flowPresets": [],
+      "students": [],
+      "homeworks": [],
+      "submissions": {},
+      "_storage": {
+        "id": "class-CL:S2D",
         "revision": 0,
         "updatedAt": 0
       }
@@ -919,7 +919,7 @@ button:disabled { cursor:not-allowed; opacity:.55; }
         let soundEnabled = true;
         const pristineHTML = document.documentElement.cloneNode(true);
         const storagePrefix = 'tch-original-repair-v1:';
-        const classDefinitions = [{"key": "中國歷史:S1D", "className": "S1D", "subject": "中國歷史"}, {"key": "CL:S1D", "className": "S1D", "subject": "CL"}, {"key": "CL:S2A", "className": "S2A", "subject": "CL"}, {"key": "CL:S2B", "className": "S2B", "subject": "CL"}, {"key": "CL:S2C", "className": "S2C", "subject": "CL"}, {"key": "CL:S3B", "className": "S3B", "subject": "CL"}, {"key": "CL:S3C", "className": "S3C", "subject": "CL"}, {"key": "CL:S3D", "className": "S3D", "subject": "CL"}, {"key": "公經社:S3A", "className": "S3A", "subject": "公經社"}, {"key": "公經社:S3B", "className": "S3B", "subject": "公經社"}, {"key": "公社:S4B", "className": "S4B", "subject": "公社"}];
+        const classDefinitions = [{"key": "中國歷史:S1D", "className": "S1D", "subject": "中國歷史"}, {"key": "CL:S1D", "className": "S1D", "subject": "CL"}, {"key": "CL:S2B", "className": "S2B", "subject": "CL"}, {"key": "CL:S2C", "className": "S2C", "subject": "CL"}, {"key": "CL:S2D", "className": "S2D", "subject": "CL"}, {"key": "CL:S3B", "className": "S3B", "subject": "CL"}, {"key": "CL:S3C", "className": "S3C", "subject": "CL"}, {"key": "CL:S3D", "className": "S3D", "subject": "CL"}, {"key": "公經社:S3A", "className": "S3A", "subject": "公經社"}, {"key": "公經社:S3B", "className": "S3B", "subject": "公經社"}, {"key": "公社:S4B", "className": "S4B", "subject": "公社"}];
         let classBook=null,currentClassKey=null;
         let originalFileHandle = null, fileHandleReady = Promise.resolve(), fileWriteBusy = false;
         let lessonEditorReady = false, pickerMode = 'slot', wheelFinish = null;
@@ -2404,6 +2404,13 @@ async function animateClaw(selected,index,candidates,reduced) {
 function validateClassBook(raw) {
     if(!raw||raw.workspaceVersion!==1||typeof raw.id!=='string'||!Number.isSafeInteger(raw.revision)||raw.revision<0||!raw.classes)throw Error('workspace');
     const copy=JSON.parse(JSON.stringify(raw));
+    // Keep the superseded class intact, but never relabel its students as S2D.
+    if(Object.hasOwn(copy.classes,'CL:S2A')&&!Object.hasOwn(copy.classes,'CL:S2D')){
+        const retired=validateOriginalData(copy.classes['CL:S2A']);
+        copy.archivedClasses={...copy.archivedClasses,'CL:S2A':retired};
+        delete copy.classes['CL:S2A'];
+        copy.classes['CL:S2D']=validateOriginalData({lang:'zh',lesson:{flow:[]},students:[],homeworks:[],submissions:{}});
+    }
     if(Object.keys(copy.classes).length!==classDefinitions.length)throw Error('classes');
     for(const def of classDefinitions){
         const data=validateOriginalData(copy.classes[def.key]);
@@ -2419,14 +2426,16 @@ function validateClassBook(raw) {
     return copy;
 }
 function loadClassBook(raw) {
+    let migrated=Object.hasOwn(raw.classes||{},'CL:S2A');
     const embedded=validateClassBook(raw);
     storageRootKey=storagePrefix+'book-active:'+embedded.id+':'+location.pathname;
     try {
         const id=localStorage.getItem(storageRootKey)||embedded.id;
         const text=localStorage.getItem(storagePrefix+id+':'+location.pathname);
-        if(text){const cached=validateClassBook(JSON.parse(text));if(cached.id===id&&(id!==embedded.id||cached.revision>embedded.revision)){classBook=cached;isDirty=true;}}
+        if(text){const decoded=JSON.parse(text),cached=validateClassBook(decoded);if(cached.id===id&&(id!==embedded.id||cached.revision>embedded.revision)){classBook=cached;migrated=Object.hasOwn(decoded.classes,'CL:S2A');isDirty=true;}}
     }catch{localRecoveryWarning=true;}
     if(!classBook){classBook=embedded;if(classBook.id==='class-book-template-v1')classBook.id=newStorageId();}
+    if(migrated)isDirty=true;
     currentClassKey=null;
     return classBook.classes[classDefinitions[0].key];
 }
@@ -2445,6 +2454,12 @@ function initializeClassHome() {
     const home=document.getElementById('class-home');home.replaceChildren();
     const title=document.createElement('h1');title.textContent='課堂管理系統 · 選擇班別';home.appendChild(title);
     const note=document.createElement('p');note.textContent='按科目及班別進入；同班不同科的資料分開保存。';home.appendChild(note);
+    if(classBook.archivedClasses?.['CL:S2A']){
+        const archived=document.createElement('p');archived.textContent='CL 班別已更正為 S2D；請匯入 Excel 更新名單。原 S2A 資料已封存保留。 ';
+        const download=document.createElement('button');download.textContent='下載原 S2A 資料';
+        download.onclick=()=>downloadFile(JSON.stringify(classBook.archivedClasses['CL:S2A'],null,2),'archived-CL-S2A.json','application/json');
+        archived.appendChild(download);home.appendChild(archived);
+    }
     for(const subject of [...new Set(classDefinitions.map(d=>d.subject))]){
         const group=document.createElement('div');group.className='class-subject card';
         const h=document.createElement('h2');h.textContent=subject;group.appendChild(h);

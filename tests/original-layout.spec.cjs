@@ -100,7 +100,7 @@ async function choose(page,key){if(!await page.locator('#class-home').isVisible(
 test('all eleven class-subject combinations keep lessons, students and homework separate after reload',async({page})=>{
  await page.route('https://**',r=>r.abort());await page.goto('/');await expect(page.locator('[data-class-key]')).toHaveCount(11);
  const keys=await page.locator('[data-class-key]').evaluateAll(nodes=>nodes.map(n=>n.dataset.classKey));
- expect(keys).toContain('中國歷史:S1D');expect(keys).toContain('CL:S1D');expect(keys).toContain('公經社:S3B');expect(keys).toContain('CL:S3B');
+ expect(keys.filter(k=>k.startsWith('CL:'))).toEqual(['CL:S1D','CL:S2B','CL:S2C','CL:S2D','CL:S3B','CL:S3C','CL:S3D']);expect(keys).not.toContain('CL:S2A');expect(keys).toContain('中國歷史:S1D');expect(keys).toContain('CL:S1D');expect(keys).toContain('公經社:S3B');expect(keys).toContain('CL:S3B');
  for(let i=0;i<keys.length;i++){
   await choose(page,keys[i]);await page.locator('#btn-admin').click();await expect(page.locator('#admin-panel')).toBeHidden();await login(page);
   await page.locator('#edit-title').fill('課堂-'+i);await addStep(page,'步驟-'+i);await roster(page,'學生-'+i);await page.locator('#new-hw-name').fill('功課-'+i);await page.locator('#btn-add-hw').click();
@@ -143,7 +143,24 @@ test('roster-only import maps the same class to both subjects without replacing 
 });
 test('local Excel imports class numbers and names into all matching subjects and keeps lessons',async({page})=>{
  await open(page);await login(page);await page.locator('#edit-title').fill('原課堂不變');
- await page.locator('input[type=file]').setInputFiles('tests/fixtures/example-class-list.xlsx');await expect(page.locator('#file-save-status')).toContainText('已更新 4 個班科');await expect(page.locator('#edit-title')).toHaveValue('原課堂不變');
+ await page.locator('input[type=file]').setInputFiles('tests/fixtures/example-class-list.xlsx');await expect(page.locator('#file-save-status')).toContainText('已更新 5 個班科');await expect(page.locator('#edit-title')).toHaveValue('原課堂不變');
  expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生甲','2 學生乙']);await choose(page,'CL:S1D');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生甲','2 學生乙']);await choose(page,'公經社:S3B');expect(await page.evaluate(()=>appData.students)).toEqual(['1 EXAMPLE THREE']);
+ await choose(page,'CL:S2D');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生丙','2 學生丁']);await page.reload();await choose(page,'CL:S2D');expect(await page.evaluate(()=>appData.students)).toEqual(['1 學生丙','2 學生丁']);await choose(page,'公經社:S3B');
  await login(page);await page.locator('input[type=file]').setInputFiles({name:'broken.xlsx',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',buffer:Buffer.from('invalid zip')});await expect(page.locator('#file-save-status')).toContainText('匯入失敗');expect(await page.evaluate(()=>appData.students)).toEqual(['1 EXAMPLE THREE']);
+});
+
+test('old S2A books import and reopen without mixing S2A students into S2D',async({page})=>{
+ await open(page);await login(page);
+ const legacy=await page.evaluate(()=>captureAllData());legacy.classes['CL:S2A']=legacy.classes['CL:S2D'];delete legacy.classes['CL:S2D'];
+ legacy.classes['CL:S2A'].students=['1 舊班學生'];legacy.classes['CL:S2A'].lesson.title='舊班課堂';legacy.classes['CL:S2A']._pickerRemaining=['1 舊班學生'];legacy.classes['CL:S2B'].lesson.title='保留其他班';
+ await page.locator('input[type=file]').setInputFiles({name:'legacy-book.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(legacy))});
+ await expect(page.locator('#class-home')).toBeVisible();await expect(page.locator('[data-class-key="CL:S2A"]')).toHaveCount(0);await expect(page.locator('[data-class-key="CL:S2D"]')).toHaveCount(1);
+ const download=page.waitForEvent('download');await page.getByRole('button',{name:'下載原 S2A 資料',exact:true}).click();const archived=JSON.parse(await fs.readFile(await (await download).path(),'utf8'));expect(archived.students).toEqual(['1 舊班學生']);expect(archived.lesson.title).toBe('舊班課堂');
+ await choose(page,'CL:S2D');expect(await page.evaluate(()=>appData.students)).toEqual([]);await login(page);await page.locator('#edit-title').fill('新 S2D 課堂');await choose(page,'CL:S2B');await expect(page.locator('#display-title')).toHaveText('保留其他班');
+ await page.reload();await choose(page,'CL:S2D');await expect(page.locator('#display-title')).toHaveText('新 S2D 課堂');expect(await page.evaluate(()=>validateClassBook(captureAllData()).archivedClasses['CL:S2A'].students)).toEqual(['1 舊班學生']);
+ // Loading an old embedded HTML and recovering an old browser cache use the same migration.
+ await page.evaluate(book=>{const slot=dataStorageKey();localStorage.setItem(slot,JSON.stringify({...book,id:classBook.id,revision:classBook.revision+1}));},legacy);
+ await page.reload();await choose(page,'CL:S2B');await expect(page.locator('#display-title')).toHaveText('保留其他班');await choose(page,'CL:S2D');expect(await page.evaluate(()=>appData.students)).toEqual([]);
+ const html=(await fs.readFile('index.html','utf8')).replace(/(<script[^>]*id="embedded-data"[^>]*>)[\s\S]*?(<\/script>)/,'$1'+JSON.stringify(legacy)+'$2');
+ await page.route('http://legacy-book.test/**',r=>r.fulfill({contentType:'text/html',body:html}));await page.goto('http://legacy-book.test/');await expect(page.locator('[data-class-key]')).toHaveCount(11);await choose(page,'CL:S2D');expect(await page.evaluate(()=>appData.students)).toEqual([]);await choose(page,'CL:S2B');await expect(page.locator('#display-title')).toHaveText('保留其他班');
 });
