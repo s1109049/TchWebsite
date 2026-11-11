@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="750" viewBox="0 0 1280 750" role="img" aria-labelledby="title desc">
+<title id="title">Database hierarchy question with fictional data</title><desc id="desc">A database containing three tables. Labels a to e point to the database, tables, one row, one column, and a single character.</desc>
+<rect width="1280" height="750" rx="20" fill="#f3f8fb"/>
+<text x="52" y="76" fill="#2b5366" font-family="Arial,sans-serif" font-size="38" font-weight="700">Hierarchy of a database</text>
+<text x="53" y="108" fill="#617986" font-family="Arial,sans-serif" font-size="20">Look at the labels (a)–(e). All sample names and values are fictional.</text>
+<g font-family="Arial,sans-serif" fill="#233f4a">
+<rect x="492" y="142" width="296" height="108" rx="13" fill="#cfe5ed" stroke="#6a98ac" stroke-width="3"/>
+<path d="M 525 181 h30 l8 8 h40 v33 h-78 z" fill="#79a9c1" stroke="#50829b" stroke-width="2"/>
+<text x="622" y="209" font-size="23" font-weight="700">School data</text>
+<rect x="456" y="130" width="64" height="45" rx="8" fill="white" stroke="#527a8a" stroke-width="2"/><text x="474" y="160" font-size="24">(a)</text>
+<g fill="none" stroke="#8eacb8" stroke-width="4"><path d="M550 250 V278 H215 V306"/><path d="M640 250 V306"/><path d="M730 250 V278 H1064 V306"/></g>
+<g transform="translate(37 318)">
+<text x="0" y="-19" font-size="22" font-weight="700">Student Info</text><rect x="0" y="0" width="351" height="220" rx="6" fill="white" stroke="#86a9b7" stroke-width="2"/>
+<path d="M0 0 h351 v44 h-351z" fill="#d9e9ef"/><path d="M68 0 v220 M 193 0 v220 M 270 0 v220 M0 44 h351 M0 88 h351 M0 132 h351 M0 176 h351" fill="none" stroke="#a9c1ca"/>
+<text x="15" y="29" font-size="18" font-weight="700">ID</text><text x="79" y="29" font-size="18" font-weight="700">Name</text><text x="204" y="29" font-size="18" font-weight="700">Class</text><text x="278" y="29" font-size="18" font-weight="700">Year</text>
+<g font-size="18"><text x="10" y="74">A01</text><text x="79" y="74">Alex Lee</text><text x="205" y="74">3A</text><text x="278" y="74">2011</text><text x="10" y="118">A02</text><text x="79" y="118">Sam Chan</text><text x="205" y="118">3A</text><text x="278" y="118">2011</text><text x="10" y="162">A03</text><text x="79" y="162">Robin Ho</text><text x="205" y="162">3B</text><text x="278" y="162">2012</text><text x="10" y="206">A04</text><text x="79" y="206">Taylor Ng</text><text x="205" y="206">3B</text><text x="278" y="206">2012</text></g></g>
+<g transform="translate(460 318)">
+<text x="0" y="-19" font-size="22" font-weight="700">Marks</text><rect x="0" y="0" width="360" height="220" rx="6" fill="white" stroke="#86a9b7" stroke-width="2"/>
+<path d="M0 0 h360 v44 h-360z" fill="#d9e9ef"/><path d="M75 0 v220 M235 0 v220 M0 44 h360 M0 88 h360 M0 132 h360 M0 176 h360" fill="none" stroke="#a9c1ca"/>
+<rect x="76" y="1" width="158" height="218" fill="#f6d38a" fill-opacity=".35" stroke="#d99546" stroke-width="3"/>
+<rect x="1" y="89" width="358" height="42" rx="4" fill="#b8e3f5" fill-opacity=".45" stroke="#4c9dc1" stroke-width="3"/>
+<text x="14" y="29" font-size="18" font-weight="700">ID</text><text x="90" y="29" font-size="18" font-weight="700">Subject</text><text x="248" y="29" font-size="18" font-weight="700">Mark</text>
+<g font-size="18"><text x="12" y="74">A01</text><text x="90" y="74">English</text><text x="251" y="74">84</text><text x="12" y="118">A02</text><text x="90" y="118">Maths</text><text x="251" y="118">90</text><text x="12" y="162">A03</text><text x="90" y="162">English</text><text x="251" y="162">78</text><text x="12" y="206">A04</text><text x="90" y="206">Maths</text><text x="251" y="206">86</text></g></g>
+<g transform="translate(898 318)">
+<text x="0" y="-19" font-size="22" font-weight="700">Activities</text><rect x="0" y="0" width="337" height="176" rx="6" fill="white" stroke="#86a9b7" stroke-width="2"/>
+<path d="M0 0 h337 v44 h-337z" fill="#f5e8d9"/><path d="M70 0 v176 M155 0 v176 M0 44 h337 M0 88 h337 M0 132 h337" fill="none" stroke="#cdbdaa"/>
+<text x="14" y="29" font-size="18" font-weight="700">ID</text><text x="82" y="29" font-size="18" font-weight="700">Year</text><text x="170" y="29" font-size="18" font-weight="700">Activity</text>
+<g font-size="18"><text x="12" y="74">A01</text><text x="83" y="74">2026</text><text x="170" y="74">Music</text><text x="12" y="118">A02</text><text x="83" y="118">2026</text><text x="170" y="118">Chess</text><text x="12" y="162">A03</text><text x="83" y="162">2026</text><text x="170" y="162">Drama</text></g><rect x="211" y="53" width="13" height="25" rx="3" fill="none" stroke="#a768b7" stroke-width="3"/></g>
+<g fill="white" stroke="#527a8a" stroke-width="2"><rect x="388" y="275" width="59" height="40" rx="6"/><rect x="374" y="407" width="59" height="40" rx="6"/><rect x="627" y="592" width="59" height="40" rx="6"/><rect x="1158" y="540" width="59" height="40" rx="6"/></g>
+<g font-size="21" fill="#233f4a"><text x="404" y="302">(b)</text><text x="390" y="434">(c)</text><text x="643" y="619">(d)</text><text x="1175" y="567">(e)</text></g>
+<g fill="none" stroke-width="3"><path d="M433 427 H460" stroke="#4c9dc1"/><path d="M656 592 V538" stroke="#d99546"/><path d="M1188 540 V501 H1116 V394" stroke="#a768b7"/></g>
+<text x="52" y="690" font-size="19" fill="#607b85">Based on the worksheet's hierarchy question; example data has been replaced.</text>
+</g></svg>
