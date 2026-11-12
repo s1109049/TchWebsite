@@ -19,57 +19,25 @@
   
 /* Interactive Notes 2 lesson */
 .function-lab{scroll-margin-top:24px;margin-bottom:82px}
-.lab-frame{background:#fffefa;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
-.lab-intro{padding:26px 30px;background:#eff7f4;border-bottom:1px solid #d1e6dc;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-.lab-intro p{margin:5px 0 0;color:#55746c;font-size:.98rem}.lab-path{font-size:.86rem;font-weight:800;color:#327565}
-.lab-body{padding:28px 30px 30px}
-.lab-kicker{color:#66818d;font-weight:900;letter-spacing:.11em;font-size:.76rem;text-transform:uppercase}
-.lab-cats,.lab-fns{display:flex;flex-wrap:wrap;gap:9px;margin:11px 0 22px}
-.lab-cats button,.lab-fns button{font:inherit;border:1px solid #bfd5dd;background:#fff;color:#376278;font-size:.96rem;font-weight:800;border-radius:10px;padding:9px 14px;cursor:pointer}
-.lab-cats button[aria-pressed=true]{background:#246994;border-color:#246994;color:#fff}
-.lab-fns button[aria-pressed=true]{background:#dff0e9;border-color:#63ab90;color:#166e59;box-shadow:inset 0 -3px #7cbea3}
-.lab-fns{margin-bottom:25px}
-.lab-divider{border:0;border-top:1px solid #dce8eb;margin:0 0 22px}
-.lab-title-row{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;flex-wrap:wrap}
-.lab-title-row h3{font-size:clamp(1.6rem,2.8vw,2.3rem);color:#1d5876}.lab-purpose{font-size:1.06rem;color:#546d79;max-width:770px}
-.lab-tag{background:#fff2cf;border-radius:8px;color:#805e28;padding:6px 12px;font-size:.83rem;font-weight:900}
-.lab-steps{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0;color:#476a7d;font-weight:800;font-size:.87rem}
-.lab-steps span{background:#edf4f7;border-radius:7px;padding:7px 10px}
-.lab-grid{display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);gap:30px;align-items:start}
-.lab-data-box{border:1px solid #d8e5e8;border-radius:12px;overflow:hidden;background:#fff}
-.lab-data-head{padding:11px 14px;background:#e9f3f6;color:#315c70;font-size:.9rem;font-weight:900}
-.lab-sheet-scroll{overflow-x:auto}.lab-sheet{border-collapse:collapse;width:100%;font-size:.92rem}
-.lab-sheet th,.lab-sheet td{padding:6px 10px;border-bottom:1px solid #e5edef;white-space:nowrap}
-.lab-sheet th{background:#f6f9f9;position:sticky;top:0;z-index:1;font-size:.8rem}
-.lab-sheet td:first-child{color:#557886;font-weight:800;width:75px}
-.lab-cell{width:100%;min-width:80px;max-width:150px;border:1px solid #ccdfe4;border-radius:6px;padding:6px 8px;font:inherit;color:#294552;background:#fff}
-.lab-sheet tr.lab-matched td{background:#fff2bf}.lab-sheet tr.lab-matched .lab-cell{border-color:#e9bc52}
-.lab-inputs{padding:17px 16px;display:grid;gap:14px}
-.lab-inputs label{display:grid;gap:5px;font-size:.9rem;font-weight:800;color:#486c7d}
-.lab-inputs input,.lab-inputs select{font:inherit;font-weight:500;color:#263d4b;padding:10px 11px;border:1px solid #bfd2dc;border-radius:8px;background:#fff;min-width:0;width:100%}
-.lab-help{padding:10px 14px;background:#f6faf9;color:#637c84;font-size:.84rem}
-.lab-explain p{font-size:1rem;color:#4d6875}.lab-explain .lab-rule{font-size:1.06rem;color:#263d4b}
-.lab-formula{background:#1d3d51;color:#fff;border-radius:11px;padding:14px 16px;margin:14px 0 8px;font:clamp(.9rem,1.5vw,1.12rem)/1.6 ui-monospace,Consolas,monospace;overflow:auto;white-space:nowrap}
-.lab-formula .lf-func{color:#91dee4;font-weight:900}.lab-formula .lf-ref{color:#ffe092;font-weight:800}.lab-formula .lf-lit{color:#ffd4b5}.lab-formula .lf-num{color:#bff0c9}
-.lab-legend{font-size:.83rem;color:#627c86;display:flex;gap:14px;flex-wrap:wrap}.lab-legend span:nth-child(1){color:#187789}.lab-legend span:nth-child(2){color:#996600}.lab-legend span:nth-child(3){color:#a34b31}
-.lab-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px}
-.lab-run,.lab-reset,.lab-next{font:inherit;border-radius:10px;padding:10px 16px;font-weight:800;cursor:pointer}
-.lab-run{background:#246994;color:#fff;border:1px solid #246994}.lab-reset,.lab-next{background:white;color:#28647f;border:1px solid #b9d3dd}
-.lab-result{margin-top:16px;border-left:5px solid #3a9b77;background:#e7f5ee;border-radius:4px 10px 10px 4px;padding:15px 17px;color:#274f45}
-.lab-result[hidden]{display:none}.lab-result .lab-result-label{display:block;font-size:.77rem;letter-spacing:.1em;font-weight:900;color:#3e8270;text-transform:uppercase}
-.lab-result output{display:block;font-size:1.65rem;font-weight:900;color:#176f59;white-space:pre-wrap;overflow-wrap:anywhere;margin:3px 0}
-.lab-result p{margin:5px 0 0;color:#385f54;font-size:.96rem}
-.lab-tip{margin-top:16px;background:#fff7e0;padding:12px 15px;border-radius:9px;font-size:.92rem;color:#735520}
-.lab-quiz{margin-top:30px;padding:21px 22px;background:#f1f6f8;border-radius:13px;border:1px solid #d9e7ec}
-.lab-quiz h4{margin:4px 0 8px;font-size:1.16rem;color:#205975}.lab-quiz p{margin:0;color:#526e7b}.lab-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
-.lab-options button{font:inherit;background:white;border:1px solid #bed4dd;color:#305f75;padding:8px 16px;border-radius:9px;font-weight:800;cursor:pointer}
-.lab-options button[aria-pressed=true]{background:#e0f0e9;border-color:#67ac92;color:#176950}
-.lab-feedback{margin:10px 0 0!important;font-weight:800}.lab-feedback.good{color:#167452}.lab-feedback.again{color:#9c542a}
-.lab-bottom{margin-top:24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#5b7783;font-size:.92rem}
-.lab-bottom a{font-weight:800}.function-lab button:focus-visible,.function-lab input:focus-visible,.function-lab select:focus-visible{outline:3px solid #dc9624;outline-offset:2px}
-@media(max-width:850px){.lab-grid{grid-template-columns:1fr}.lab-body,.lab-intro{padding:21px}}
-@media(max-width:520px){.lab-cats button,.lab-fns button{font-size:.9rem;padding:8px 11px}.lab-body{padding:18px}.lab-title-row h3{font-size:1.55rem}.lab-steps{font-size:.8rem}.lab-quiz{padding:17px}}
-
+.lab-frame{background:#fffefa;border:1px solid #d6e4e8;border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.lab-intro{padding:27px 30px;background:#eaf5f1;border-bottom:1px solid #d1e6dc;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.lab-intro h3{color:#164e67;font-size:1.5rem;margin:3px 0}.lab-intro p{margin:3px 0 0;color:#55746c;font-size:.98rem}.lab-overline{font-weight:900;letter-spacing:.13em;font-size:.72rem;color:#32846f}
+.lab-path{display:flex;gap:7px;flex-wrap:wrap;color:#246b59;font-weight:850;font-size:.82rem}.lab-path span{border:1px solid #bedfd4;background:#fff;border-radius:99px;padding:7px 10px}
+.lab-body{padding:29px 30px 30px}.lab-picker-label{display:flex;gap:10px;align-items:flex-start;color:#23576d}.lab-picker-label>span{display:grid;place-items:center;min-width:28px;height:28px;border-radius:9px;background:#e3f1f4;color:#22728d;font-size:.74rem;font-weight:900}.lab-picker-label strong{display:block;font-size:1rem}.lab-picker-label small{display:block;color:#718892;font-size:.84rem}.lab-picker-second{margin-top:17px}
+.lab-cats,.lab-fns{display:flex;flex-wrap:wrap;gap:8px;margin:11px 0 4px}.lab-cats button,.lab-fns button{font:inherit;border:1px solid #bfd5dd;background:#fff;color:#376278;font-size:.94rem;font-weight:800;border-radius:10px;padding:9px 13px;cursor:pointer}.lab-cats button[aria-pressed=true]{background:#246994;border-color:#246994;color:#fff}.lab-fns button[aria-pressed=true]{background:#dff0e9;border-color:#63ab90;color:#166e59;box-shadow:inset 0 -3px #7cbea3}
+.lab-lesson{margin-top:25px;border:1px solid #dce9eb;border-radius:16px;overflow:hidden;background:#fff}.lab-lesson-head{padding:21px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#f7faf9;border-bottom:1px solid #dce9eb}.lab-lesson-head h3{font-size:clamp(1.5rem,2.5vw,2rem);line-height:1.1;color:#1d5876;margin:4px 0}.lab-lesson-head p{margin:0;color:#536f7b}.lab-tag{background:#fff1cc;color:#80622d;padding:6px 10px;border-radius:8px;font-size:.8rem;font-weight:850}
+.lab-grid{display:grid;grid-template-columns:minmax(265px,.84fr) minmax(0,1.16fr);gap:24px;padding:24px;align-items:start}.lab-stack{min-width:0}.lab-kicker{font-weight:900;letter-spacing:.1em;font-size:.72rem;color:#68838e;text-transform:uppercase}.lab-small{font-size:.88rem;color:#68818c;line-height:1.45}
+.lab-data-box{border:1px solid #cfe1e6;border-radius:12px;overflow:hidden;background:#fff}.lab-data-head{padding:12px 14px;background:#e8f3f6;color:#315c70;font-size:.89rem;font-weight:850;display:flex;justify-content:space-between;gap:10px;align-items:center}.lab-data-head small{font-size:.76rem;color:#63818c;font-weight:600}.lab-sheet-scroll{overflow-x:auto}.lab-sheet{border-collapse:collapse;width:100%;font-size:.91rem}.lab-sheet th,.lab-sheet td{padding:5px 8px;border-bottom:1px solid #e5edef;white-space:nowrap}.lab-sheet th{background:#f7fafb;color:#597784;font-size:.75rem;text-align:left}.lab-sheet td:first-child{color:#557886;font-weight:850;width:55px}.lab-sheet td:last-child{width:74px;font-size:.72rem;font-weight:850;color:#5d7f72}.lab-sheet tr.lab-range td:first-child{box-shadow:inset 4px 0 #8ec9bd}.lab-sheet tr.lab-visited td{background:#f2f8f6}.lab-sheet tr.lab-skipped td{color:#8a9a9e;background:#f8f9f9}.lab-sheet tr.lab-current td{background:#fff0bd!important}.lab-sheet tr.lab-current td:first-child{box-shadow:inset 4px 0 #e5ad36}.lab-sheet tr.lab-current input{border-color:#dcac4c;background:#fffdf3}
+.lab-cell{width:100%;min-width:68px;max-width:150px;border:1px solid #cadfe4;border-radius:7px;padding:7px 8px;font:inherit;color:#294552;background:#fff}.lab-inputs{padding:15px;display:grid;gap:13px}.lab-inputs label{display:grid;gap:5px;font-size:.87rem;font-weight:850;color:#486c7d}.lab-inputs input,.lab-inputs select{font:inherit;font-weight:500;color:#263d4b;padding:10px 11px;border:1px solid #bfd2dc;border-radius:8px;background:#fff;min-width:0;width:100%}.lab-help{padding:10px 13px;background:#f6faf9;color:#637c84;font-size:.84rem}.lab-char-strip{display:flex;gap:5px;flex-wrap:wrap;padding:0 15px 15px}.lab-character{text-align:center;min-width:29px;display:grid;gap:2px}.lab-character small{font-size:.66rem;color:#7d939c}.lab-character b{display:grid;place-items:center;min-width:29px;height:31px;border:1px solid #d6e6ea;border-radius:7px;background:#f8fbfc;color:#2b6175;font:800 .9rem ui-monospace,Consolas,monospace}.lab-character.selected b{background:#ffe9a6;border-color:#e4ae36;color:#66480e}.lab-character.space b{color:#a37642}
+.lab-explain-title{font-size:1rem;font-weight:850;color:#254d62;margin:2px 0 8px}.lab-formula{background:#1d3d51;color:#fff;border-radius:11px;padding:14px 16px;margin:10px 0;font:clamp(.92rem,1.45vw,1.12rem)/1.6 ui-monospace,Consolas,monospace;overflow:auto;white-space:nowrap}.lab-formula .lf-func{color:#91dee4;font-weight:900}.lab-formula .lf-ref{color:#ffe092;font-weight:900}.lab-formula .lf-lit{color:#ffd4b5;font-weight:800}.lab-formula .lf-num{color:#bff0c9;font-weight:900}.lab-formula.focusing span{opacity:.32}.lab-formula.focus-func .lf-func,.lab-formula.focus-ref .lf-ref,.lab-formula.focus-values .lf-lit,.lab-formula.focus-values .lf-num{opacity:1;text-decoration:underline;text-underline-offset:5px}
+.lab-formula-tabs{display:flex;flex-wrap:wrap;gap:7px}.lab-formula-tabs button{font:inherit;font-size:.79rem;font-weight:850;border:1px solid #c9dfe4;background:#fff;border-radius:8px;padding:7px 10px;color:#3f7183;cursor:pointer}.lab-formula-tabs button[aria-pressed=true]{border-color:#62aa9a;background:#e6f5ef;color:#176d56}.lab-focus-note{min-height:42px;margin:9px 0 0;padding:9px 11px;border-radius:8px;background:#f3f8f9;color:#4e707d;font-size:.86rem;line-height:1.4}
+.lab-predict{margin-top:19px;border:1px solid #eddfba;background:#fffaf0;border-radius:12px;padding:15px}.lab-predict strong{display:block;color:#765722;font-size:1rem}.lab-predict p{margin:3px 0 10px;color:#806f51;font-size:.85rem}.lab-predict-row{display:flex;gap:8px;flex-wrap:wrap}.lab-predict input{flex:1 1 110px;min-width:0;width:100%;padding:9px 10px;border:1px solid #d7c7a5;border-radius:8px;font:inherit;background:#fff}.lab-btn{font:inherit;font-size:.9rem;border-radius:9px;padding:9px 13px;font-weight:850;cursor:pointer}.lab-btn.primary{background:#246994;color:#fff;border:1px solid #246994}.lab-btn.secondary{background:#fff;color:#28647f;border:1px solid #b9d3dd}.lab-predict-feedback{min-height:21px;margin:8px 0 0;font-size:.86rem;color:#6e6b5e}.lab-predict-feedback.good{color:#167452;font-weight:800}.lab-predict-feedback.again{color:#a1532a;font-weight:800}
+.lab-trace{margin-top:18px;border:1px solid #cfdfdf;border-radius:12px;overflow:hidden}.lab-trace-head{padding:13px 15px;background:#eaf5f1;display:flex;justify-content:space-between;gap:10px;align-items:center}.lab-trace-head strong{color:#225d50}.lab-trace-head span{font-size:.76rem;font-weight:850;color:#5f887d}.lab-track{height:5px;background:#dbece7}.lab-track>span{display:block;background:#59ab8c;height:100%;transition:width .2s}.lab-trace-body{padding:15px}.lab-trace-badge{font-size:.73rem;letter-spacing:.06em;text-transform:uppercase;font-weight:900;color:#2c8973}.lab-trace-message{font-size:1rem;color:#263e4b;font-weight:800;line-height:1.45;margin:5px 0}.lab-trace-detail{font-size:.88rem;color:#5c7681;line-height:1.4;margin:4px 0}.lab-trace-value{margin-top:10px;background:#f1f7f6;border-radius:9px;padding:10px 12px;color:#317a67;font-size:.85rem;font-weight:750}.lab-trace-value b{display:block;color:#165d4d;font-size:1.28rem;overflow-wrap:anywhere}.lab-trace-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.lab-trace-controls button:disabled{opacity:.5;cursor:default}
+.lab-tip{margin-top:16px;padding:11px 13px;border-radius:9px;background:#fff7e1;color:#735520;font-size:.88rem}.lab-bottom{margin-top:22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#5b7783;font-size:.9rem}.lab-bottom a{font-weight:850}.function-lab button:focus-visible,.function-lab input:focus-visible,.function-lab select:focus-visible{outline:3px solid #d58e25;outline-offset:2px}
+.lab-trace-body{display:flex;flex-direction:column}.lab-trace-controls{order:-1;margin:0 0 13px}
+.lab-challenge{margin-top:18px;border:1px solid #c8e4d9;background:#f1faf6;padding:15px;border-radius:12px}.lab-challenge strong{display:block;color:#215e4f;font-size:1rem;margin-top:2px}.lab-challenge p{font-size:.9rem;line-height:1.45;color:#496c63;margin:5px 0 11px}.lab-challenge-feedback{font-size:.84rem;color:#608078;margin-top:8px}.lab-challenge-feedback.good{color:#167452;font-weight:800}.lab-challenge-feedback.again{color:#a1532a;font-weight:800}
+@media(max-width:850px){.lab-grid{grid-template-columns:1fr}.lab-body,.lab-intro{padding:21px}.lab-grid{padding:20px}}
+@media(max-width:520px){.lab-body{padding:17px}.lab-grid{padding:15px;gap:20px}.lab-lesson-head{padding:17px}.lab-cats button,.lab-fns button{font-size:.88rem;padding:8px 10px}.lab-path{font-size:.74rem}.lab-predict-row{display:grid}.lab-predict-row button{width:100%}}
 
 </style>
 </head>
@@ -91,14 +59,15 @@
       </section>
       
 <section id="functions" class="function-lab">
-  <div class="sectionhead"><div class="eyebrow">Before the practical task · Notes 2</div><h2>Learn the functions first.</h2><p>Explore the same examples as your Notes 2 and Excel demo. Choose a function, predict the result, then change the data and try it.</p></div>
+  <div class="sectionhead"><div class="eyebrow">Before the practical task · Notes 2</div><h2>Let’s see functions in action.</h2><p>Explore one example at a time. Predict what Excel will return, then follow its calculation and change the data yourself.</p></div>
   <div class="lab-frame">
-    <div class="lab-intro"><div><strong>Function explorer</strong><p>Four families of functions, one step at a time.</p></div><div class="lab-path">1 &nbsp; Choose &nbsp; → &nbsp; 2 &nbsp; Predict &nbsp; → &nbsp; 3 &nbsp; Try</div></div>
+    <div class="lab-intro"><div><span class="lab-overline">THE FUNCTION LAB</span><h3>Think like Excel</h3><p>Choose a function and watch what happens inside the formula.</p></div><div class="lab-path"><span>01 Look</span><span>02 Predict</span><span>03 Follow</span><span>04 Change</span></div></div>
     <div class="lab-body">
-      <div class="lab-kicker">Step 1 · Choose a family</div><div class="lab-cats" id="lab-cats" aria-label="Function families"></div>
-      <div class="lab-kicker">Step 2 · Choose a function</div><div class="lab-fns" id="lab-fns" aria-label="Choose a function"></div>
-      <hr class="lab-divider"><div id="lab-content"></div>
-      <div class="lab-quiz" id="lab-quiz"></div>
+      <div class="lab-picker-label"><span>01</span><div><strong>Choose a family</strong><small>Start with Statistical, or pick another family.</small></div></div>
+      <div class="lab-cats" id="lab-cats" aria-label="Function families"></div>
+      <div class="lab-picker-label lab-picker-second"><span>02</span><div><strong>Choose a function</strong><small>One function, one small example.</small></div></div>
+      <div class="lab-fns" id="lab-fns" aria-label="Choose a function"></div>
+      <div id="lab-content"></div>
       <div class="lab-bottom"><span>Examples follow the Notes 2 and demonstration workbooks.</span><a href="#questions">Ready? Go to the practical task →</a></div>
     </div>
   </div>
@@ -235,32 +204,6 @@ function colorFormula(s){
   out+='<span class="'+k+'">'+esc(t)+'</span>';last=re.lastIndex;
  }return out+esc(s.slice(last));
 }
-function sheetHTML(cat){
- const isStat=cat==='stat',values=isStat?state.stats:state.math, letter=isStat?'B':'C';
- const rs=values.map((v,i)=>'<tr data-lab-row="'+cat+'-'+i+'"><td>'+letter+(i+2)+'</td><td>'+(isStat?(i===8?'Blank example':'Student '+(i+1)):'Student '+(i+1))+'</td><td><input class="lab-cell" aria-label="'+letter+(i+2)+' '+(isStat?'mark':'class mark')+'" data-lab-field="'+cat+':'+i+'" value="'+esc(v)+'" autocomplete="off"></td></tr>').join('');
- return '<div class="lab-data-box"><div class="lab-data-head">'+(isStat?'Notes 2 · Student marks':'Demo workbook · Class marks')+'</div><div class="lab-sheet-scroll"><table class="lab-sheet"><thead><tr><th scope="col">Cell</th><th scope="col">Record</th><th scope="col">Value · editable</th></tr></thead><tbody>'+rs+'</tbody></table></div><div class="lab-help">'+(isStat?'In the starting example, B4 contains text (ABS) and B10 is blank.':'C2:C9 contains the eight class marks.')+' Change a value, then try the function again.</div></div>';
-}
-function inputField(label,key,value,type,extra){
- return '<label>'+esc(label)+'<input type="'+(type||'text')+'" data-lab-field="'+key+'" value="'+esc(value)+'" '+(extra||'')+'></label>';
-}
-function inputHTML(){
- const f=state.fn;
- if(state.category==='stat')return sheetHTML('stat');
- if(state.category==='math'&&f==='SUM')return sheetHTML('math');
- if(f==='QUOTIENT'||f==='MOD'){
-  return '<div class="lab-data-box"><div class="lab-data-head">Division example · edit the numbers</div><div class="lab-inputs">'+inputField('X · dividend','x',state.x,'number','step="any"')+inputField('D · divisor (not zero)','d',state.d,'number','step="any"')+'</div><div class="lab-help">Try 13 ÷ 5, then choose a different pair.</div></div>';
- }
- if(f==='IF')return '<div class="lab-data-box"><div class="lab-data-head">Demo workbook · examination report card</div><div class="lab-inputs">'+inputField('B4 · Chinese mark (0–100)','mark',state.mark,'number','min="0" max="100" step="any"')+'</div><div class="lab-help">Try 80, 45 and 50 to test the boundary.</div></div>';
- if(f==='AND'||f==='OR')return '<div class="lab-data-box"><div class="lab-data-head">Demo workbook · examination summary</div><div class="lab-inputs">'+inputField('B12 · language subjects passed','language',state.language,'number','min="0" step="1"')+inputField('B13 · non-language subjects passed','nonlanguage',state.nonlanguage,'number','min="0" step="1"')+'</div><div class="lab-help">These are counts, so enter non-negative whole numbers.</div></div>';
- if(f==='NOT')return '<div class="lab-data-box"><div class="lab-data-head">Demo workbook · promotion decision</div><div class="lab-inputs"><label>B15 · promotion (Yes / No)<select data-lab-field="promotion"><option value="Yes" '+(state.promotion==='Yes'?'selected':'')+'>Yes</option><option value="No" '+(state.promotion==='No'?'selected':'')+'>No</option></select></label></div><div class="lab-help">Change B15 to see how NOT reverses the condition.</div></div>';
- if(state.category==='text'){
-  let parts=inputField('Text · try changing it','text',state.text,'text','maxlength="120"');
-  if(f==='MID')parts+=inputField('Starting position (1 or more)','start',state.start,'number','min="1" step="1"');
-  if(['LEFT','MID','RIGHT'].includes(f))parts+=inputField('Number of characters','length',state.length,'number','min="0" step="1"');
-  return '<div class="lab-data-box"><div class="lab-data-head">Notes 2 · text example</div><div class="lab-inputs">'+parts+'</div><div class="lab-help">Try simple English text. Spaces count as characters, including spaces at either end.</div></div>';
- }
- return '';
-}
 function currentValue(key){return String(state[key]).trim();}
 function numeric(key){const v=currentValue(key);return v!==''&&Number.isFinite(Number(v))?Number(v):null;}
 function nonnegInt(key){const n=numeric(key);return n!==null&&Number.isInteger(n)&&n>=0?n:null;}
@@ -322,58 +265,211 @@ function evaluateLab(){
  if(f==='PROPER'){v=s.toLowerCase().replace(/(^|[^\p{L}])(\p{L})/gu,(m,p,c)=>p+c.toUpperCase());why='The first letter of each word becomes uppercase; the rest become lowercase.';}
  return {value:v,why:why,emptyText:v===''};
 }
-function categories(){
+
+/* A learner-controlled walkthrough, using the Notes 2 examples. */
+let trace=[], traceIndex=-1, focusKind='';
+const challenges={
+ MAX:{prompt:'Reset the example, then change B3 to 70. What is the highest mark now?',field:'stat:1',value:'70',answer:'92'},
+ MIN:{prompt:'Reset the example, then change B5 to 10. What is the lowest mark now?',field:'stat:3',value:'10',answer:'10'},
+ AVERAGE:{prompt:'Reset the example, then change B5 to 35. What is the new average?',field:'stat:3',value:'35',answer:'60'},
+ COUNT:{prompt:'Reset the example, then replace ABS in B4 with 50. How many numbers are there?',field:'stat:2',value:'50',answer:'8'},
+ COUNTA:{prompt:'Reset the example, then clear ABS from B4. How many non-empty cells are there?',field:'stat:2',value:'',answer:'7'},
+ COUNTIF:{prompt:'Reset the example, then change B2 to ABS. How many cells now match ABS?',field:'stat:0',value:'ABS',answer:'2'},
+ SUM:{prompt:'Reset the example, then change C2 from 60 to 67. What is the new total?',field:'math:0',value:'67',answer:'460'},
+ QUOTIENT:{prompt:'Reset the example, then change the first number to 17. What is the integer part of 17 ÷ 5?',field:'x',value:'17',answer:'3'},
+ MOD:{prompt:'Reset the example, then change the first number to 17. What is the remainder of 17 ÷ 5?',field:'x',value:'17',answer:'2'},
+ IF:{prompt:'Reset the example, then change B4 to 49. Will the result be Pass or Fail?',field:'mark',value:'49',answer:'Fail'},
+ AND:{prompt:'Reset the example, then change B12 to 0. What will the formula return?',field:'language',value:'0',answer:'No'},
+ OR:{prompt:'Reset the example, then change B13 to 0. What will the formula return?',field:'nonlanguage',value:'0',answer:'No'},
+ NOT:{prompt:'Reset the example, then change B15 to No. What will the formula return?',field:'promotion',value:'No',answer:'Repeat'},
+ LEN:{prompt:'Reset the example, then type No with one space before and one after it. How many characters are there?',field:'text',value:' No ',answer:'4'},
+ LEFT:{prompt:'Reset the example, then change the number of characters to 4. What will LEFT return?',field:'length',value:'4',answer:'Scho'},
+ MID:{prompt:'Reset the example, then change the number of characters to 3. Starting at position 3, what will MID return?',field:'length',value:'3',answer:'hoo'},
+ RIGHT:{prompt:'Reset the example, then change the number of characters to 3. What will RIGHT return?',field:'length',value:'3',answer:'ool'},
+ LOWER:{prompt:'Reset the example, then change the text to KC School. What will LOWER return?',field:'text',value:'KC School',answer:'kc school'},
+ UPPER:{prompt:'Reset the example, then change the text to kc School. What will UPPER return?',field:'text',value:'kc School',answer:'KC SCHOOL'},
+ PROPER:{prompt:'Reset the example, then change the text to mary chan. What will PROPER return?',field:'text',value:'mary chan',answer:'Mary Chan'}
+};
+function categoryMarkup(){
  document.getElementById('lab-cats').innerHTML=cats.map(c=>'<button type="button" data-lab-do="category" data-lab-value="'+c.id+'" aria-pressed="'+(state.category===c.id)+'">'+esc(c.label)+'</button>').join('');
- const cat=cats.find(c=>c.id===state.category);
- document.getElementById('lab-fns').innerHTML=cat.names.map(f=>'<button type="button" data-lab-do="function" data-lab-value="'+f+'" aria-pressed="'+(state.fn===f)+'">'+esc(f)+'</button>').join('');
+ const c=cats.find(x=>x.id===state.category);
+ document.getElementById('lab-fns').innerHTML=c.names.map(f=>'<button type="button" data-lab-do="function" data-lab-value="'+f+'" aria-pressed="'+(state.fn===f)+'">'+esc(f)+'</button>').join('');
 }
-function renderQuiz(){
- const q=quiz[state.category];
- const options=q.options.map(o=>'<button type="button" data-lab-do="quiz" data-lab-value="'+esc(o)+'" aria-pressed="'+(state.answer===o)+'">'+esc(o)+'</button>').join('');
- let feedback='';
- if(state.answer!==null){const ok=state.answer===q.answer;feedback='<p class="lab-feedback '+(ok?'good':'again')+'" role="status">'+(ok?'Correct! ':'Try again. ')+(ok?esc(q.why):'Look at the example and choose again.')+'</p>';}
- document.getElementById('lab-quiz').innerHTML='<div class="lab-kicker">Quick check · Think first</div><h4>Can you work this out?</h4><p>'+esc(q.q)+'</p><div class="lab-options">'+options+'</div>'+feedback;
+function labField(label,key,value,type,extra){
+ return '<label>'+esc(label)+'<input type="'+(type||'text')+'" data-lab-field="'+key+'" value="'+esc(value)+'" '+(extra||'')+'></label>';
 }
-function renderContent(){
- const f=state.fn, item=spec[f];
- document.getElementById('lab-content').innerHTML=
-  '<div class="lab-title-row"><div><h3>'+esc(f)+'</h3><p class="lab-purpose">'+esc(item.purpose)+'</p></div><span class="lab-tag">'+esc(cats.find(c=>c.id===state.category).label)+'</span></div>'+
-  '<div class="lab-steps"><span>1 · Look at the data</span><span>2 · Predict the output</span><span>3 · Press Try it</span></div>'+
-  '<div class="lab-grid"><div>'+inputHTML()+'</div><div class="lab-explain"><div class="lab-kicker">What does it do?</div><p class="lab-rule">'+esc(item.rule)+'</p>'+
-  '<div class="lab-kicker" style="margin-top:18px">The formula</div><div class="lab-formula" id="lab-formula" aria-label="Example formula">'+colorFormula(formula())+'</div>'+
-  '<div class="lab-legend"><span>● Function</span><span>● Cell / range</span><span>● Text criterion</span></div>'+
-  '<div class="lab-actions"><button type="button" class="lab-run" data-lab-do="run">▶ Try it · show result</button><button type="button" class="lab-reset" data-lab-do="reset">↺ Reset example</button></div>'+
-  '<div id="lab-result" class="lab-result" hidden aria-live="polite"><span class="lab-result-label">Result</span><output id="lab-output"></output><p id="lab-why"></p></div>'+
-  '<div class="lab-tip"><b>Remember:</b> '+esc(item.tip)+'</div></div></div>';
+function dataMarkup(){
+ const f=state.fn, isStat=state.category==='stat', isSum=f==='SUM';
+ if(isStat||isSum){
+  const values=isStat?state.stats:state.math, letter=isStat?'B':'C', cat=isStat?'stat':'math';
+  const inRange=isStat&&['COUNT','COUNTA'].includes(f)?9:8;
+  const rows=values.map((v,i)=>'<tr class="'+(i<inRange?'lab-range':'')+'" data-lab-row="'+cat+'-'+i+'"><td>'+letter+(i+2)+'</td><td><input class="lab-cell" aria-label="'+letter+(i+2)+' '+(isStat?'mark':'class mark')+'" data-lab-field="'+cat+':'+i+'" value="'+esc(v)+'" autocomplete="off"></td><td data-lab-status="'+i+'">'+(i<inRange?'In range':'Outside')+'</td></tr>').join('');
+  return '<div class="lab-data-box"><div class="lab-data-head"><span>'+ (isStat?'Notes 2 · student marks':'Demo workbook · class marks')+'</span><small>Edit values</small></div><div class="lab-sheet-scroll"><table class="lab-sheet"><thead><tr><th>Cell</th><th>Value</th><th>Trace</th></tr></thead><tbody>'+rows+'</tbody></table></div><div class="lab-help">'+(isStat?'Starting example: B4 is text (ABS); B10 is blank.':'The eight marks start in C2:C9.')+' Edit a value and follow the calculation again.</div></div>';
+ }
+ if(f==='QUOTIENT'||f==='MOD')return '<div class="lab-data-box"><div class="lab-data-head"><span>Division example</span><small>Edit values</small></div><div class="lab-inputs">'+labField('First number · dividend','x',state.x,'number','step="any"')+labField('Second number · divisor','d',state.d,'number','step="any"')+'</div><div class="lab-help">Start with 13 ÷ 5. Then try a different pair.</div></div>';
+ if(f==='IF')return '<div class="lab-data-box"><div class="lab-data-head"><span>Examination report card</span><small>Edit value</small></div><div class="lab-inputs">'+labField('B4 · examination mark (0–100)','mark',state.mark,'number','min="0" max="100" step="any"')+'</div><div class="lab-help">Try 49, 50 and 80. What changes at the boundary?</div></div>';
+ if(f==='AND'||f==='OR')return '<div class="lab-data-box"><div class="lab-data-head"><span>Examination summary</span><small>Edit values</small></div><div class="lab-inputs">'+labField('B12 · language subjects passed','language',state.language,'number','min="0" step="1"')+labField('B13 · non-language subjects passed','nonlanguage',state.nonlanguage,'number','min="0" step="1"')+'</div><div class="lab-help">Enter whole numbers. Try changing one count to 0.</div></div>';
+ if(f==='NOT')return '<div class="lab-data-box"><div class="lab-data-head"><span>Promotion decision</span><small>Change value</small></div><div class="lab-inputs"><label>B15 · promotion<select data-lab-field="promotion"><option value="Yes" '+(state.promotion==='Yes'?'selected':'')+'>Yes</option><option value="No" '+(state.promotion==='No'?'selected':'')+'>No</option></select></label></div><div class="lab-help">Change B15 to see how NOT reverses the condition.</div></div>';
+ let p=labField('Text · change it yourself','text',state.text,'text','maxlength="120"');
+ if(f==='MID')p+=labField('Starting position','start',state.start,'number','min="1" step="1"');
+ if(['LEFT','MID','RIGHT'].includes(f))p+=labField('Number of characters','length',state.length,'number','min="0" step="1"');
+ return '<div class="lab-data-box"><div class="lab-data-head"><span>Text example</span><small>Editable</small></div><div class="lab-inputs">'+p+'</div><div class="lab-kicker" style="padding:0 15px 8px">Character positions</div><div class="lab-char-strip" id="lab-char-strip"></div><div class="lab-help">The symbol ␠ shows a space. Spaces count as characters.</div></div>';
 }
-function renderAll(){categories();renderContent();renderQuiz();}
-function clearResult(){
- state.hasRun=false;
- const result=document.getElementById('lab-result');if(result)result.hidden=true;
- root.querySelectorAll('.lab-matched').forEach(r=>r.classList.remove('lab-matched'));
- const el=document.getElementById('lab-formula');if(el)el.innerHTML=colorFormula(formula());
+function focusDescription(kind){
+ const f=state.fn, hasRef=/\b[A-Z]+\d+/.test(formula());
+ if(!kind)return 'Tap a button to see what each coloured part of the formula means.';
+ if(kind==='func')return '<b>'+esc(f)+'</b> is the function name. It tells Excel what job to do.';
+ if(kind==='ref')return hasRef?'The <b>yellow cell reference or range</b> tells Excel which cells to use. '+((state.category==='stat'||f==='SUM')?'A green edge marks the cells in the range.':'Look for the matching cell label in the data box.'):'This example puts the values directly inside the brackets, so there is no cell reference.';
+ if(['IF','AND','OR','NOT','COUNTIF'].includes(f))return 'The coloured <b>values and text</b> show the condition or the possible outputs. Commas separate the parts.';
+ return 'The coloured <b>values inside the brackets</b> are the inputs. Commas separate inputs when there is more than one.';
 }
-function resetCurrent(){
+function challengeMarkup(){
+ const c=challenges[state.fn];
+ return '<div class="lab-challenge"><div class="lab-kicker">05 · Your turn</div><strong>Try a small change</strong><p>'+esc(c.prompt)+'</p><button type="button" class="lab-btn secondary" data-lab-do="challenge">Check my change</button><div id="lab-challenge-feedback" class="lab-challenge-feedback" aria-live="polite">Then use the prediction box above to check your answer.</div></div>';
+}
+function lessonMarkup(){
+ const f=state.fn,item=spec[f],cat=cats.find(c=>c.id===state.category);
+ return '<article class="lab-lesson"><div class="lab-lesson-head"><div><div class="lab-kicker">Your current function</div><h3>'+esc(f)+'</h3><p>'+esc(item.purpose)+'</p></div><span class="lab-tag">'+esc(cat.label)+'</span></div><div class="lab-grid"><div><div class="lab-kicker" style="margin-bottom:9px">01 · Look at the data</div>'+dataMarkup()+'</div><div class="lab-stack"><div class="lab-kicker">02 · Explore the formula</div><div class="lab-explain-title">What does each part mean?</div><div id="lab-formula" class="lab-formula" aria-label="Example formula">'+colorFormula(formula())+'</div><div class="lab-formula-tabs" aria-label="Formula parts"><button type="button" data-lab-do="focus" data-lab-value="func">Function</button><button type="button" data-lab-do="focus" data-lab-value="ref">Cell / range</button><button type="button" data-lab-do="focus" data-lab-value="values">Values / condition</button></div><div class="lab-focus-note" id="lab-focus-note" aria-live="polite"></div><div class="lab-predict"><strong>03 · Make a prediction</strong><p>What will Excel return using these values?</p><div class="lab-predict-row"><input id="lab-predict-input" type="text" aria-label="Your predicted result" placeholder="Type your answer" autocomplete="off"><button type="button" class="lab-btn secondary" data-lab-do="check">Check my answer</button></div><div class="lab-predict-feedback" id="lab-predict-feedback" aria-live="polite">You can also skip ahead and follow the steps.</div></div><div class="lab-trace"><div class="lab-trace-head"><strong>04 · Follow the calculation</strong><span id="lab-trace-count">Ready</span></div><div class="lab-track"><span id="lab-progress" style="width:0%"></span></div><div class="lab-trace-body"><div id="lab-trace-view" aria-live="polite"></div><div class="lab-trace-controls"><button type="button" class="lab-btn primary" data-lab-do="next">Start walkthrough →</button><button type="button" class="lab-btn secondary" data-lab-do="finish">Show result</button><button type="button" class="lab-btn secondary" data-lab-do="restart">Start again</button></div></div></div>'+challengeMarkup()+'<div class="lab-tip"><b>Remember:</b> '+esc(item.tip)+'</div><button type="button" class="lab-btn secondary" style="margin-top:12px" data-lab-do="reset">↺ Reset example</button></div></div></article>';
+}
+function markCharacters(selected){
+ const el=document.getElementById('lab-char-strip');if(!el)return;
+ const chosen=selected||[];let chars=Array.from(state.text);
+ el.innerHTML=chars.length?chars.map((c,i)=>'<span class="lab-character '+(chosen.includes(i)?'selected ':'')+(c===' '?'space':'')+'"><small>'+(i+1)+'</small><b>'+esc(c===' '?'␠':c)+'</b></span>').join(''):'<span class="lab-small">No characters yet.</span>';
+}
+function applyFocus(){
+ const code=document.getElementById('lab-formula');if(!code)return;
+ code.innerHTML=colorFormula(formula());code.className='lab-formula'+(focusKind?' focusing focus-'+focusKind:'');
+ root.querySelectorAll('[data-lab-do="focus"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.labValue===focusKind)));
+ document.getElementById('lab-focus-note').innerHTML=focusDescription(focusKind);
+}
+function renderLesson(){categoryMarkup();document.getElementById('lab-content').innerHTML=lessonMarkup();trace=[];traceIndex=-1;focusKind='';applyFocus();markCharacters([]);drawTrace();}
+function formatted(v){return v===''?'(empty text)':String(v);}
+function invalid(r){return ['Enter two numbers','Enter a mark from 0 to 100','Enter whole numbers','Enter a whole number'].includes(String(r.value));}
+function showFeedback(text,kind){const n=document.getElementById('lab-predict-feedback');n.className='lab-predict-feedback '+(kind||'');n.textContent=text;}
+function checkPrediction(){
+ const r=evaluateLab();if(invalid(r)){showFeedback(r.value+'. '+r.why,'again');return;}
+ const rawInput=document.getElementById('lab-predict-input').value,input=rawInput.trim();
+ const textResult=['LEFT','MID','RIGHT','LOWER','UPPER','PROPER'].includes(state.fn);
+ if(!input&&!(textResult&&rawInput!==''&&rawInput===String(r.value))){showFeedback('Type a prediction first, or start the walkthrough.','again');return;}
+ let wanted=String(r.emptyText?'(empty text)':r.value), numericWanted=classify(wanted), numericInput=classify(input), ok;
+ if(textResult)ok=rawInput===wanted;
+ else if(numericWanted.number&&numericInput.number)ok=Math.abs(numericInput.value-numericWanted.value)<1e-10*Math.max(1,Math.abs(numericWanted.value));
+ else ok=input.toLowerCase()===wanted.toLowerCase();
+ showFeedback(ok?'Correct! Now follow the steps to see why.':'Not quite yet. Use the walkthrough to look at each part. You can try again.',ok?'good':'again');
+}
+function checkChallenge(){
+ const c=challenges[state.fn];let current;
+ if(c.field.startsWith('stat:'))current=state.stats[Number(c.field.split(':')[1])];
+ else if(c.field.startsWith('math:'))current=state.math[Number(c.field.split(':')[1])];
+ else current=state[c.field];
+ const left=classify(current),right=classify(c.value);
+ const fieldMatches=c.field==='text'?current===c.value:(left.number&&right.number?left.value===right.value:String(current).toUpperCase()===String(c.value).toUpperCase());
+ const ok=fieldMatches&&String(evaluateLab().value)===c.answer;
+ const n=document.getElementById('lab-challenge-feedback');n.className='lab-challenge-feedback '+(ok?'good':'again');
+ n.textContent=ok?'Great! You made the change. Predict the new result above or follow the steps.':'Not quite. Reset the example, then follow the instruction above.';
+}
+function rangeTrace(){
+ const f=state.fn,isStat=state.category==='stat',letter=isStat?'B':'C';
+ const source=(isStat?state.stats:state.math).slice(0,isStat&&['COUNT','COUNTA'].includes(f)?9:8);
+ const events=[],seen=[],nums=[];let count=0;
+ for(let i=0;i<source.length;i++){
+  const p=classify(source[i]),cell=letter+(i+2),shown=p.empty?'blank':('“'+p.raw+'”');let used=false,reason='',value='',label='';
+  if(['MAX','MIN','AVERAGE','SUM','COUNT'].includes(f)){
+   used=p.number;if(used)nums.push(p.value);
+   reason=used?'It is a number, so '+f+' uses it.':(p.empty?'It is blank, so '+f+' skips it.':'It is text, so '+f+' skips it.');
+   if(f==='COUNT'){value=String(nums.length);label='Numbers counted so far';}
+   if(f==='SUM'){value=displayNum(nums.reduce((a,b)=>a+b,0));label='Running total';}
+   if(f==='MAX'||f==='MIN'){value=nums.length?displayNum(f==='MAX'?Math.max(...nums):Math.min(...nums)):'No numbers yet';label=(f==='MAX'?'Highest':'Lowest')+' so far';}
+   if(f==='AVERAGE'){value=displayNum(nums.reduce((a,b)=>a+b,0))+' ÷ '+nums.length+' number'+(nums.length===1?'':'s');label='Sum and count so far';}
+  }else if(f==='COUNTA'){
+   used=!p.empty;if(used)count++;reason=used?'The cell is not empty, so count it.':'The cell is empty, so skip it.';value=String(count);label='Non-empty cells so far';
+  }else if(f==='COUNTIF'){
+   used=!p.empty&&!p.number&&p.raw.toUpperCase()==='ABS';if(used)count++;
+   reason=used?'It matches ABS, so count it.':'It does not match ABS, so skip it.';value=String(count);label='Matching cells so far';
+  }
+  seen.push({i,used});events.push({badge:'Reading '+cell,title:cell+' contains '+shown+'.',detail:reason,label,value,current:i,seen:seen.map(x=>({...x}))});
+ }
+ const result=evaluateLab();events.push({badge:'Calculation complete',title:'Excel returns '+formatted(result.value)+'.',detail:result.why,label:'Final result',value:formatted(result.value),seen:seen.map(x=>({...x}))});
+ return events;
+}
+function logicTrace(){
+ const f=state.fn,result=evaluateLab();if(invalid(result))return [{badge:'Check the data',title:result.value,detail:result.why}];
+ let a=[];
+ if(f==='IF'){
+  const m=numeric('mark'),yes=m>=50;
+  a=[{badge:'Test the condition',title:'Is B4 ≥ 50?',detail:'B4 is '+displayNum(m)+'. The condition is '+(yes?'TRUE.':'FALSE.'),label:'Condition',value:yes?'TRUE':'FALSE'},
+   {badge:'Choose a branch',title:yes?'The condition is TRUE.':'The condition is FALSE.',detail:'IF chooses the '+(yes?'first':'second')+' text result.',label:'Chosen text',value:yes?'Pass':'Fail'}];
+ }else if(f==='AND'||f==='OR'){
+  const x=nonnegInt('language'),y=nonnegInt('nonlanguage'),a1=f==='AND'?x>0:x===0,a2=f==='AND'?y>0:y===0,t=f==='AND'?a1&&a2:a1||a2;
+  const op=f==='AND'?'> 0':'= 0';a=[{badge:'Condition 1',title:'B12 '+op,detail:'B12 is '+x+', so this condition is '+(a1?'TRUE.':'FALSE.'),label:'Condition 1',value:a1?'TRUE':'FALSE'},
+   {badge:'Condition 2',title:'B13 '+op,detail:'B13 is '+y+', so this condition is '+(a2?'TRUE.':'FALSE.'),label:'Condition 2',value:a2?'TRUE':'FALSE'},
+   {badge:'Combine conditions',title:f+'('+String(a1).toUpperCase()+', '+String(a2).toUpperCase()+')',detail:f==='AND'?'AND needs both conditions to be TRUE.':'OR needs at least one condition to be TRUE.',label:f+' result',value:t?'TRUE':'FALSE'},
+   {badge:'Choose a branch',title:'IF reads '+(t?'TRUE':'FALSE')+'.',detail:'IF chooses the matching text result.',label:'Chosen text',value:result.value}];
+ }else{
+  const yes=state.promotion==='Yes';a=[{badge:'Test the condition',title:'Is B15 = “Yes”?',detail:'B15 is '+state.promotion+', so the comparison is '+(yes?'TRUE.':'FALSE.'),label:'Comparison',value:yes?'TRUE':'FALSE'},
+   {badge:'Reverse it',title:'NOT reverses the answer.',detail:'NOT('+String(yes).toUpperCase()+') becomes '+(!yes?'TRUE.':'FALSE.'),label:'NOT result',value:yes?'FALSE':'TRUE'},
+   {badge:'Choose a branch',title:'IF reads '+(!yes?'TRUE':'FALSE')+'.',detail:'IF chooses the matching text result.',label:'Chosen text',value:result.value}];
+ }
+ a.push({badge:'Calculation complete',title:'Excel returns '+formatted(result.value)+'.',detail:result.why,label:'Final result',value:formatted(result.value)});return a;
+}
+function mathTrace(){
+ const f=state.fn,r=evaluateLab();if(invalid(r))return [{badge:'Check the data',title:r.value,detail:r.why}];
+ const x=numeric('x'),d=numeric('d');if(d===0)return [{badge:'Check the divisor',title:'The divisor is 0.',detail:'Excel cannot divide by zero.'},{badge:'Calculation complete',title:'Excel returns #DIV/0!.',detail:r.why,label:'Final result',value:'#DIV/0!'}];
+ let steps=[{badge:'Divide',title:displayNum(x)+' ÷ '+displayNum(d),detail:'First, divide the first number by the second.',label:'Division',value:displayNum(x/d)}];
+ if(f==='QUOTIENT')steps.push({badge:'Keep the integer part',title:'Remove the decimal part toward zero.',detail:'QUOTIENT keeps the integer part, without rounding away from zero.',label:'Integer part',value:formatted(r.value)});
+ else steps.push({badge:'Find the remainder',title:'Subtract the whole groups.',detail:'Excel uses '+displayNum(x)+' − '+displayNum(d)+' × '+displayNum(Math.floor(x/d))+'.',label:'Remainder',value:formatted(r.value)});
+ steps.push({badge:'Calculation complete',title:'Excel returns '+formatted(r.value)+'.',detail:r.why,label:'Final result',value:formatted(r.value)});return steps;
+}
+function textTrace(){
+ const f=state.fn,r=evaluateLab();if(invalid(r))return [{badge:'Check the data',title:r.value,detail:r.why}];
+ if(r.value==='#VALUE!')return [{badge:'Check the position',title:'MID starts at position 1 or higher.',detail:r.why},{badge:'Calculation complete',title:'Excel returns #VALUE!.',detail:r.why,label:'Final result',value:'#VALUE!'}];
+ const chars=Array.from(state.text),len=nonnegInt('length'),start=nonnegInt('start');let sel=[],detail='';
+ if(f==='LEN'){sel=chars.map((c,i)=>i);detail='Count every character, including spaces.';}
+ if(f==='LEFT'){sel=chars.map((c,i)=>i).filter(i=>i<len);detail='Take the first '+len+' characters from the left.';}
+ if(f==='RIGHT'){sel=chars.map((c,i)=>i).filter(i=>i>=Math.max(0,chars.length-len));detail='Take the last '+len+' characters from the right.';}
+ if(f==='MID'){sel=chars.map((c,i)=>i).filter(i=>i>=start-1&&i<start-1+len);detail='Start at position '+start+' and take '+len+' characters.';}
+ if(['LOWER','UPPER'].includes(f)){sel=chars.map((c,i)=>i).filter(i=>/\p{L}/u.test(chars[i]));detail='Change each highlighted letter to '+(f==='LOWER'?'lowercase.':'uppercase.');}
+ if(f==='PROPER'){sel=chars.map((c,i)=>i).filter(i=>/\p{L}/u.test(chars[i])&&(i===0||! /\p{L}/u.test(chars[i-1])));detail='Capitalise the highlighted first letter of each word; make other letters lowercase.';}
+ return [{badge:'Read the input',title:'Look at the characters and their positions.',detail:'Each box is one character. A space is shown as ␠.',selected:[]},
+  {badge:'Apply '+f,title:'Follow the highlighted characters.',detail,selected:sel},
+  {badge:'Calculation complete',title:'Excel returns '+formatted(r.emptyText?'(empty text)':r.value)+'.',detail:r.why,label:'Final result',value:formatted(r.emptyText?'(empty text)':r.value),selected:sel}];
+}
+function makeTrace(){if(state.category==='stat'||state.fn==='SUM')return rangeTrace();if(state.category==='logic')return logicTrace();if(state.category==='math')return mathTrace();return textTrace();}
+function drawTrace(){
+ const stage=traceIndex>=0?trace[traceIndex]:null,view=document.getElementById('lab-trace-view'),count=document.getElementById('lab-trace-count');
+ if(!view)return;
+ if(!stage){view.innerHTML='<div class="lab-trace-badge">Ready to explore</div><p class="lab-trace-message">Watch Excel work, one step at a time.</p><p class="lab-trace-detail">Press Start walkthrough. You can also jump to the result.</p>';count.textContent='Ready';}
+ else{view.innerHTML='<div class="lab-trace-badge">'+esc(stage.badge)+'</div><p class="lab-trace-message">'+esc(stage.title)+'</p><p class="lab-trace-detail">'+esc(stage.detail||'')+'</p>'+(stage.value!==undefined?'<div class="lab-trace-value">'+esc(stage.label||'Result')+'<b>'+esc(stage.value)+'</b></div>':'');count.textContent='Step '+(traceIndex+1)+' of '+trace.length;}
+ document.getElementById('lab-progress').style.width=(stage?(traceIndex+1)/trace.length*100:0)+'%';
+ const next=root.querySelector('[data-lab-do="next"]');next.textContent=stage?'Next step →':'Start walkthrough →';next.disabled=!!stage&&traceIndex>=trace.length-1;
+ root.querySelectorAll('[data-lab-row]').forEach((row,i)=>{
+  row.classList.remove('lab-current','lab-visited','lab-skipped');const item=stage&&stage.seen?stage.seen.find(x=>x.i===i):null;
+  if(item)row.classList.add(item.used?'lab-visited':'lab-skipped');if(stage&&stage.current===i)row.classList.add('lab-current');
+  const label=row.querySelector('[data-lab-status]');if(label)label.textContent=stage&&stage.current===i?(item&&item.used?'Use now':'Skip now'):item?(item.used?'Used':'Skipped'):(row.classList.contains('lab-range')?'In range':'Outside');
+ });
+ markCharacters(stage&&stage.selected?stage.selected:[]);
+}
+function clearTrace(){trace=[];traceIndex=-1;drawTrace();applyFocus();const el=document.getElementById('lab-predict-input');if(el)el.value='';showFeedback('The data changed. Predict again or restart the walkthrough.');const ch=document.getElementById('lab-challenge-feedback');if(ch){ch.className='lab-challenge-feedback';ch.textContent='Then use the prediction box above to check your answer.';}}
+function resetExample(){
  if(state.category==='stat')state.stats=originalStats.slice();
  if(state.category==='math'){state.math=originalMath.slice();state.x='13';state.d='5';}
  if(state.category==='logic'){state.mark='80';state.language='1';state.nonlanguage='2';state.promotion='Yes';}
  if(state.category==='text'){const d=textDefaults[state.fn];state.text=d[0];state.length=d[1];state.start=d[2];}
- state.hasRun=false;renderContent();
+ renderLesson();
 }
 root.addEventListener('click',event=>{
- const button=event.target.closest('button[data-lab-do]');if(!button||!root.contains(button))return;
- const action=button.dataset.labDo, value=button.dataset.labValue;
- if(action==='category'){const cat=cats.find(c=>c.id===value);if(!cat)return;state.category=cat.id;state.fn=cat.names[0];state.answer=null;state.hasRun=false;if(cat.id==='text'){const d=textDefaults[state.fn];state.text=d[0];state.length=d[1];state.start=d[2];}renderAll();}
- if(action==='function'){const cat=cats.find(c=>c.id===state.category);if(!cat.names.includes(value))return;state.fn=value;state.hasRun=false;if(state.category==='text'){const d=textDefaults[value];state.text=d[0];state.length=d[1];state.start=d[2];}categories();renderContent();}
- if(action==='reset')resetCurrent();
- if(action==='quiz'){state.answer=value;renderQuiz();}
- if(action==='run'){
-  const result=evaluateLab();state.hasRun=true;
-  const output=document.getElementById('lab-output');output.textContent=result.emptyText?'(empty text)':String(result.value);
-  document.getElementById('lab-why').textContent=result.why;document.getElementById('lab-result').hidden=false;
-  root.querySelectorAll('.lab-matched').forEach(r=>r.classList.remove('lab-matched'));
-  const cat=state.category==='stat'?'stat':state.fn==='SUM'?'math':null;
-  if(cat&&result.high)result.high.forEach(i=>{const row=root.querySelector('[data-lab-row="'+cat+'-'+i+'"]');if(row)row.classList.add('lab-matched');});
+ const b=event.target.closest('button[data-lab-do]');if(!b||!root.contains(b))return;
+ const action=b.dataset.labDo,v=b.dataset.labValue;
+ if(action==='category'){const cat=cats.find(x=>x.id===v);if(!cat)return;state.category=v;state.fn=cat.names[0];if(v==='text'){const d=textDefaults[state.fn];state.text=d[0];state.length=d[1];state.start=d[2];}renderLesson();}
+ else if(action==='function'){const cat=cats.find(x=>x.id===state.category);if(!cat.names.includes(v))return;state.fn=v;if(state.category==='text'){const d=textDefaults[v];state.text=d[0];state.length=d[1];state.start=d[2];}renderLesson();}
+ else if(action==='focus'){focusKind=v;applyFocus();}
+ else if(action==='check')checkPrediction();
+ else if(action==='challenge')checkChallenge();
+ else if(action==='reset')resetExample();
+ else if(action==='restart'){traceIndex=-1;drawTrace();}
+ else if(action==='next'||action==='finish'){
+  const r=evaluateLab();if(invalid(r)){showFeedback(r.value+'. '+r.why,'again');return;}
+  if(!trace.length)trace=makeTrace();traceIndex=action==='finish'?trace.length-1:Math.min(traceIndex+1,trace.length-1);drawTrace();
  }
 });
 root.addEventListener('input',event=>{
@@ -381,17 +477,15 @@ root.addEventListener('input',event=>{
  if(field.startsWith('stat:'))state.stats[Number(field.split(':')[1])]=event.target.value;
  else if(field.startsWith('math:'))state.math[Number(field.split(':')[1])]=event.target.value;
  else if(Object.prototype.hasOwnProperty.call(state,field))state[field]=event.target.value;
- clearResult();
+ clearTrace();
 });
-root.addEventListener('change',event=>{
- const field=event.target.dataset.labField;if(field==='promotion'){state.promotion=event.target.value;clearResult();}
-});
-renderAll();
+root.addEventListener('change',event=>{if(event.target.dataset.labField==='promotion'){state.promotion=event.target.value;clearTrace();}});
+renderLesson();
 })();
-
 
 </script>
 </body>
 </html>
+
 
 
