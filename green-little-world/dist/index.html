@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f7ef">
+  <meta name="description" content="在 3D 小花園認識花、樹、草，練習香港三色回收。繁體中文、語音提示、大按鈕，按照自己的步伐學習。">
+  <title>綠意小天地｜一起認識大自然</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232e6049'/%3E%3Cpath d='M45 16C23 15 14 25 20 37s28 7 25-21Z' fill='%23d5e9a8'/%3E%3Cpath d='m19 48 21-26' stroke='%23f8f9ef' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip" href="#learn">跳到學習活動</a>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="綠意小天地首頁"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M29 8C12 7 6 15 11 25s22 4 18-17Z" fill="currentColor"/><path d="M10 33 26 13" fill="none" stroke="#35634e" stroke-width="2.5" stroke-linecap="round"/></svg></span><span>綠意小天地<small>GREEN LITTLE WORLD</small></span></a>
+    <div class="header-actions"><button id="sound-toggle" class="utility" aria-pressed="true"><span data-icon="volume"></span><span id="sound-label">語音開啟</span></button><button id="settings-open" class="utility" aria-haspopup="dialog"><span data-icon="sliders"></span><span>學習設定</span></button></div>
+  </header>
+  <main id="learn">
+    <section class="intro" aria-labelledby="page-title">
+      <div><div class="eyebrow"><span></span> 點一點・拖一拖・學一學</div><h1 id="page-title">一起探索<span>綠色小世界</span></h1><p>動手操作 3D 實物，認識大自然，也學會分類回收。</p></div>
+      <div class="intro-note"><span data-icon="sun"></span><span>每一小步，<br><strong>都是新發現。</strong></span></div>
+    </section>
+    <nav class="lesson-tabs" aria-label="選擇學習主題"><button id="tab-nature" class="lesson-tab active" aria-pressed="true"><span class="tab-number">01</span><span data-icon="sprout"></span><span>花・樹・草</span><span class="tab-tag">認識大自然</span></button><button id="tab-recycle" class="lesson-tab" aria-pressed="false"><span class="tab-number">02</span><span data-icon="recycle"></span><span>三色回收箱</span><span class="tab-tag">一起做環保</span></button></nav>
+    <section class="learning-layout" aria-label="互動學習區">
+      <div class="garden-card">
+        <div class="scene-heading"><span class="scene-pill"><i></i><span id="scene-label">我的小花園</span></span><div class="scene-tools"><button id="zoom-out" class="scene-control zoom-control" aria-label="縮小 3D 物件" title="縮小物件">−</button><button id="zoom-in" class="scene-control zoom-control" aria-label="放大 3D 物件" title="放大物件">＋</button><button id="view-reset" class="scene-control" aria-label="還原物件位置" title="還原物件位置"><span data-icon="rotate"></span></button></div></div>
+        <div id="garden" class="garden" role="group" aria-label="可點選及拖拉的立體小花園。也可使用下方大按鈕完成活動。"><div id="scene-loading" class="scene-loading"><span class="loading-leaf" data-icon="sprout"></span><span>小花園準備中…</span></div></div>
+        <div id="scene-status" class="scene-status" aria-hidden="true">點一下認識植物，也可拖動它。</div>
+        <div class="scene-caption"><span data-icon="hand"></span><span id="scene-caption">按一按花、樹或草，認識新朋友。</span><span class="dimension-tag">3D 互動花園</span></div>
+        <div id="touch-prompt" class="touch-prompt" aria-hidden="true"></div>
+        <div id="item-actions" class="item-actions" hidden><button id="pickup-action" class="pickup-button"><span data-icon="hand"></span><span id="pickup-label">拿起報紙</span></button><button id="return-action" class="return-button" disabled>放回原位</button></div>
+        <div id="choice-buttons" class="choice-grid" aria-label="選擇植物" aria-describedby="activity-title activity-description"></div>
+      </div>
+      <aside class="activity-card" aria-labelledby="activity-title">
+        <div class="activity-top"><span class="activity-label" id="activity-label">認識植物</span><button class="listen-button" id="listen" aria-label="聽一聽這一題"><span data-icon="volume"></span>聽一聽</button></div>
+        <div id="progress" class="progress" hidden aria-label="練習進度"></div>
+        <div class="object-picture" id="object-picture" aria-hidden="true"></div>
+        <div class="activity-copy" aria-live="polite" aria-atomic="true"><span id="object-kicker" class="object-kicker">大自然的朋友</span><h2 id="activity-title">這是花</h2><p id="activity-description">花有美麗的花瓣。</p></div><p id="interaction-help" class="interaction-help">點一下 3D 植物聽介紹。<br>按住植物，也可以拖動它。</p>
+        <div id="feedback" class="feedback" role="status" aria-atomic="true"><span data-icon="sparkle"></span><span id="feedback-text">按一按，認識花、樹、草。</span></div>
+        <button id="primary-action" class="primary-button"><span id="primary-label">開始找一找</span><span data-icon="arrow"></span></button>
+        <button id="secondary-action" class="secondary-button" hidden>返回認識植物</button>
+        <div class="gentle-note"><span data-icon="heart"></span><span id="gentle-note">慢慢來，按錯了也可以再試。</span></div>
+      </aside>
+    </section>
+    <section class="bottom-notes" aria-label="學習小提示"><div class="tip-icon" data-icon="leaf"></div><div><strong id="bottom-title">愛護花草，從認識開始</strong><p id="bottom-copy">花、樹、草，都是我們的好朋友。</p></div><span class="pace-note"><span data-icon="smile"></span> 沒有計時，安心學習</span></section>
+    <footer><span>綠意小天地 <i>·</i> 用心觀察，一起愛護環境</span><span>為每一種學習步伐而設</span></footer>
+  </main>
+  <dialog id="settings" aria-labelledby="settings-title"><form method="dialog"><div class="dialog-heading"><div><span class="eyebrow">按照你的步伐</span><h2 id="settings-title">學習設定</h2></div><button class="dialog-close" aria-label="關閉學習設定" value="close">×</button></div><label class="setting-row"><span><strong>減少動態</strong><small>省略慶祝及放入回收箱的過場動畫</small></span><input id="reduce-motion" type="checkbox" role="switch"></label><label class="setting-row"><span><strong>加大文字</strong><small>讓指示和按鈕更容易閱讀</small></span><input id="large-text" type="checkbox" role="switch"></label><label class="setting-select"><span><strong>回收練習</strong><small>由簡單開始，再試更多物品</small></span><select id="difficulty"><option value="basic">基礎：3 件物品</option><option value="extended">進階：6 件物品</option></select></label><div class="voice-note" id="voice-note">語音會使用裝置提供的中文聲音，優先選用粵語。</div><details class="teacher-note"><summary>給老師及照顧者的小提示</summary><p>先一起看物件，再請學生點一下或拖動。回收練習可以直接把 3D 物品拖進回收箱，也可以先點物品拿起，再點回收箱。下方大按鈕同樣可以完成練習。</p><p>每次只給一個指示；學生完成後，按「下一個」繼續。「放回原位」只放下物品，不會重新開始這一輪。</p><p>香港三色回收：藍色收廢紙、黃色收金屬、啡色收塑膠。示例以乾淨的報紙、紙盒、鋁罐、金屬罐、膠樽及塑膠容器為主；請留意現場回收箱的指示。</p><p>練習沒有計時或扣分，也不收集學生的姓名或作答紀錄。設定只保留在此瀏覽器。</p></details><button class="primary-button" value="done">設定好了<span data-icon="check"></span></button></form></dialog>
+  <noscript><p class="noscript">請開啟 JavaScript 使用互動小花園。香港三色回收：藍色收廢紙，黃色收金屬，啡色收塑膠。</p></noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
