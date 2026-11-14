@@ -55,7 +55,9 @@ function parkArt(key){
  if(key==='flower.leaf'||key==='tree.leaf')key='leaf';
  if(key==='grass.leaf')return art('grass');
  if(key==='water'||key==='sun'||key==='air'||key==='entrance')return icon(key==='entrance'?'map':key);
- if(key==='growth')return art('flower');
+ if(key==='growth'||key==='flowering')return art('flower');
+ if(key==='conditions')return icon('sun');
+ if(key==='seed')return '<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="76" rx="32" ry="7" fill="#d8d7bc"/><ellipse cx="50" cy="48" rx="23" ry="31" fill="#af8b58" transform="rotate(27 50 48)"/><path d="M58 27C42 42 39 58 42 69" fill="none" stroke="#d0b487" stroke-width="4" stroke-linecap="round"/></svg>';
  if(key==='recycle')return art('bottle');
  if(partBodies[key])return `<svg viewBox="0 0 100 100" aria-hidden="true">${partBodies[key]}</svg>`;
  return art(key);

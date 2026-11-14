@@ -77,81 +77,100 @@ function findClick(name,predicate){
 }
 function geometrySignature(group){const items=[];group.updateWorldMatrix(true,true);group.traverse(o=>{if(o.isMesh&&visible(o))items.push([o.geometry.type,o.geometry.parameters,o.matrixWorld.elements,o.material?.color?.getHex()]);});return JSON.stringify(items);}
 
-for(const [width,height] of [[850,570],[700,500],[343,430]]){
-  const navigated=[],selected=[],actions=[],arrived=[];
-  const park=createPark({clientWidth:width,clientHeight:height,appendChild(){}},{onNavigate:station=>navigated.push(station),onSelect:value=>selected.push(value),onAction:action=>actions.push(action),onArrive:station=>arrived.push(station)});
+
+function opaque(node){
+  if(!node.isMesh||!visible(node))return false;
+  const materials=Array.isArray(node.material)?node.material:[node.material];
+  return materials.some(m=>m?.visible!==false&&(m?.opacity??1)>.05);
+}
+function belongs(node,target){for(let n=node;n;n=n.parent)if(n===target)return true;return false;}
+function visibilitySamples(name){
+  const target=object(name),r=rectangle(target),ray=new THREE.Raycaster(),meshList=[];
+  latest.scene.traverse(node=>{if(opaque(node))meshList.push(node);});
+  const points=[],obstructions=new Map();let targetPixels=0;
+  const left=Math.max(1,r.left),right=Math.min(latest.canvas.width-1,r.right),top=Math.max(1,r.top),bottom=Math.min(latest.canvas.height-1,r.bottom);
+  for(let yi=1;yi<21;yi++)for(let xi=1;xi<21;xi++){
+    const x=left+(right-left)*xi/21,y=top+(bottom-top)*yi/21;
+    ray.setFromCamera(new THREE.Vector2(x/latest.canvas.width*2-1,1-y/latest.canvas.height*2),latest.camera);
+    const own=ray.intersectObject(target,true).find(h=>opaque(h.object));if(!own)continue;targetPixels++;
+    const first=ray.intersectObjects(meshList,false)[0];
+    if(!first||belongs(first.object,target)||first.distance>=own.distance-.025)points.push({x,y});
+    else {let n=first.object;while(n.parent&&!n.name)n=n.parent;obstructions.set(n.name||n.type,(obstructions.get(n.name||n.type)||0)+1);}
+  }
+  assert(targetPixels>0,`No target pixels for ${name}`);
+  return {points,fraction:points.length/targetPixels,targetPixels,blocked:Object.fromEntries(obstructions)};
+}
+function clearClick(name,predicate){
+  const sampled=visibilitySamples(name);
+  assert(sampled.points.length,`No actually visible pixels for ${name}: ${JSON.stringify(sampled.blocked)}`);
+  for(const point of sampled.points){click(point);if(predicate())return point;}
+  throw Error(`Visible ${name} did not respond to pointer input`);
+}
+function assertFramed(name,padding=3){
+  const r=rectangle(object(name));
+  assert(r.left>=-padding&&r.right<=latest.canvas.width+padding&&r.top>=-padding&&r.bottom<=latest.canvas.height+padding,`${name} clipped by fixed camera: ${JSON.stringify(r)}`);
+  return r;
+}
+for(const [width,height] of [[850,570],[700,500],[343,430],[364,338]]){
+  const selected=[],actions=[],arrived=[];
+  const park=createPark({clientWidth:width,clientHeight:height,appendChild(){}},{onSelect:value=>selected.push(value),onAction:value=>actions.push(value),onArrive:value=>arrived.push(value)});
   await Promise.resolve();
-  assert.equal(park.getState().station,'entrance');assert.equal(frames.size,0,'park animates at idle');
-  const cameraStart=latest.camera.position.clone();
-  const arrivalBefore=arrived.length;park.goTo('flower');assert.equal(park.getState().station,'flower');assert.equal(arrived.length,arrivalBefore,'arrived before travelling finished');settle();assert.equal(arrived.at(-1),'flower');
-  assert(cameraStart.distanceTo(latest.camera.position)>2,'tour did not actually move through park');
-  const partSizes={};
-  for(const [station,keys] of [['flower',['flower.petals','flower.leaf','flower.stem']],['tree',['tree.leaf','tree.trunk','tree.root']],['grass',['grass.leaf']]]){
+  assert.equal(park.getState().station,'entrance');assert.equal(frames.size,0,'idle park schedules frames');
+  latest.scene.traverse(node=>{
+    assert(!/marker-|park-bin-|station-recycle|plaque|billboard/i.test(node.name),'removed signs/recycling remain in park');
+    if(node.isMesh)for(const m of Array.isArray(node.material)?node.material:[node.material])assert(!m?.map?.isCanvasTexture,'3D text billboard remains');
+  });
+  const start=latest.camera.position.clone(),arrivalBefore=arrived.length;
+  park.goTo('flower');assert.equal(arrived.length,arrivalBefore,'arrived callback before guided travel finished');settle();assert.equal(arrived.at(-1),'flower');assert(start.distanceTo(latest.camera.position)>2);
+  const partSizes={},partVisibility={};
+  for(const [station,keys]of [['flower',['flower.petals','flower.leaf','flower.stem']],['tree',['tree.leaf','tree.trunk','tree.root']],['grass',['grass.leaf']]]){
     park.goTo(station);settle();
     for(const key of keys){
-      const r=rectangle(object(key));partSizes[key]=[Math.round(r.width),Math.round(r.height)];
-      findClick(key,()=>selected.at(-1)?.key===key);
-      assert.equal(selected.at(-1).kind,'part');
-      park.focusPart(key);assert.equal(frames.size,0,'selection caused an indefinite animation');
+      const bounds=assertFramed(key),sampled=visibilitySamples(key);
+      partSizes[key]=[Math.round(bounds.width),Math.round(bounds.height)];partVisibility[key]=Number(sampled.fraction.toFixed(3));
+      assert(sampled.fraction>=.5,`${key} is substantially occluded: ${JSON.stringify({fraction:sampled.fraction,blocked:sampled.blocked})}`);
+      const count=selected.length;clearClick(key,()=>selected.length>count&&selected.at(-1)?.key===key);assert.equal(selected.at(-1).kind,'part');
+      park.focusPart(key);assert.equal(frames.size,0,'selection animates indefinitely');
     }
   }
-  // Each camera destination must be a real viewpoint inside the same environment.
-  const viewpointPositions=new Set();
-  park.setMotion(false);
-  for(const station of ['entrance','flower','tree','grass','growth','recycle']){
-    park.goTo(station);assert.equal(park.getState().station,station);assert.equal(park.getState().transitioning,false);
-    viewpointPositions.add(latest.camera.position.toArray().map(n=>n.toFixed(2)).join(','));
-    assert.equal(frames.size,0,'reduced-motion navigation scheduled frames');
+  park.goTo('tree');settle();object('tree.root.traces');assert(visibilitySamples('tree.root.traces').fraction>.65,'visible root lines are hidden by cross-section soil');
+  park.setMotion(false);const positions=new Set();
+  for(const station of ['entrance','flower','tree','grass','growth','conditions']){
+    park.goTo(station);assert.equal(park.getState().station,station);assert.equal(park.getState().transitioning,false);positions.add(latest.camera.position.toArray().map(n=>n.toFixed(2)).join(','));assert.equal(frames.size,0);
   }
-  assert.equal(viewpointPositions.size,6,'camera destinations are not distinct');
-  for(const [key,label] of [['paper','廢紙'],['metal','金屬'],['plastic','塑膠']])findClick('park-bin-'+label,()=>selected.at(-1)?.kind==='bin'&&selected.at(-1)?.key===key);
-  park.goTo('entrance');findClick('marker-flower',()=>navigated.at(-1)==='flower');
-  park.goTo('flower');
-  const can=object('watering-can'),canHome=can.position.clone();
-  const canTap=findClick('watering-can',()=>actions.at(-1)==='water');
-  const target=rectangle(object('water-target-flower'));
-  const destination={x:Math.max(2,Math.min(width-2,(target.left+target.right)/2)),y:Math.max(2,Math.min(height-2,(target.top+target.bottom)/2))};
-  const waterBefore=actions.filter(x=>x==='water').length;
-  drag(canTap,destination);
-  assert.equal(actions.filter(x=>x==='water').length,waterBefore+1,'dragging the watering can onto flower bed did not water');
-  assert(can.position.distanceTo(canHome)<.001,'watering can did not return after use');
-  drag(canTap,{x:width+50,y:height+50},'mouse');
-  assert(can.position.distanceTo(canHome)<.001,'empty-ground drop did not return watering can');
-  const actionCount=actions.length,begin=canTap;
-  latest.canvas.emit('pointerdown',{clientX:begin.x,clientY:begin.y});latest.canvas.emit('pointermove',{clientX:20,clientY:20});latest.canvas.emit('pointercancel',{pointerId:1});
-  assert(!latest.canvas.hasPointerCapture(1),'cancel leaked pointer capture');assert(can.position.distanceTo(canHome)<.001,'cancel did not restore can');assert.equal(actions.filter(x=>x==='water').length,waterBefore+1,'cancel incorrectly watered');
-  const homeView=latest.camera.position.clone();
-  park.move('forward');assert(latest.camera.position.distanceTo(homeView)>.05,'walk control does not move camera');
-  for(let i=0;i<100;i++)park.move('forward');
-  assert(latest.camera.position.distanceTo(homeView)<12,'walk escaped the station boundary');
-  park.resetView();assert(latest.camera.position.distanceTo(homeView)<.001,'reset view failed');
-  const viewOrientation=latest.camera.quaternion.clone();drag({x:width/2,y:10},{x:width/2+40,y:30});assert(latest.camera.quaternion.angleTo(viewOrientation)>.01,'looking around did not rotate the view');park.resetView();assert(latest.camera.quaternion.angleTo(viewOrientation)<.001,'reset view did not restore look direction');
-  park.goTo('growth');const signatures=[];
+  assert.equal(positions.size,6,'guided observation stops share the same camera');
+  park.goTo('flower');const cameraPosition=latest.camera.position.clone(),cameraOrientation=latest.camera.quaternion.clone();
+  latest.canvas.emit('pointerdown',{clientX:2,clientY:2});latest.canvas.emit('pointermove',{clientX:100,clientY:60});latest.canvas.emit('pointerup',{clientX:100,clientY:60});
+  assert(latest.camera.quaternion.angleTo(cameraOrientation)<.000001,'background drag changes fixed guided camera');park.move?.('forward');assert(latest.camera.position.distanceTo(cameraPosition)<.000001,'manual movement remains available');
+  const can=object('watering-can');
+  for(const [station,targetName]of [['flower','water-target-flower'],['conditions','water-target-conditions']]){
+    park.goTo(station);assertFramed('watering-can');const home=can.position.clone(),before=actions.filter(x=>x==='water').length;
+    const canPoint=clearClick('watering-can',()=>actions.filter(x=>x==='water').length>before),target=rectangle(object(targetName));
+    const destination={x:(target.left+target.right)/2,y:(target.top+target.bottom)/2};
+    drag(canPoint,destination);assert.equal(actions.filter(x=>x==='water').length,before+2,'true watering-can drag did not water');assert(can.position.distanceTo(home)<.001,'water can did not return home');
+    const count=actions.filter(x=>x==='water').length;
+    drag(canPoint,{x:width+50,y:height+50},'mouse');assert.equal(actions.filter(x=>x==='water').length,count,'off-target drag incorrectly watered');assert(can.position.distanceTo(home)<.001);
+    latest.canvas.emit('pointerdown',{clientX:canPoint.x,clientY:canPoint.y});latest.canvas.emit('pointermove',{clientX:10,clientY:20});latest.canvas.emit('pointercancel',{pointerId:1});
+    assert.equal(latest.canvas.capture.size,0,'cancel leaves pointer captured');assert(can.position.distanceTo(home)<.001);assert.equal(actions.filter(x=>x==='water').length,count,'canceled drag watered');
+  }
+  park.goTo('growth');assert.equal(can.visible,false,'watering can hides growth model');assert.equal(object('station-conditions').visible,false,'later flowering example distracts from early growth stages');const signatures=[];
   for(let stage=0;stage<5;stage++){
-    park.setGrowthStage(stage);assert.equal(park.getState().growthStage,stage);
-    signatures.push(geometrySignature(object('growth-plant')));
+    park.setGrowthStage(stage);assert.equal(park.getState().growthStage,stage);const bounds=assertFramed('growth-plant');assert(bounds.width>=25,'growth model too small');
+    const sampled=visibilitySamples('growth-plant');assert(sampled.fraction>.8,`growth stage ${stage} occluded: ${JSON.stringify(sampled.blocked)}`);signatures.push(geometrySignature(object('growth-plant')));
   }
-  assert.equal(new Set(signatures).size,5,'growth stages do not change 3D geometry');
-  const nurseryBefore=actions.filter(action=>action==='water').length;
-  const nurseryTap=findClick('watering-can',()=>actions.filter(action=>action==='water').length>nurseryBefore),nurseryTarget=rectangle(object('water-target-growth'));
-  drag(nurseryTap,{x:(nurseryTarget.left+nurseryTarget.right)/2,y:(nurseryTarget.top+nurseryTarget.bottom)/2});assert.equal(actions.filter(action=>action==='water').length,nurseryBefore+2,'watering nursery by dragging failed');
-  park.setConditions({sun:false,water:false,air:false});assert.deepEqual(park.getState().conditions,{sun:false,water:false,air:false});assert.equal(object('park-sun').visible,false);assert.equal(object('park-clouds').visible,true);assert.equal(object('moisture').visible,false);assert.equal(object('air-flow').visible,false);
-  park.setConditions({sun:true,water:true,air:true});assert.deepEqual(park.getState().conditions,{sun:true,water:true,air:true});assert.equal(object('park-sun').visible,true);assert.equal(object('moisture').visible,true);assert.equal(object('air-flow').visible,true);
-  park.water();assert.equal(frames.size,0,'reduced-motion watering animates');
+  assert.equal(new Set(signatures).size,5,'growth stages do not change geometry');
+  park.setGrowthStage(1);object('growth-root');assert(visibilitySamples('growth-root').fraction>.6,'germination root is buried/occluded');
+  park.goTo('conditions');assert.equal(object('station-conditions').visible,true,'conditions teaching bed not restored at its own stop');assert(can.visible,'conditions watering can missing');assertFramed('watering-can');
+  park.goTo('growth');assert.equal(object('station-conditions').visible,false);park.goTo('entrance');assert.equal(object('station-conditions').visible,true,'conditions bed not restored for park overview');park.goTo('conditions');
+  park.setConditions({sun:false,water:false,air:false});assert.deepEqual(park.getState().conditions,{sun:false,water:false,air:false});assert.equal(object('moisture').visible,false);assert.equal(object('air-flow').visible,false);
+  park.setConditions({sun:true,water:true,air:true});assert.deepEqual(park.getState().conditions,{sun:true,water:true,air:true});assert.equal(object('moisture').visible,true);assert.equal(object('air-flow').visible,true);
   park.setMotion(true);park.setConditions({sun:true});settle();park.setConditions({air:true});settle();park.water();settle();
-  park.goTo('tree');assert.ok(frames.size,'guided travel does not animate when enabled');
-  park.setMotion(false);assert.equal(frames.size,0,'motion preference does not stop travel');
-  assert.equal(park.getState().transitioning,false);
-  assert.equal(arrived.at(-1),'tree','reduced motion did not complete arrival');
-  park.setMotion(true);const retargetBefore=arrived.length;park.goTo('grass');park.goTo('growth');settle();assert.deepEqual(arrived.slice(retargetBefore),['growth'],'retargeting announced canceled destination');park.setMotion(false);
-  park.goTo('flower');const lockedStart=findClick('watering-can',()=>actions.at(-1)==='water');latest.canvas.emit('pointerdown',{clientX:lockedStart.x,clientY:lockedStart.y});
-  park.setInteractive(false);assert(!latest.canvas.hasPointerCapture(1),'locking left pointer captured');
-  const lockedActions=actions.length,lockedSelections=selected.length;
-  const lockedView=latest.camera.position.clone();click(lockedStart);park.move('forward');assert.equal(actions.length,lockedActions);assert.equal(selected.length,lockedSelections);assert(latest.camera.position.distanceTo(lockedView)<.001,'locked walk controls changed camera');
-  park.setInteractive(true);findClick('watering-can',()=>actions.length>lockedActions);
-  const material=object('flower.petals').children.find(o=>o.isMesh)?.material??object('flower.petals').material;
-  let disposedMaterials=0;if(material)material.addEventListener('dispose',()=>disposedMaterials++);
-  park.dispose();assert.equal(frames.size,0,'dispose left RAF scheduled');assert.equal(latest.canvas.listeners.size,0,'dispose left pointer listeners');assert.equal(latest.canvas.capture.size,0,'dispose left pointer capture');assert(latest.renderer.disposed);if(material)assert(disposedMaterials>0,'materials not disposed');
-  console.log(JSON.stringify({viewport:[width,height],partSizes,status:'passed'}));
+  const completion=arrived.length;park.goTo('tree');assert(frames.size>0);park.setMotion(false);assert.equal(frames.size,0);assert.equal(arrived.at(-1),'tree');assert.equal(arrived.length,completion+1);
+  park.setMotion(true);const retarget=arrived.length;park.goTo('grass');park.goTo('conditions');settle();assert.deepEqual(arrived.slice(retarget),['conditions'],'canceled destination announced arrival');park.setMotion(false);
+  park.goTo('flower');const locked=clearClick('watering-can',()=>actions.at(-1)==='water');latest.canvas.emit('pointerdown',{clientX:locked.x,clientY:locked.y});park.setInteractive(false);assert.equal(latest.canvas.capture.size,0);
+  const counts=[actions.length,selected.length];click(locked);assert.deepEqual([actions.length,selected.length],counts,'locked scene responds to input');park.setInteractive(true);
+  let material;object('flower.petals').traverse(o=>{if(o.isMesh&&!material)material=o.material;});let disposed=0;material?.addEventListener('dispose',()=>disposed++);
+  park.dispose();assert.equal(frames.size,0);assert.equal(latest.canvas.listeners.size,0);assert.equal(latest.canvas.capture.size,0);assert(latest.renderer.disposed);assert(disposed>0,'material leak');
+  console.log(JSON.stringify({viewport:[width,height],partSizes,partVisibility,status:'passed'}));
 }
-console.log('PASS: guided 3D tour, real part picking, route markers, watering click/drag/cancel, bounded walking, five distinct growth stages, conditions, reduced motion, locks and disposal.');
+console.log('PASS: fixed guided tour, no 3D signs/recycling, first-hit plant visibility, watering drag/cancel, five visible growth stages, conditions, arrival/reduced-motion, locks and disposal.');
