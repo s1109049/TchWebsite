@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#132335" />
+  <meta name="description" content="Interactive S2 Computer Literacy Google Sheets lesson: cells, ranges, weather forecast tables, line charts, sparklines, and a live Three.js 3D data lab." />
+  <title>S2 Computer Literacy | Google Sheets · 3D Data Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"}}</script>
+  <style>
+    :root{--navy:#122337;--navy2:#203a54;--ink:#16253b;--muted:#697b8d;--line:#e2e9ed;--canvas:#f6f8f8;--card:#fff;--green:#1e8c71;--green-soft:#e8f6f0;--blue:#4e82d9;--blue-soft:#e9f0fc;--orange:#f0a36b;--shadow:0 16px 45px rgba(23,48,67,.055);--round:20px}
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--ink);font-family:Nunito,'DM Sans',system-ui,-apple-system,sans-serif;background:var(--canvas);font-size:15px;line-height:1.5}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.55}
+    a{color:var(--green);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .shell{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
+    .sidebar{background:#15283b;color:#ecf6f5;position:sticky;top:0;align-self:start;height:100vh;display:flex;flex-direction:column;padding:26px 17px 18px;z-index:10;overflow:auto}
+    .brand{padding:5px 12px 26px;border-bottom:1px solid rgba(255,255,255,.11)}
+    .brand-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .brand-mark{width:37px;height:37px;display:grid;place-items:center;background:#3bc4a2;border-radius:11px;font-size:21px;color:#153a35;font-weight:900;box-shadow:0 7px 18px #0a192688}
+    .brand-kicker{letter-spacing:.18em;text-transform:uppercase;color:#96c9bf;font-size:10px;font-weight:900}
+    .brand-name{font-size:15px;font-weight:900;line-height:1.24;letter-spacing:.02em}
+    .side-unit{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8ea6b8;font-weight:900;padding:23px 13px 9px}
+    .nav{display:flex;flex-direction:column;gap:5px}
+    .nav-btn{border:1px solid transparent;text-align:left;display:flex;gap:11px;align-items:center;color:#c5d5e0;background:transparent;border-radius:12px;padding:11px 10px;font-size:12.7px;font-weight:800;transition:background .2s, color .2s}
+    .nav-btn:hover{background:#ffffff10;color:#fff}
+    .nav-btn.active{background:#2c485a;color:#fff;border-color:#3d586d}
+    .nav-num{width:29px;height:29px;border-radius:8px;display:grid;place-items:center;flex:0 0 29px;background:#ffffff0e;color:#9db9c4;font-size:12px}
+    .active .nav-num{color:#153b32;background:#72e0be}
+    .side-bottom{margin-top:auto;padding:25px 12px 0;color:#9db0bc;font-size:11px;border-top:1px solid #ffffff1d}
+    .side-bottom strong{color:#ecf5fa}
+    .main{min-width:0;padding:0 40px 42px}
+    .topbar{height:77px;border-bottom:1px solid #e0e8ed;display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .crumb{font-size:12px;font-weight:900;letter-spacing:.035em;color:#6e8193;display:flex;align-items:center;gap:10px}
+    .crumb .separator{color:#b6c8d1}
+    .top-actions{display:flex;gap:10px;align-items:center}
+    .top-pill{border:1px solid #d8e5e6;background:#fff;border-radius:999px;font-size:11px;font-weight:900;color:#486071;padding:8px 13px;white-space:nowrap}
+    .progress-ring{width:34px;height:34px;border-radius:50%;background:conic-gradient(#27ae89 var(--progress,0%),#e3ebec var(--progress,0%));display:grid;place-items:center}
+    .progress-ring:after{content:'';width:24px;height:24px;border-radius:50%;background:#f6f8f8;grid-area:1/1}
+    .progress-ring b{position:absolute;font-size:0}
+    .page-head{padding:30px 0 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
+    .eyebrow{text-transform:uppercase;color:var(--green);font-size:10px;letter-spacing:.22em;font-weight:900;margin-bottom:9px}
+    h1{font-size:clamp(29px,3.2vw,43px);letter-spacing:-.055em;margin:0;font-weight:900;line-height:1.13}
+    .subtitle{font-size:13.7px;color:var(--muted);max-width:610px;margin:11px 0 0}
+    .number-chip{color:#718394;border:1px solid #dfe8e9;background:#fff;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap}
+    .workspace{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,1fr);gap:22px;align-items:start}
+    .lesson-pane{min-width:0}
+    .panel{display:none;animation:rise .35s ease both}
+    .panel.active{display:block}
+    @keyframes rise{from{opacity:.5;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--round);box-shadow:var(--shadow);padding:25px;margin-bottom:19px}
+    .card.compact{padding:21px}
+    .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:17px}
+    .section-label{font-size:10px;color:#268d77;letter-spacing:.15em;text-transform:uppercase;font-weight:900}
+    h2{margin:4px 0 0;font-weight:900;font-size:20px;letter-spacing:-.035em;line-height:1.24}
+    h3{font-size:14px;font-weight:900;margin:0 0 7px}
+    .desc{font-size:12.5px;color:#667b8d;margin:0 0 15px;line-height:1.65}
+    .hero-graphic{padding:27px;border-radius:16px;background:linear-gradient(115deg,#eaf8f3,#e8f0fc);position:relative;overflow:hidden;margin-bottom:18px;min-height:170px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .hero-graphic:before,.hero-graphic:after{content:'';position:absolute;border-radius:50%;border:1px solid #b2dfd3;width:270px;height:270px;right:-60px;top:-175px}
+    .hero-graphic:after{width:190px;height:190px;top:105px;right:-95px}
+    .hero-graphic .big{font-size:26px;font-weight:900;letter-spacing:-.05em;line-height:1.19;max-width:270px;position:relative;z-index:1}
+    .hero-art{position:relative;width:170px;height:125px;perspective:450px;flex-shrink:0}
+    .hero-art .sheet{position:absolute;inset:13px 12px;border:5px solid #ffffff;border-radius:10px;transform:rotate(-9deg) rotateY(-25deg);background:repeating-linear-gradient(to right,transparent 0 29%,#c5dcd7 30% 31%),repeating-linear-gradient(to bottom,#f7fffd 0 24%,#c2d9d6 25% 26%);box-shadow:12px 18px 0 #80bdaa80,18px 25px 40px #528b8833}
+    .hero-art .sheet:after{content:'';position:absolute;top:35%;left:31%;width:37%;height:23%;background:#46bd96bb;border:2px solid #1d946e}
+    .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:17px 0}
+    .mini-stat{border:1px solid #e3ebeb;padding:14px;border-radius:14px;background:#fff}
+    .mini-stat b{display:block;font-size:24px;letter-spacing:-.04em;color:#1b594f;font-weight:900}
+    .mini-stat span{font-size:10.5px;color:#758a98;font-weight:800}
+    .task-path{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+    .path-card{padding:17px 14px;background:#f7faf9;border:1px solid #e6eff0;border-radius:13px}
+    .path-card strong{display:block;color:#225e55;font-size:18px;margin-bottom:7px}
+    .path-card span{display:block;font-size:12px;color:#748997}
+    .hint{background:#eff6fc;border:1px solid #d7e8f8;border-radius:13px;color:#4a667e;padding:12px 14px;font-size:12px;line-height:1.5;margin:12px 0}
+    .hint strong{color:#2c5f82}
+    .hint.warn{background:#fff8ef;border-color:#f8e4c9;color:#8c6538}
+    .hint.good{background:#eaf8f1;border-color:#ccebdc;color:#28735b}
+    .hint.bad{background:#fff2ef;border-color:#f5d7d1;color:#a25344}
+    .action-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:15px}
+    .btn{border:1px solid #dce5e9;border-radius:10px;background:#fff;color:#2d4359;font-weight:900;font-size:12px;padding:10px 15px;line-height:1.2;transition:transform .1s,background .2s}
+    .btn:hover{background:#f3f8f8}
+    .btn:active{transform:scale(.98)}
+    .btn.primary{background:#228b70;color:#fff;border-color:#228b70}
+    .btn.primary:hover{background:#197b62}
+    .btn.dark{background:#20364c;color:#fff;border-color:#20364c}
+    .btn.small{padding:8px 12px;font-size:11px}
+    .btn.ghost{background:transparent}
+    .pill-toggle{border:1px solid #e1e8eb;background:#f9fbfc;color:#667e8f;border-radius:999px;padding:8px 13px;font-size:11px;font-weight:900}
+    .pill-toggle.active{border-color:#96d7bd;color:#187b60;background:#eaf8f0}
+    .input{border:1px solid #d9e5e6;border-radius:9px;padding:10px 12px;background:#fff;min-width:0;width:100%;outline:0;font-weight:800;font-size:12px;color:#1b3446}
+    .input:focus{border-color:#40ac8e;box-shadow:0 0 0 3px #52c6aa22}
+    .input-label{display:block;color:#687e90;font-weight:900;font-size:10px;letter-spacing:.075em;text-transform:uppercase;margin:0 0 7px}
+    .two-inputs{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .micro-note{font-size:11px;color:#718797;margin:9px 0}
+    .divider{height:1px;background:#e8eeee;margin:21px 0}
+    .level{font-size:10px;color:#2f8f78;background:#e8f6ef;border-radius:99px;padding:5px 9px;font-weight:900;white-space:nowrap}
+    .three-card{position:sticky;top:18px;border:1px solid #233d4c;border-radius:22px;background:#142b3c;box-shadow:0 25px 65px #1a344126;color:#fff;overflow:hidden}
+    .three-head{padding:22px 23px 7px;display:flex;justify-content:space-between;gap:12px;align-items:start}
+    .three-head h2{color:#fff;font-size:19px;margin:5px 0}
+    .three-head .section-label{color:#7de3be}
+    .live-dot{display:flex;gap:6px;align-items:center;color:#8cc9b9;font-size:10px;letter-spacing:.08em;font-weight:900;margin-top:5px;white-space:nowrap}
+    .live-dot:before{content:'';height:7px;width:7px;background:#6cdeb0;border-radius:50%;box-shadow:0 0 0 4px #42be9330}
+    .scene-wrap{height:325px;width:100%;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 44%,#294d60 0,#193448 45%,#142b3c 85%)}
+    .scene-wrap canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+    .scene-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:22px;pointer-events:none;color:#b0d4d6;font-weight:900;font-size:11px;letter-spacing:.08em}.fallback-grid{display:grid;grid-template-columns:repeat(5,27px);gap:5px;transform:perspective(440px) rotateX(57deg) rotateZ(-32deg);filter:drop-shadow(12px 23px 8px #071b2baa)}.fallback-grid i{width:27px;height:28px;display:block;border-radius:3px;background:linear-gradient(135deg,#4b8290,#2e5265);border:1px solid #77baba77;box-shadow:3px 4px 0 #1c3a4f}.fallback-grid i:nth-child(7),.fallback-grid i:nth-child(12),.fallback-grid i:nth-child(17),.fallback-grid i:nth-child(18){background:linear-gradient(135deg,#8ef5d1,#38a894);border-color:#b2ffdf;box-shadow:4px 8px 0 #17735a}
+    .scene-hud{position:absolute;bottom:14px;left:14px;background:#0c2537ba;backdrop-filter:blur(6px);border:1px solid #ffffff25;color:#d7f5ef;border-radius:9px;padding:7px 11px;font-size:11px;font-weight:800;pointer-events:none}
+    .scene-hud strong{color:#fff}
+    .scene-bottom{padding:14px 22px 19px;border-top:1px solid #ffffff15;background:#142b3c}
+    .scene-bottom p{color:#adc2cd;font-size:11px;line-height:1.55;margin:5px 0 13px}
+    .mode-buttons{display:flex;flex-wrap:wrap;gap:7px}
+    .mode-buttons button{border:1px solid #426174;border-radius:8px;padding:8px 11px;color:#b6d8db;background:#1e3e51;font-size:10px;font-weight:900}
+    .mode-buttons button.active{background:#6bdfb8;border-color:#6bdfb8;color:#10382b}
+    .legend{display:flex;gap:12px;align-items:center;color:#aac4cd;font-size:10.5px;font-weight:800;margin-top:13px}
+    .legend span{display:flex;gap:6px;align-items:center}
+    .legend i{display:inline-block;width:9px;height:9px;border-radius:3px;background:#61d1b4}
+    .legend i.max{background:#f9ba86}
+    .lab-grid{border:1px solid #dee8e8;border-radius:13px;overflow:hidden;margin-top:12px;max-width:100%}
+    .grid-intro{display:grid;grid-template-columns:42px repeat(5,minmax(0,1fr));background:#edf4f4}
+    .grid-intro .g-cell{display:grid;place-items:center;min-height:45px;border-right:1px solid #dbe8e6;border-bottom:1px solid #dbe8e6;font-weight:900;font-size:13px;color:#506d7d;background:#fff;cursor:pointer;transition:background .18s}
+    .grid-intro .g-cell.head{background:#eef5f5;color:#78919c;cursor:default}
+    .grid-intro .g-cell:hover:not(.head){background:#ddf6ed}
+    .grid-intro .g-cell.selected{background:#a8e6ce;outline:2px solid #209776;outline-offset:-2px;color:#085b46}
+    .grid-intro .g-cell:nth-child(6n){border-right:0}
+    .question{font-size:16px;font-weight:900;color:#1e384a;margin:0 0 10px}
+    .feedback{min-height:0;margin-top:11px;font-size:12px;font-weight:800;color:#6e8291}
+    .feedback.ok{color:#198064}
+    .feedback.error{color:#b46647}
+    .feedback.info{color:#446c8b}
+    .sheet-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:7px;background:#f8faf9;border:1px solid #dde7e7;border-radius:11px 11px 0 0;padding:10px 11px}
+    .sheet-toolbar .logo-mini{width:24px;height:29px;background:#3aa977;color:#fff;border-radius:5px;display:grid;place-items:center;font-size:14px;font-weight:900}
+    .sheet-toolbar input{font-size:12px;padding:6px 8px;width:min(220px,55%);border:1px solid transparent;background:transparent;border-radius:6px;color:#395265;font-weight:900}
+    .sheet-toolbar input:focus{background:#fff;border-color:#78c8b3;outline:0}
+    .sheet-bar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #dde7e7;border-top:0;padding:7px 11px;font-size:11px;color:#78909f}
+    .name-box{width:59px;border:1px solid #dce6e7;border-radius:5px;padding:4px 7px;background:#f8fbfa;color:#1e856b;font-weight:900;text-align:center;font-size:11px}
+    .fakefx{font-style:italic;font-size:15px;font-family:serif;color:#899ea8}
+    .sheet-scroll{width:100%;overflow:auto;border:1px solid #dde7e7;border-top:0;border-bottom:0;background:#fff}
+    .sheet-table{width:100%;min-width:390px;table-layout:fixed;border-collapse:separate;border-spacing:0;font-size:12px}
+    .sheet-table col.rowhead{width:35px}
+    .sheet-table col.col-a{width:27%}
+    .sheet-table col.col-b,.sheet-table col.col-c{width:calc((73% - 35px)/2)}
+    .sheet-table.wide col.col-a{width:27%}
+    .sheet-table.wide col.col-b,.sheet-table.wide col.col-c{width:36.5%}
+    .sheet-table th{padding:7px 6px;background:#f0f5f5;color:#6f8290;font-weight:900;text-align:center;border-right:1px solid #e0e7e7;border-bottom:1px solid #e0e7e7}
+    .sheet-table td{border-right:1px solid #e5eeee;border-bottom:1px solid #e5eeee;background:#fff;padding:0;height:35px}
+    .sheet-table.has-borders td:not(.row-index){border-right-color:#819a9d;border-bottom-color:#819a9d}
+    .sheet-table .row-index{background:#f3f7f6;color:#96a6b0;font-size:10px;font-weight:900;text-align:center;padding:5px}
+    .sheet-table td input{padding:7px 8px;width:100%;height:35px;outline:0;border:2px solid transparent;background:transparent;font-size:11px;color:#28475a;font-weight:700;min-width:0;text-align:left}
+    .sheet-table td input:focus{border-color:#299c7d;background:#f8fffc}
+    .sheet-table td input.val{text-align:center}
+    .sheet-table .table-title{height:36px}
+    .sheet-table .table-title input{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sheet-table.merged .table-title input{text-align:center}
+    .sheet-table .head-row td{background:#f3f8f8}
+    .sheet-table.fill .head-row td{background:#cdece0}
+    .sheet-table .head-row input{font-weight:900;color:#315f60}
+    .sheet-table.wrap .head-row td,.sheet-table.wrap .head-row input{height:54px}
+    .sheet-table.wrap .head-row input{white-space:normal;text-align:center;font-size:10px}
+    .sheet-table .editing-active{outline:2px solid #229d7a;outline-offset:-2px;background:#effaf4}
+    .sheet-footer{display:flex;align-items:center;gap:9px;border:1px solid #dde7e7;border-radius:0 0 10px 10px;padding:9px 12px;background:#f6f9f7;font-size:11px;font-weight:900;color:#57776c}
+    .sheet-footer .plus{font-size:16px;color:#4a8b79}
+    .sheet-footer input{width:168px;padding:4px 7px;color:#176f58;border:1px solid transparent;background:#e0f0e8;border-radius:5px;font-size:11px;font-weight:900}
+    .sheet-footer input:focus{border-color:#2da284;outline:0}
+    .checks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+    .check-line{border:1px solid #e0e8e9;background:#fff;border-radius:12px;padding:13px 12px;display:flex;align-items:center;justify-content:space-between;gap:7px;text-align:left;min-height:60px}
+    .check-line b{display:block;font-size:11.5px}
+    .check-line small{display:block;font-size:10px;color:#83949d}
+    .check-line .indicator{width:26px;height:26px;border-radius:50%;border:2px solid #d6e3e2;display:grid;place-items:center;color:#fff;flex-shrink:0}
+    .check-line.on{background:#effaf5;border-color:#a2dfc9}
+    .check-line.on .indicator{background:#27a77e;border-color:#27a77e}
+    .chart-wrap{background:#fff;border:1px solid #e5ecec;border-radius:13px;padding:9px;overflow:hidden}
+    #chartCanvas{display:block;width:100%;height:285px}
+    .tab-strip{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 13px}
+    .tab-strip button{border:1px solid #dfebeb;background:#f4f8f8;color:#60798d;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:900}
+    .tab-strip button.active{background:#23566a;color:#fff;border-color:#23566a}
+    .chart-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    .chart-controls label{display:block;font-size:11px;font-weight:800;color:#596f80}
+    .switch-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #e0e9e9;padding:9px 10px;border-radius:10px;font-size:11px;font-weight:800;color:#526a7c}
+    .switch-row input{accent-color:#289e7b;width:16px;height:16px;cursor:pointer}
+    .spark-box{background:#f6faf8;border:1px solid #e2eeea;border-radius:13px;padding:16px;margin:11px 0}
+    .spark-label{font-size:10px;letter-spacing:.1em;color:#669081;text-transform:uppercase;font-weight:900;margin-bottom:6px}
+    .spark-formula{font-family:'DM Sans',monospace;font-size:15px;font-weight:800;color:#175947;letter-spacing:-.01em}
+    .spark-row{display:grid;grid-template-columns:70px minmax(0,1fr) 116px;gap:8px;align-items:center;padding:12px;border:1px solid #e5eeee;background:#fff;border-radius:11px;margin:10px 0}
+    .spark-row code{color:#2c7a67;font-size:12px}
+    .spark-row svg{width:110px;height:32px}
+    .mini-badge{border-radius:99px;background:#edf3f5;color:#647e88;font-size:10px;padding:4px 9px;font-weight:900}
+    .quiz-item{border:1px solid #e6eeee;border-radius:13px;padding:17px;margin:12px 0;background:#fff}
+    .quiz-item .qnumber{font-size:10px;font-weight:900;color:#189376;letter-spacing:.13em;margin-bottom:6px}
+    .answers{display:grid;gap:7px;margin-top:11px}
+    .answer{display:flex;gap:9px;align-items:center;padding:10px 12px;border:1px solid #dfe8e9;border-radius:9px;background:#fbfcfc;text-align:left;color:#3b5669;font-size:12px;font-weight:800}
+    .answer:hover{border-color:#a5d7c7}
+    .answer.selected{background:#e7f5ef;border-color:#39ab89;color:#1a735a}
+    .answer.good{background:#dcf4e9;border-color:#68c69d}
+    .answer.bad{background:#fff0eb;border-color:#e6a28e}
+    .answer .opt{display:grid;place-items:center;border:1px solid #d1e0df;border-radius:6px;width:22px;height:22px;flex:0 0 22px;font-size:10px}
+    .quiz-explain{font-size:11.5px;color:#607c8d;margin:10px 0 0;font-weight:800}
+    .scorebox{display:flex;align-items:center;justify-content:space-between;gap:15px;border:1px solid #bfdfce;background:#e8f7ed;border-radius:15px;padding:17px;margin:14px 0}
+    .scorebox b{font-size:26px;color:#197b5a;white-space:nowrap}
+    .scorebox p{margin:0;color:#3d695e;font-size:11.5px;font-weight:800}
+    .teacher-tip{border-left:3px solid #82bcda;background:#f3f8fb;padding:13px;border-radius:0 8px 8px 0;font-size:11px;color:#567386}
+    .footer-nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+    .page-footer{text-align:center;font-size:10px;color:#8ca2ac;margin-top:24px}
+    .only-small{display:none}
+    body.presentation{font-size:17px}
+    body.presentation .main{max-width:1680px}
+    body.presentation .card{padding:29px}
+    body.presentation .desc,body.presentation .subtitle{font-size:16px}
+    body.presentation .question{font-size:19px}
+    body.presentation .three-card{top:10px}
+    @media(max-width:1250px){.shell{grid-template-columns:210px minmax(0,1fr)}.main{padding:0 23px 35px}.workspace{grid-template-columns:minmax(0,1.3fr) minmax(285px,1fr);gap:14px}.card{padding:20px}.three-head{padding:17px 17px 6px}.scene-bottom{padding:13px 16px}.scene-wrap{height:280px}.sidebar{padding-left:10px;padding-right:10px}}
+    @media(max-width:1050px){.workspace{grid-template-columns:1fr}.three-card{position:relative;top:0;grid-row:1;margin-bottom:5px}.scene-wrap{height:270px}.three-head{padding:17px 20px 4px}.scene-bottom{padding:12px 20px}.lesson-pane{grid-row:2}.three-card .scene-bottom p{margin-bottom:9px}.three-card{display:block}}
+    @media(max-width:750px){.shell{display:block}.sidebar{height:auto;position:relative;padding:11px 12px 12px;overflow:visible}.brand{padding:0 5px 8px;border:0}.brand-logo{margin:0}.brand-mark{width:31px;height:31px}.brand-kicker{font-size:8px}.brand-name{font-size:12px}.side-unit,.side-bottom{display:none}.nav{display:flex;overflow:auto;flex-direction:row;gap:4px;padding-top:6px;scrollbar-width:none}.nav-btn{flex:0 0 auto;display:flex;font-size:10px;padding:6px 8px;gap:6px;border-radius:8px}.nav-num{width:20px;height:20px;flex-basis:20px;font-size:9px;border-radius:5px}.main{padding:0 13px 25px}.topbar{height:52px}.crumb{font-size:9px;white-space:nowrap;gap:5px}.top-actions{gap:5px}.top-pill{font-size:9px;padding:6px 8px}.progress-ring{display:none}.progress-ring{width:27px;height:27px}.progress-ring:after{width:19px;height:19px}.page-head{padding:18px 1px 16px}.eyebrow{font-size:8px}.subtitle{font-size:12px}h1{font-size:28px}.number-chip{display:none}.card{border-radius:15px;padding:17px;margin-bottom:11px}.three-card{border-radius:15px}.scene-wrap{height:250px}.mini-stats{gap:6px}.mini-stat{padding:9px}.mini-stat b{font-size:18px}.mini-stat span{font-size:9px}.task-path{gap:6px}.path-card{padding:10px}.path-card strong{font-size:15px}.path-card span{font-size:10px}.hero-graphic{padding:17px;min-height:137px}.hero-graphic .big{font-size:21px}.hero-art{transform:scale(.75);transform-origin:center right;margin-right:-12px}.checks,.chart-controls{grid-template-columns:1fr}.two-inputs{grid-template-columns:1fr}.spark-row{grid-template-columns:45px minmax(0,1fr) 85px;padding:8px}.spark-row svg{width:85px}.only-small{display:block}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-logo"><div class="brand-mark">▦</div><div><div class="brand-kicker">King's College</div><div class="brand-name">Computer Literacy<br/>S.2 Learning Studio</div></div></div></div>
+    <div class="side-unit">Topic 02 · Learning path</div>
+    <nav class="nav" id="sideNav" aria-label="Lesson sections">
+      <button class="nav-btn active" data-step="0"><span class="nav-num">00</span>Overview</button>
+      <button class="nav-btn" data-step="1"><span class="nav-num">01</span>Explore the Grid</button>
+      <button class="nav-btn" data-step="2"><span class="nav-num">02</span>Enter the Data</button>
+      <button class="nav-btn" data-step="3"><span class="nav-num">03</span>Format the Table</button>
+      <button class="nav-btn" data-step="4"><span class="nav-num">04</span>Make a Chart</button>
+      <button class="nav-btn" data-step="5"><span class="nav-num">05</span>Sparkline Lab</button>
+      <button class="nav-btn" data-step="6"><span class="nav-num">06</span>Final Challenge</button>
+    </nav>
+    <div class="side-bottom">LEARNING BY DOING<br/><strong>Click · Explore · Experiment</strong><br/><span id="smallProgress">0 / 6 checkpoints complete</span></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="crumb">S2 CL <span class="separator">/</span> <span>TOPIC 2</span> <span class="separator">/</span><span id="crumbStep">OVERVIEW</span></div><div class="top-actions"><button class="top-pill" id="presentationBtn" title="Toggle larger classroom text">▣ &nbsp;Projector view</button><span class="top-pill" id="topProgress">0 / 6</span><span class="progress-ring" id="progressRing" aria-label="Learning progress"></span></div></header>
+    <div class="page-head"><div><div class="eyebrow" id="chapterText">Interactive lesson · Step 00</div><h1 id="pageTitle">Google Sheets, reimagined.</h1><p class="subtitle" id="pageSubtitle">Learn the tools behind a nine-day weather forecast — then watch your spreadsheet come to life in 3D.</p></div><div class="number-chip" id="stepChip">LESSON / 00—06</div></div>
+    <div class="workspace">
+      <div class="lesson-pane">
+        <section class="panel active" id="panel0">
+          <div class="card">
+            <div class="hero-graphic"><div class="big">A table of numbers.<br/>A world of insights.</div><div class="hero-art" aria-hidden="true"><div class="sheet"></div></div></div>
+            <div class="card-head"><div><div class="section-label">THE BIG IDEA</div><h2>What is a spreadsheet?</h2></div><span class="level">Start here</span></div>
+            <p class="desc">A <strong>spreadsheet</strong> stores, organises, calculates, analyses and presents data. It contains <strong>cells</strong> arranged in rows and columns. Google Sheets and Microsoft Excel are examples of spreadsheet software.</p>
+            <div class="mini-stats"><div class="mini-stat"><b>9</b><span>Forecast days</span></div><div class="mini-stat"><b>3</b><span>Data columns</span></div><div class="mini-stat"><b>2</b><span>Temperature series</span></div></div>
+            <div class="divider"></div><h3>Your practical task</h3><div class="task-path"><div class="path-card"><strong>01</strong><span>Build & format a temperature table</span></div><div class="path-card"><strong>02</strong><span>Visualise temperature trends</span></div><div class="path-card"><strong>03</strong><span>Try charts and sparklines</span></div></div>
+            <p class="micro-note">The data used here are <strong>sample learning values</strong>, not the current Hong Kong Observatory forecast.</p>
+            <div class="action-row"><button class="btn primary" data-goto="1">Start learning →</button><a class="btn" style="text-decoration:none" href="https://www.hko.gov.hk/en/wxinfo/currwx/fnd.htm" target="_blank" rel="noopener">Official HKO 9-day forecast ↗</a></div>
+          </div>
+        </section>
+        <section class="panel" id="panel1">
+          <div class="card">
+            <div class="card-head"><div><div class="section-label">01 · UNDERSTAND THE GRID</div><h2>Rows, columns and cells</h2></div><span class="level">Concept</span></div>
+            <p class="desc">A <strong>column</strong> runs vertically (A, B, C). A <strong>row</strong> runs horizontally (1, 2, 3). Their intersection is a <strong>cell</strong>. Every cell has an address: <strong>column letter + row number</strong>.</p>
+            <div class="hint">Examples: <strong>B5</strong> = Column B, Row 5. <strong>B3:B11</strong> = all cells from B3 to B11 in one column.</div>
+            <p class="question">Find cell B5. Click the correct cell below.</p>
+            <div class="lab-grid"><div class="grid-intro" id="introGrid" aria-label="Interactive 5-by-5 spreadsheet"></div></div>
+            <div class="feedback" id="gridFeedback" aria-live="polite">Choose a cell to see its address in the Name box.</div>
+            <div class="action-row"><button class="btn small" id="newGridTask">Try another address</button><span class="mini-badge" id="gridTaskCount">0 / 3 solved</span></div>
+            <div class="divider"></div><h3>Explore the 3D grid →</h3><p class="desc">Switch between <strong>Cell</strong>, <strong>Row</strong>, <strong>Column</strong> and <strong>Range</strong> in the 3D Lab. The highlighted tiles show exactly what each word means.</p>
+          </div>
+        </section>
+        <section class="panel" id="panel2">
+          <div class="card">
+            <div class="card-head"><div><div class="section-label">02 · WEATHER FORECAST</div><h2>Enter your data</h2></div><span class="level">Worksheet · Part 1</span></div>
+            <p class="desc">Create a table just like Google Sheets. Each row represents <strong>one day</strong>; each column represents a different type of data. Click any cell to edit it.</p>
+            <div class="two-inputs"><label><span class="input-label">Spreadsheet file name</span><input class="input" id="fileName" value="S2CL_TempSpreadsheet" /></label><label><span class="input-label">Worksheet name</span><input class="input" id="sheetName" value="Temperature Forecast" /></label></div>
+            <div class="hint">Real assignment: use the latest data from the <a href="https://www.hko.gov.hk/en/wxinfo/currwx/fnd.htm" target="_blank" rel="noopener">HKO website ↗</a>. This simulator starts with <strong>fictional sample values</strong> so you can practise without live data.</div>
+            <div id="sheetMount2"></div>
+            <div class="action-row"><button class="btn small" id="loadSamples">Load practice values</button><button class="btn small" id="clearNums">Clear temperatures</button><button class="btn primary" id="checkData">Check my table</button></div><div class="feedback" id="dataFeedback" aria-live="polite"></div>
+          </div>
+        </section>
+        <section class="panel" id="panel3">
+          <div class="card">
+            <div class="card-head"><div><div class="section-label">03 · PRESENT DATA CLEARLY</div><h2>Format your spreadsheet</h2></div><span class="level">Worksheet · Part 1</span></div>
+            <p class="desc">A clear table is easier to read. Use the controls below to apply the formatting instructions from your practical worksheet.</p>
+            <div class="checks" id="formatChecks"></div>
+            <div class="hint">Select <strong>A1:C1</strong> to merge the title. Apply borders to the full table <strong>A1:C11</strong> (not just the first seven days).</div>
+            <div id="sheetMount3"></div>
+            <div class="action-row"><button class="btn primary" id="checkFormat">Check formatting</button><button class="btn" id="resetFormat">Undo formatting</button></div><div class="feedback" id="formatFeedback" aria-live="polite"></div>
+          </div>
+        </section>
+        <section class="panel" id="panel4">
+          <div class="card">
+            <div class="card-head"><div><div class="section-label">04 · TURN DATA INTO A STORY</div><h2>Build your weather chart</h2></div><span class="level">Worksheet · Part 2</span></div>
+            <p class="desc">Select <strong>A2:C11</strong> in Google Sheets, then choose <strong>Insert → Chart</strong>. Use a <strong>line chart</strong> to reveal how temperature changes over time. Switch types below to compare.</p>
+            <div class="tab-strip" id="chartTypes"><button data-chart="line" class="active">↗ Line chart</button><button data-chart="column">▥ Column chart</button><button data-chart="pie">◕ Pie chart</button></div>
+            <div class="chart-wrap"><canvas id="chartCanvas" aria-label="Temperature data chart"></canvas></div><div class="feedback" id="chartFeedback">Line charts are good at showing trends over time.</div>
+            <div class="chart-controls"><label><span class="input-label">Chart title</span><input class="input" id="chartTitle" value="9-day Temperature Forecast for Hong Kong" /></label><label><span class="input-label">Vertical axis bounds</span><select class="input" id="axisBounds"><option value="auto">Automatic</option><option value="focus">Focused range (18–34°C)</option><option value="zero">Start from 0°C</option></select></label><label class="switch-row">Show legend <input type="checkbox" id="showLegend" checked /></label><label class="switch-row">Show circular markers <input type="checkbox" id="showPoints" checked /></label><label class="switch-row">Show vertical axis line <input type="checkbox" id="showYAxis" checked /></label><label class="switch-row">Slant date labels (35°) <input type="checkbox" id="slantLabels" checked /></label></div>
+            <div class="action-row"><button class="btn primary" id="chartCheck">Check chart settings</button><button class="btn" id="downloadChart">Download chart PNG ↓</button></div><div class="feedback" id="chartCheckFeedback" aria-live="polite"></div>
+            <div class="hint warn">A pie chart is used for <strong>proportions</strong>, not trends. In this demo, the pie chart shows the Min/Max share for Day 1 only, so you can see why it is not ideal for comparing nine days.</div>
+          </div>
+        </section>
+        <section class="panel" id="panel5">
+          <div class="card">
+            <div class="card-head"><div><div class="section-label">05 · ONE CELL, ONE MINI CHART</div><h2>The SPARKLINE function</h2></div><span class="level">Worksheet · Part 2</span></div>
+            <p class="desc">A <strong>sparkline</strong> draws a miniature chart inside a single cell. It reads a range of data and displays the trend without taking up space for a full chart.</p>
+            <div class="spark-box"><div class="spark-label">Teacher's worked example · Minimum temperature · Cell B13</div><div class="spark-formula">=SPARKLINE(B3:B11)</div><p class="micro-note">B = minimum temperature column; 3:11 = the nine forecast days.</p></div>
+            <h3>Your turn · Maximum temperature · Cell C13</h3><p class="desc">Type the correct formula, including the <strong>=</strong> sign and brackets. Then check the live miniature chart.</p>
+            <label><span class="input-label">Formula in C13</span><input class="input" id="sparkInput" spellcheck="false" autocomplete="off" placeholder="=SPARKLINE( … )" /></label>
+            <div class="action-row"><button class="btn primary" id="checkSpark">Run formula</button><button class="btn" id="sparkHint">Give me a hint</button></div><div class="feedback" id="sparkFeedback" aria-live="polite"></div>
+            <div class="divider"></div><h3>Results inside your worksheet</h3><div class="spark-row"><strong>B13</strong><code>=SPARKLINE(B3:B11)</code><div id="sparkMin"></div></div><div class="spark-row"><strong>C13</strong><code id="sparkMaxFormula">Not entered</code><div id="sparkMax"></div></div>
+          </div>
+        </section>
+        <section class="panel" id="panel6">
+          <div class="card">
+            <div class="card-head"><div><div class="section-label">06 · SHOW WHAT YOU KNOW</div><h2>Final challenge</h2></div><span class="level">5 questions</span></div>
+            <p class="desc">Answer all five questions. You will get a score and helpful explanations after submission. Think carefully before checking.</p>
+            <div id="quizMount"></div>
+            <div class="action-row"><button class="btn primary" id="submitQuiz">Check my answers</button><button class="btn" id="retryQuiz">Try again</button><button class="btn" id="exportProgress">Download learning summary ↓</button></div><div id="quizResult" aria-live="polite"></div>
+            <div class="divider"></div><div class="teacher-tip"><strong>Next step in real Google Sheets:</strong> finish the assigned spreadsheet with current HKO data, a properly formatted nine-day table, a line chart and two sparklines. For the extension, create a separate column/bar chart and export its PNG. Follow your teacher's Google Classroom submission instructions.</div>
+          </div>
+        </section>
+        <div class="footer-nav"><button class="btn ghost" id="prevBtn" disabled>← Previous</button><button class="btn dark" id="nextBtn">Next lesson →</button></div>
+        <div class="page-footer">KING'S COLLEGE · S2 COMPUTER LITERACY · PRACTICE SIMULATOR — NOT CONNECTED TO GOOGLE SHEETS OR LIVE HKO DATA</div>
+      </div>
+      <aside class="three-card" aria-label="Interactive Three.js 3D data lab">
+        <div class="three-head"><div><div class="section-label">THREE.JS / LIVE MODEL</div><h2 id="sceneTitle">Explore the spreadsheet</h2></div><div class="live-dot" id="liveBadge">3D Lab</div></div>
+        <div class="scene-wrap" id="sceneWrap"><div id="scenePlaceholder" class="scene-placeholder"><div class="fallback-grid" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span id="sceneStatus">LOADING INTERACTIVE 3D MODEL</span></div><div class="scene-hud" id="sceneHud">Selected: <strong>B5</strong></div></div>
+        <div class="scene-bottom"><div class="mode-buttons" id="modeButtons"><button data-mode="cell" class="active">Cell · B5</button><button data-mode="row">Row · 5</button><button data-mode="column">Column · B</button><button data-mode="range">Range · B3:C5</button></div><p id="sceneExplanation">Click and drag the model to rotate it. Use your mouse wheel or pinch to zoom. Green tiles show the selected cells.</p><div class="legend"><span><i></i> Minimum / selected</span><span><i class="max"></i> Maximum</span></div></div>
+      </aside>
+    </div>
+  </main>
+</div>
+<script>
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const query=sel=>Array.from(document.querySelectorAll(sel));
+  const sampleMin=[22,21,23,24,22,23,25,24,23];
+  const sampleMax=[27,28,29,30,27,28,31,29,28];
+  const state={step:0,mode:'cell',targetIndex:0,solvedTargets:[],selected:'B5',chartType:'line',sparkValid:false,quizAnswers:{},quizSubmitted:false,completed:new Set(),format:{merge:false,width:false,wrap:false,borders:false,fill:false},title:'9-day Temperature Forecast for Hong Kong',days:Array.from({length:9},(_,i)=>({day:`Day ${i+1}`,min:sampleMin[i],max:sampleMax[i]})),fileName:'S2CL_TempSpreadsheet',sheetName:'Temperature Forecast'};
+  const targets=['B5','D2','A4'];
+  const lessons=[
+    ['Google Sheets, reimagined.','Learn the tools behind a nine-day weather forecast — then watch your spreadsheet come to life in 3D.'],
+    ['Explore the grid.','Understand how row numbers and column letters form a unique cell address.'],
+    ['Build your weather table.','Enter nine forecast days into a simulated spreadsheet and see your data update instantly.'],
+    ['Make data easy to read.','Apply merging, borders, heading colours and spacing to improve your table.'],
+    ['See the trend.','Create charts and compare how different chart types communicate data.'],
+    ['A chart inside a cell.','Write a SPARKLINE formula to turn a data range into a miniature chart.'],
+    ['Check your understanding.','Complete the five-question challenge and review the key learning points.']
+  ];
+  const lessonNames=['OVERVIEW','EXPLORE THE GRID','ENTER THE DATA','FORMAT THE TABLE','MAKE A CHART','SPARKLINE LAB','FINAL CHALLENGE'];
+  window.labState=state;
+  const notify3d=()=>{if(typeof window.refresh3D==='function')window.refresh3D()};
+  const feedback=(id,message,status='info')=>{$(id).textContent=message;$(id).className='feedback '+status};
+  function complete(step){if(step>=1){state.completed.add(step);updateProgress()}}
+  function updateProgress(){const n=state.completed.size;$('topProgress').textContent=`${n} / 6`;$('smallProgress').textContent=`${n} / 6 checkpoints complete`;$('progressRing').style.setProperty('--progress',`${n/6*100}%`)}
+  function goto(step){state.step=Math.max(0,Math.min(6,step));query('.panel').forEach((p,i)=>p.classList.toggle('active',i===state.step));query('[data-step]').forEach(el=>el.classList.toggle('active',Number(el.dataset.step)===state.step));$('pageTitle').textContent=lessons[state.step][0];$('pageSubtitle').textContent=lessons[state.step][1];$('crumbStep').textContent=lessonNames[state.step];$('chapterText').textContent=`Interactive lesson · Step ${String(state.step).padStart(2,'0')}`;$('stepChip').textContent=`LESSON / ${String(state.step).padStart(2,'0')}—06`;$('prevBtn').disabled=state.step===0;$('nextBtn').textContent=state.step===6?'Back to start ↺':'Next lesson →';$('sceneTitle').textContent=state.step>=4?'The 3D temperature lab':state.step>=2?'Watch the data come alive':'Explore the spreadsheet';$('modeButtons').style.display=state.step>=2?'none':'flex';$('sceneExplanation').textContent=state.step>=2?'A live 3D view of the nine-day data. Teal = minimum and orange = maximum. Change a temperature in Step 02 to update the model.':'Click and drag the model to rotate it. Use the controls above to select different cells.';if(state.step>=2)renderSheet();if(state.step===4)drawChart();if(state.step===5)drawSparks();if(state.step===6)renderQuiz();notify3d();window.scrollTo({top:0,behavior:'smooth'})}
+  query('[data-step]').forEach(b=>b.addEventListener('click',()=>goto(Number(b.dataset.step))));query('[data-goto]').forEach(b=>b.addEventListener('click',()=>goto(Number(b.dataset.goto))));$('prevBtn').onclick=()=>goto(state.step-1);$('nextBtn').onclick=()=>goto(state.step===6?0:state.step+1);$('presentationBtn').onclick=()=>{document.body.classList.toggle('presentation');setTimeout(()=>{drawChart();window.resize3D?.()},50)};
+  // Lesson 1: cell address exploration
+  function renderIntroGrid(){const grid=$('introGrid');grid.innerHTML='';const letters=['','A','B','C','D','E'];letters.forEach(ch=>{const div=document.createElement('div');div.className='g-cell head';div.textContent=ch;grid.appendChild(div)});for(let r=1;r<=5;r++){const label=document.createElement('div');label.className='g-cell head';label.textContent=r;grid.appendChild(label);for(let c=0;c<5;c++){const name=String.fromCharCode(65+c)+r;const cell=document.createElement('button');cell.className='g-cell'+(state.selected===name?' selected':'');cell.type='button';cell.textContent=name;cell.setAttribute('aria-label',`Cell ${name}`);cell.addEventListener('click',()=>{state.selected=name;renderIntroGrid();$('sceneHud').innerHTML=`Selected: <strong>${name}</strong>`;if(name===targets[state.targetIndex]){if(!state.solvedTargets.includes(name))state.solvedTargets.push(name);feedback('gridFeedback',`Correct! ${name} means Column ${name[0]}, Row ${name.slice(1)}.`,'ok');if(state.solvedTargets.length===3)complete(1)}else feedback('gridFeedback',`${name} = Column ${name[0]}, Row ${name.slice(1)}. Try ${targets[state.targetIndex]}.`,'error');$('gridTaskCount').textContent=`${state.solvedTargets.length} / 3 solved`;notify3d()});grid.appendChild(cell)}}}
+  function setGridTask(){const desired=targets[state.targetIndex];query('#panel1 .question').forEach(x=>x.textContent=`Find cell ${desired}. Click the correct cell below.`);feedback('gridFeedback',`Choose Column ${desired[0]} and Row ${desired.slice(1)}.`,'info')}
+  $('newGridTask').onclick=()=>{state.targetIndex=(state.targetIndex+1)%targets.length;setGridTask()};
+  renderIntroGrid();
+  // Sheet simulator: one source of truth, recreated on each change
+  function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  const formatDefs=[['merge','Merge & centre','A1:C1'],['width','Widen columns','A:C'],['wrap','Wrap headings','B2 and C2'],['borders','Apply all borders','A1:C11'],['fill','Fill header colour','A2:C2']];
+  function renderFormatChecks(){const wrap=$('formatChecks');wrap.innerHTML=formatDefs.map(([key,title,range])=>`<button type="button" class="check-line ${state.format[key]?'on':''}" data-format="${key}"><span><b>${title}</b><small>${range}</small></span><span class="indicator">${state.format[key]?'✓':'+'}</span></button>`).join('');query('[data-format]').forEach(btn=>btn.onclick=()=>{state.format[btn.dataset.format]=!state.format[btn.dataset.format];renderFormatChecks();renderSheet()})}
+  function getSheetHtml(){const f=state.format;let html=`<div class="sheet-toolbar"><span class="logo-mini">▤</span><input class="file-inline" value="${esc(state.fileName)}" aria-label="Spreadsheet file name"><span style="margin-left:auto;color:#77948a;font-size:10px;font-weight:900">Practice sheet</span></div><div class="sheet-bar"><span class="name-box" id="nameBox">${esc(state.selected)}</span><span class="fakefx">fx</span><span>Formula bar / Selected cell</span></div><div class="sheet-scroll"><table class="sheet-table ${f.merge?'merged':''} ${f.width?'wide':''} ${f.wrap?'wrap':''} ${f.borders?'has-borders':''} ${f.fill?'fill':''}"><colgroup><col class="rowhead"><col class="col-a"><col class="col-b"><col class="col-c"></colgroup><thead><tr><th></th><th>A</th><th>B</th><th>C</th></tr></thead><tbody>`;
+    html+=`<tr><td class="row-index">1</td><td class="table-title" colspan="${f.merge?3:1}"><input data-cell="A1" value="${esc(state.title)}" aria-label="Cell A1"></td>${f.merge?'':'<td></td><td></td>'}</tr>`;
+    html+=`<tr class="head-row"><td class="row-index">2</td><td><input data-cell="A2" value="Date" aria-label="Cell A2" readonly></td><td><input data-cell="B2" value="Minimum Temperature" aria-label="Cell B2" readonly></td><td><input data-cell="C2" value="Maximum Temperature" aria-label="Cell C2" readonly></td></tr>`;
+    for(let i=0;i<9;i++){const r=i+3;const d=state.days[i];html+=`<tr><td class="row-index">${r}</td><td><input data-cell="A${r}" data-day="${i}" data-key="day" value="${esc(d.day)}" aria-label="Date for day ${i+1}"></td><td><input class="val" inputmode="numeric" data-cell="B${r}" data-day="${i}" data-key="min" value="${d.min===null?'':esc(d.min)}" aria-label="Minimum temperature for day ${i+1}"></td><td><input class="val" inputmode="numeric" data-cell="C${r}" data-day="${i}" data-key="max" value="${d.max===null?'':esc(d.max)}" aria-label="Maximum temperature for day ${i+1}"></td></tr>`}
+    html+=`<tr><td class="row-index">12</td><td></td><td></td><td></td></tr><tr><td class="row-index">13</td><td style="padding-left:8px;font-weight:900;color:#628b86;font-size:10px">SPARKLINE →</td><td style="text-align:center;color:#279e7d;font-size:10px;font-weight:900">B13</td><td style="text-align:center;color:#df926a;font-size:10px;font-weight:900">C13</td></tr>`;
+    html+=`</tbody></table></div><div class="sheet-footer"><span class="plus">＋</span><span>▤</span><input class="sheet-inline" value="${esc(state.sheetName)}" aria-label="Worksheet name"><span style="margin-left:auto;color:#9aafad">▾</span></div>`;return html;
+  }
+  function syncGlobalNames(){if($('fileName').value!==state.fileName)$('fileName').value=state.fileName;if($('sheetName').value!==state.sheetName)$('sheetName').value=state.sheetName}
+  function renderSheet(){const mount=state.step===3?'sheetMount3':'sheetMount2';$(mount).innerHTML=getSheetHtml();$(mount).querySelectorAll('[data-cell]').forEach(input=>{input.onfocus=()=>{state.selected=input.dataset.cell;$(mount).querySelector('.name-box').textContent=state.selected;notify3d()};input.oninput=()=>{if(input.dataset.cell==='A1')state.title=input.value;else if(input.dataset.day!==undefined){const i=Number(input.dataset.day),key=input.dataset.key;if(key==='day')state.days[i].day=input.value;else{const val=input.value.trim();state.days[i][key]=val===''?null:Number.isFinite(Number(val))?Number(val):null}}notify3d();if(state.step===4)drawChart()}});
+    $(mount).querySelector('.file-inline').addEventListener('input',e=>{state.fileName=e.target.value;syncGlobalNames()});$(mount).querySelector('.sheet-inline').addEventListener('input',e=>{state.sheetName=e.target.value;syncGlobalNames()});
+  }
+  $('fileName').oninput=e=>{state.fileName=e.target.value;document.querySelectorAll('.file-inline').forEach(x=>x.value=state.fileName)};$('sheetName').oninput=e=>{state.sheetName=e.target.value;document.querySelectorAll('.sheet-inline').forEach(x=>x.value=state.sheetName)};
+  $('loadSamples').onclick=()=>{state.days.forEach((d,i)=>{d.day=`Day ${i+1}`;d.min=sampleMin[i];d.max=sampleMax[i]});renderSheet();notify3d();feedback('dataFeedback','Sample values restored. You can now change any temperature.','ok')};
+  $('clearNums').onclick=()=>{state.days.forEach(d=>{d.min=null;d.max=null});renderSheet();notify3d();feedback('dataFeedback','Temperatures cleared. Enter nine minimum and maximum values.','info')};
+  function goodNumbers(){return state.days.every(d=>d.day.trim()!==''&&Number.isFinite(d.min)&&Number.isFinite(d.max)&&d.min<=d.max)}
+  $('checkData').onclick=()=>{if(!goodNumbers()){feedback('dataFeedback','Check all nine dates and 18 temperatures. Each minimum must be no higher than its maximum.','error');return}if(state.title.trim()!=='9-day Temperature Forecast for Hong Kong'){feedback('dataFeedback','Your data are valid. Check the title in A1 against the worksheet instructions.','error');return}if(!state.fileName.trim()||!state.sheetName.trim()){feedback('dataFeedback','Give your file and worksheet a name before continuing.','error');return}complete(2);feedback('dataFeedback','Well done! Your A1:C11 data table is complete. Go to Step 03 to format it.','ok')};
+  renderFormatChecks();
+  $('checkFormat').onclick=()=>{const missing=formatDefs.filter(([k])=>!state.format[k]).map(([,n])=>n);if(missing.length)feedback('formatFeedback',`Not finished yet: ${missing.join(', ')}.`,'error');else{complete(3);feedback('formatFeedback','All five formatting actions are applied to your simulated worksheet.','ok')}};
+  $('resetFormat').onclick=()=>{Object.keys(state.format).forEach(k=>state.format[k]=false);renderFormatChecks();renderSheet();feedback('formatFeedback','Formatting has been reset. Try the steps again.','info')};
+  // Chart simulation: drawn to a high-DPI canvas; PNG export matches lesson view
+  const colors={minimum:'#22ad91',maximum:'#ed9a6d',ink:'#294358',muted:'#7f94a4',grid:'#e6ecee'};
+  const avg=(values)=>values.reduce((a,b)=>a+b,0)/values.length;
+  function drawChart(){const canvas=$('chartCanvas');if(!canvas)return;const width=Math.max(360,canvas.parentElement.clientWidth-20),height=285,dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=width*dpr;canvas.height=height*dpr;canvas.style.height=height+'px';const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#fff';c.fillRect(0,0,width,height);c.font='800 13px Nunito, sans-serif';c.textAlign='center';c.fillStyle='#294358';const title=$('chartTitle').value||'Untitled chart';c.fillText(title.length>44?title.slice(0,42)+'…':title,width/2,23);
+    const min=state.days.map(x=>Number.isFinite(x.min)?x.min:null),max=state.days.map(x=>Number.isFinite(x.max)?x.max:null);const valid=[...min,...max].filter(Number.isFinite);if(!valid.length){c.fillText('Enter temperatures to see the chart',width/2,height/2);return}
+    const showLegend=$('showLegend').checked,showPoints=$('showPoints').checked,showY=$('showYAxis').checked,slant=$('slantLabels').checked;
+    if(state.chartType==='pie'){const a=Math.max(0,min[0]||0),b=Math.max(0,max[0]||0),t=a+b||1;const cx=width*.5,cy=height*.55,r=79;let start=-Math.PI/2;[[a,colors.minimum],[b,colors.maximum]].forEach(([v,color])=>{c.beginPath();c.moveTo(cx,cy);c.arc(cx,cy,r,start,start+v/t*Math.PI*2);c.closePath();c.fillStyle=color;c.fill();start+=v/t*Math.PI*2});c.fillStyle=colors.ink;c.font='900 10px Nunito';c.fillText('DAY 1 ONLY',cx,cy+4);if(showLegend)drawLegend(c,width,height);return}
+    const left=55,right=24,top=50,bottom=slant?63:45,pw=width-left-right,ph=height-top-bottom;
+    const setting=$('axisBounds').value;let lower,upper;if(setting==='focus'){lower=18;upper=34}else if(setting==='zero'){lower=0;upper=Math.max(35,Math.ceil(Math.max(...valid)/5)*5)}else{lower=Math.floor((Math.min(...valid)-2)/2)*2;upper=Math.ceil((Math.max(...valid)+2)/2)*2;if(lower===upper)upper+=4}const toY=v=>top+ph-(v-lower)/(upper-lower)*ph;
+    c.lineWidth=1;c.textAlign='right';c.font='700 10px Nunito, sans-serif';for(let i=0;i<=4;i++){const v=lower+(upper-lower)*i/4,y=toY(v);c.beginPath();c.moveTo(left,y);c.lineTo(left+pw,y);c.strokeStyle=colors.grid;c.stroke();c.fillStyle=colors.muted;c.fillText(Math.round(v)+'°',left-9,y+3)}
+    if(showY){c.beginPath();c.moveTo(left,top);c.lineTo(left,top+ph);c.strokeStyle='#9cabb4';c.lineWidth=1.4;c.stroke()}
+    const xs=Array.from({length:9},(_,i)=>left+pw*(i+.5)/9);
+    state.days.forEach((d,i)=>{const x=xs[i],label=(d.day||`Day ${i+1}`).slice(0,9);c.save();c.translate(x,top+ph+14);if(slant)c.rotate(-35*Math.PI/180);c.fillStyle=colors.muted;c.font='800 10px Nunito, sans-serif';c.textAlign=slant?'right':'center';c.fillText(label,0,0);c.restore()});
+    if(state.chartType==='column'){const step=pw/9;for(let i=0;i<9;i++)[[min[i],colors.minimum,-.23],[max[i],colors.maximum,.23]].forEach(([v,color,offset])=>{if(v===null)return;const x=xs[i]+offset*step,bw=step*.33;const y=Math.max(top,Math.min(top+ph,toY(v)));c.fillStyle=color;c.fillRect(x-bw/2,y,bw,top+ph-y)})}
+    else{[[min,colors.minimum],[max,colors.maximum]].forEach(([arr,color])=>{c.strokeStyle=color;c.lineWidth=3;c.lineCap='round';let prev=false;arr.forEach((v,i)=>{if(v===null){prev=false;return}const y=toY(v);if(!prev){c.beginPath();c.moveTo(xs[i],y)}else c.lineTo(xs[i],y);prev=true;if(i===8||arr[i+1]===null){c.stroke();prev=false}});if(showPoints)arr.forEach((v,i)=>{if(v===null)return;c.beginPath();c.arc(xs[i],toY(v),4,0,2*Math.PI);c.fillStyle='#fff';c.fill();c.lineWidth=2.7;c.strokeStyle=color;c.stroke()})})}
+    if(showLegend)drawLegend(c,width,height)
+  }
+  function drawLegend(c,w,h){const items=[['Minimum Temperature',colors.minimum],['Maximum Temperature',colors.maximum]];c.font='800 10px Nunito, sans-serif';items.forEach(([name,color],i)=>{const x=w/2-145+i*155,y=h-7;c.fillStyle=color;c.fillRect(x,y-9,11,8);c.fillStyle='#667b8c';c.textAlign='left';c.fillText(name,x+15,y-2)})}
+  function syncChartMode(){query('[data-chart]').forEach(x=>x.classList.toggle('active',x.dataset.chart===state.chartType));$('chartFeedback').textContent=state.chartType==='line'?'Line charts show changes and trends over time.':state.chartType==='column'?'Column charts compare values across days or categories.':'Pie charts compare proportions. This one uses Day 1 only, not nine-day trends.';drawChart();notify3d()}
+  query('[data-chart]').forEach(btn=>btn.onclick=()=>{state.chartType=btn.dataset.chart;syncChartMode()});
+  ['chartTitle','axisBounds','showLegend','showPoints','showYAxis','slantLabels'].forEach(id=>$(id).addEventListener('input',drawChart));
+  $('chartCheck').onclick=()=>{const faults=[];if(state.chartType!=='line')faults.push('choose Line chart');if($('chartTitle').value.trim()!=='9-day Temperature Forecast for Hong Kong')faults.push('use the correct chart title');if(!$('showLegend').checked)faults.push('show a legend');if(!$('showPoints').checked)faults.push('enable circular markers');if(!$('showYAxis').checked)faults.push('show the vertical axis line');if(!$('slantLabels').checked)faults.push('slant the date labels');if(faults.length)feedback('chartCheckFeedback','Almost there: '+faults.join('; ')+'.','error');else{complete(4);feedback('chartCheckFeedback','Chart complete! Your settings match the key worksheet requirements.','ok')}};
+  $('downloadChart').onclick=()=>{$('chartCanvas').toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='S2CL_Temperature_Chart.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)},'image/png')};
+  // Sparklines use native SVG generated from learner's actual data
+  function sparkMarkup(vals,color){const good=vals.map((v,i)=>[i,v]).filter(([,v])=>Number.isFinite(v));if(good.length<2)return '<span style="font-size:10px;color:#9cabb6">No values</span>';let lo=Math.min(...good.map(x=>x[1])),hi=Math.max(...good.map(x=>x[1]));if(hi===lo)hi=lo+1;const points=good.map(([i,v])=>`${5+i*12.5},${27-(v-lo)/(hi-lo)*20}`).join(' ');return `<svg viewBox="0 0 112 32" aria-label="Miniature temperature trend"><line x1="4" y1="29" x2="108" y2="29" stroke="#e5eeee"/><polyline points="${points}" fill="none" stroke="${color}" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/></svg>`}
+  function drawSparks(){$('sparkMin').innerHTML=sparkMarkup(state.days.map(x=>x.min),colors.minimum);$('sparkMax').innerHTML=state.sparkValid?sparkMarkup(state.days.map(x=>x.max),colors.maximum):'<span class="mini-badge">Try the formula</span>';$('sparkMaxFormula').textContent=state.sparkValid?'=SPARKLINE(C3:C11)':'Not entered'}
+  $('checkSpark').onclick=()=>{let f=$('sparkInput').value.trim().toUpperCase().replace(/\s+/g,'');if(f==='=SPARKLINE(C3:C11)'){state.sparkValid=true;complete(5);feedback('sparkFeedback','Correct! C3:C11 is the maximum-temperature range. The mini chart now appears in C13.','ok')}else{state.sparkValid=false;if(!f.startsWith('='))feedback('sparkFeedback','Remember: every formula in Google Sheets starts with =.','error');else if(!f.startsWith('=SPARKLINE('))feedback('sparkFeedback','Check the function name: SPARKLINE(...).','error');else if(!f.includes('C3:C11'))feedback('sparkFeedback','Use Column C (maximum temperatures), from Row 3 to Row 11.','error');else feedback('sparkFeedback','Check the brackets and exact formula syntax.','error')}drawSparks()};
+  $('sparkHint').onclick=()=>feedback('sparkFeedback','Hint: replace B with C in the example. Keep rows 3 to 11.','info');
+  $('sparkInput').addEventListener('keydown',e=>{if(e.key==='Enter')$('checkSpark').click()});
+  // final challenge; worksheet's main concepts and comparison questions
+  const questions=[
+    {q:'Which cell address means Column C, Row 7?',options:['7C','C7','C:7'],answer:1,why:'Cell addresses always use the column letter first, then the row number.'},
+    {q:'Which range includes all nine forecast days and the two temperature columns?',options:['B3:C11','B1:C9','B3:C9'],answer:0,why:'The forecast values occupy Columns B and C, and Rows 3 through 11.'},
+    {q:'Which chart best shows how temperature changes over nine days?',options:['Pie chart','Line chart','Column chart'],answer:1,why:'A line chart is especially useful for showing trends over time.'},
+    {q:'Which formula creates a sparkline for maximum temperatures?',options:['=SPARKLINE(B3:B11)','=CHART(C3:C11)','=SPARKLINE(C3:C11)'],answer:2,why:'The maximum-temperature data are in Column C, Rows 3–11.'},
+    {q:'What is a PNG file?',options:['An image file','A spreadsheet formula','A worksheet name'],answer:0,why:'PNG is an image format, suitable for exporting a chart image.'}
+  ];
+  function renderQuiz(){if(state.quizSubmitted&&$('quizMount').children.length)return;$('quizMount').innerHTML=questions.map((q,i)=>`<div class="quiz-item"><div class="qnumber">QUESTION ${String(i+1).padStart(2,'0')} / 05</div><div class="question">${q.q}</div><div class="answers">${q.options.map((o,j)=>`<button class="answer ${state.quizAnswers[i]===j?'selected':''}" data-q="${i}" data-a="${j}"><span class="opt">${String.fromCharCode(65+j)}</span>${o}</button>`).join('')}</div><div class="quiz-explain" id="explain${i}" style="display:none"></div></div>`).join('');query('[data-q]').forEach(b=>b.onclick=()=>{if(state.quizSubmitted)return;state.quizAnswers[Number(b.dataset.q)]=Number(b.dataset.a);renderQuiz();const el=$('panel6').querySelector('.quiz-item:nth-child('+(Number(b.dataset.q)+1)+')');el?.scrollIntoView?.({block:'nearest',behavior:'smooth'})})}
+  $('submitQuiz').onclick=()=>{if(Object.keys(state.quizAnswers).length!==5){$('quizResult').innerHTML='<div class="hint warn">Please answer all five questions before submitting.</div>';return}state.quizSubmitted=true;let score=0;questions.forEach((q,i)=>{const correct=state.quizAnswers[i]===q.answer;if(correct)score++;const buttons=$(`quizMount`).querySelectorAll(`[data-q="${i}"]`);buttons.forEach(b=>{b.disabled=true;const j=Number(b.dataset.a);b.classList.toggle('good',j===q.answer);b.classList.toggle('bad',j===state.quizAnswers[i]&&!correct)});const x=$('explain'+i);x.textContent=`${correct?'✓ Correct!':'✕ Review:'} ${q.why}`;x.style.display='block'});if(score>=4)complete(6);$('quizResult').innerHTML=`<div class="scorebox"><div><div class="section-label">YOUR RESULT</div><p>${score===5?'Excellent — all concepts mastered!':score>=4?'Well done — review any missed question.':'Review the explanations and try again.'}</p></div><b>${score} / 5</b></div>`};
+  $('retryQuiz').onclick=()=>{state.quizSubmitted=false;state.quizAnswers={};$('quizMount').innerHTML='';$('quizResult').innerHTML='';renderQuiz()};
+  $('exportProgress').onclick=()=>{const summary=["S2 COMPUTER LITERACY — TOPIC 2: GOOGLE SHEETS",'Interactive Learning Summary','',`Date: ${new Date().toLocaleDateString('en-GB')}`,'',`Completed checkpoints: ${state.completed.size} / 6`,...Array.from({length:6},(_,i)=>`${state.completed.has(i+1)?'[X]':'[ ]'} ${lessonNames[i+1]}`),'',`Spreadsheet file: ${state.fileName}`,`Worksheet: ${state.sheetName}`,`Data valid: ${goodNumbers()?'Yes':'No'}`,`Sparkline C13: ${state.sparkValid?'Correct':'Not completed'}`,`Quiz submitted: ${state.quizSubmitted?'Yes':'No'}`,'','Reminder: Complete the real assigned Google Sheet with current HKO data.'];const blob=new Blob([summary.join('\n')],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='S2_Google_Sheets_Learning_Summary.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)};
+  window.addEventListener('resize',()=>{if(state.step===4)drawChart()});
+  // Expose chart data to the Three.js viewer; no browser data goes to a server.
+  window.getLab3DData=()=>({step:state.step,mode:state.mode,selected:state.selected,chartType:state.chartType,days:state.days.map(x=>({...x}))});
+  query('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;query('[data-mode]').forEach(x=>x.classList.toggle('active',x.dataset.mode===state.mode));notify3d()});
+  syncGlobalNames();drawSparks();updateProgress();
+})();
+</script>
+<script type="module">
+  // The main learning simulator above stays usable if the CDN or WebGL is unavailable.
+  const loadingTimer=setTimeout(()=>{const s=document.getElementById('sceneStatus');if(s)s.textContent='3D REQUIRES INTERNET · 2D LESSONS STILL WORK'},7000);
+  try {
+    const THREE=await import('three');
+    const {OrbitControls}=await import('three/addons/controls/OrbitControls.js');
+    const host=document.getElementById('sceneWrap');
+    const scene=new THREE.Scene();
+    const camera=new THREE.PerspectiveCamera(37,1,.1,100);
+    camera.position.set(10,13,18);
+    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
+    renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+    renderer.setSize(host.clientWidth,host.clientHeight);
+    renderer.outputColorSpace=THREE.SRGBColorSpace;
+    renderer.setClearColor(0x142b3c,0);
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;
+    host.prepend(renderer.domElement);
+    clearTimeout(loadingTimer);
+    document.getElementById('scenePlaceholder').style.display='none';
+    const controls=new OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;controls.dampingFactor=.07;controls.enablePan=false;controls.minDistance=8;controls.maxDistance=36;controls.maxPolarAngle=Math.PI*.62;controls.target.set(0,0,0);controls.update();
+    scene.add(new THREE.AmbientLight(0xcff8ff,1.1));
+    const sun=new THREE.DirectionalLight(0xffffff,3.5);sun.position.set(5,12,8);scene.add(sun);
+    const fill=new THREE.DirectionalLight(0x77dfd1,1.8);fill.position.set(-6,6,-8);scene.add(fill);
+    const group=new THREE.Group();scene.add(group);
+    const material=(color,metal=.13)=>new THREE.MeshStandardMaterial({color,roughness:.37,metalness:metal});
+    const matBase=material(0x426478),matTile=material(0x416377),matSelect=material(0x6ee4bd),matMin=material(0x2dc6a5),matMax=material(0xffb783),matDim=material(0x305269);
+    const axesMat=new THREE.LineBasicMaterial({color:0x5e91a0,transparent:true,opacity:.4});
+    function addBox(w,h,d,x,y,z,mat,parent=group){const obj=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);obj.position.set(x,y,z);parent.add(obj);return obj}
+    function addLine(points,color=0x99e7d2,opacity=1){const geometry=new THREE.BufferGeometry().setFromPoints(points);const line=new THREE.Line(geometry,new THREE.LineBasicMaterial({color,transparent:opacity!==1,opacity,linewidth:2}));group.add(line);return line}
+    function label(text,x,y,z,color='#cce8e9',size=48){const cn=document.createElement('canvas');cn.width=256;cn.height=80;const c=cn.getContext('2d');c.clearRect(0,0,256,80);c.fillStyle=color;c.font=`900 ${size}px Nunito, Arial`;c.textAlign='center';c.textBaseline='middle';c.fillText(text,128,40);const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;const obj=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthWrite:false}));obj.position.set(x,y,z);obj.scale.set(1.2,.375,1);group.add(obj);return obj}
+    let pivot=0;
+    function renderGrid(data){camera.position.set(10,13,18);controls.target.set(0,0,0);controls.minDistance=8;controls.maxDistance=30;controls.update();
+      const W=6,C=5,tw=1.55,td=1.18,gap=.075;
+      addBox(9.5,.22,8.2,0,-.28,0,matBase);
+      for(let r=1;r<=W;r++){label(String(r),-4.55,.3,(r-3.5)*td,'#90b0c4',37);for(let col=0;col<C;col++){const letter=String.fromCharCode(65+col),addr=letter+r;const x=(col-2)*tw,z=(r-3.5)*td;const selected=data.mode==='row'?r===5:data.mode==='column'?col===1:data.mode==='range'?(col>=1&&col<=2&&r>=3&&r<=5):data.mode==='cell'?addr===(data.selected||'B5'):false;
+      const tile=addBox(tw-gap,selected?.34:.12,td-gap,x,selected?.06:0,z,selected?matSelect:((col+r)%2?matTile:matDim));tile.userData.cell=addr;
+      if(selected){const top=addBox(tw-.2,.022,td-.2,x,.26,z,material(0xa8fce3));top.material.transparent=true;top.material.opacity=.55}label(addr,x,.2,z,selected?'#053c30':'#b2d2dd',30)}}
+      for(let c=0;c<C;c++)label(String.fromCharCode(65+c),(c-2)*tw,.36,-4.5,'#95c7d0',35);
+      document.getElementById('sceneHud').innerHTML=`Selected: <strong>${data.mode==='row'?'Row 5':data.mode==='column'?'Column B':data.mode==='range'?'B3:C5':data.selected||'B5'}</strong>`
+    }
+    function renderTemps(data){camera.position.set(13,11,18);controls.target.set(0,2,0);controls.minDistance=9;controls.maxDistance=35;controls.update();
+      const vals=data.days;
+      addBox(16.8,.18,6.8,0,-.12,0,matBase);
+      const minPoints=[],maxPoints=[];
+      for(let i=0;i<9;i++){const day=vals[i],x=(i-4)*1.76;label(`D${i+1}`,x,.4,3.36,'#bedde2',35);
+        [[day.min,matMin,-.44,minPoints],[day.max,matMax,.44,maxPoints]].forEach(([value,mat,z,points])=>{if(!Number.isFinite(value))return;const h=Math.max(.07,(value-15)*.28);addBox(.56,h,.68,x,h/2,z,mat);points.push(new THREE.Vector3(x,h+.10,z));const top=addBox(.61,.055,.73,x,h,z,mat);top.material.opacity=1});
+        if(data.step>=4&&i%2===0){label(day.min===null?'—':day.min+'°',x,.42,-1.22,'#83e8ce',25)}
+      }
+      for(let j=0;j<4;j++){const h=j*1.25+.3;addLine([new THREE.Vector3(-7.8,h,-2.4),new THREE.Vector3(7.8,h,-2.4)],0x7296a8,.22)}
+      if(data.chartType!=='column'&&data.chartType!=='pie'){if(minPoints.length>1)addLine(minPoints,0x53f7bd,.95);if(maxPoints.length>1)addLine(maxPoints,0xffc498,.95);[...minPoints,...maxPoints].forEach((p,i)=>{const ball=new THREE.Mesh(new THREE.SphereGeometry(.115,12,12),i<minPoints.length?matSelect:matMax);ball.position.copy(p);group.add(ball)})}
+      document.getElementById('sceneHud').innerHTML=`<strong>9 days</strong> · ${vals.filter(d=>Number.isFinite(d.min)&&Number.isFinite(d.max)).length} complete data pairs`;
+    }
+    let currentType='';function clear(){while(group.children.length){const o=group.children[0];group.remove(o);o.geometry?.dispose?.();if(o.material?.map)o.material.map.dispose();if(o.material?.dispose&&o.material!==matBase&&o.material!==matTile&&o.material!==matSelect&&o.material!==matMin&&o.material!==matMax&&o.material!==matDim)o.material.dispose()}}
+    function rebuild(){const data=window.getLab3DData();clear();if(data.step>=2)renderTemps(data);else renderGrid(data);currentType=data.step>=2?'bars':'grid'}
+    window.refresh3D=rebuild;
+    function resize(){if(host.clientWidth<40||host.clientHeight<40)return;camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight)}window.resize3D=resize;
+    const ro=new ResizeObserver(resize);ro.observe(host);
+    const ray=new THREE.Raycaster(),cursor=new THREE.Vector2();let pointerStart=null;
+    renderer.domElement.addEventListener('pointerdown',e=>{pointerStart=[e.clientX,e.clientY]});
+    renderer.domElement.addEventListener('pointerup',e=>{if(!pointerStart||Math.hypot(e.clientX-pointerStart[0],e.clientY-pointerStart[1])>8)return;const rect=renderer.domElement.getBoundingClientRect();cursor.set(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);ray.setFromCamera(cursor,camera);const hit=ray.intersectObjects(group.children,false).find(x=>x.object.userData.cell);if(hit){document.getElementById('sceneHud').innerHTML=`Clicked: <strong>${hit.object.userData.cell}</strong>`;window.labState.selected=hit.object.userData.cell;window.labState.mode='cell';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode==='cell'));rebuild()}});
+    let frame=0;function animate(){frame=requestAnimationFrame(animate);if(document.hidden)return;controls.update();group.rotation.y=Math.sin(performance.now()*.00022)*.025;renderer.render(scene,camera)}
+    rebuild();resize();animate();
+    document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(frame)}else animate()});
+  } catch (err) {clearTimeout(loadingTimer);document.getElementById('sceneStatus').textContent='3D UNAVAILABLE · 2D LESSONS STILL WORK';document.getElementById('sceneHud').textContent='Spreadsheet learning lab';console.warn('Three.js could not load:',err)}
+</script>
+</body>
+</html>
