@@ -1,252 +1,231 @@
-const $ = id => document.getElementById(id);
-const paths = {
- volume:'<path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
- muted:'<path d="M11 5 6 9H3v6h3l5 4zM16 9l5 6m0-6-5 6"/>',
- sliders:'<path d="M4 7h7m4 0h5M4 17h3m4 0h9"/><circle cx="13" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
- sun:'<circle cx="12" cy="12" r="4"/><path d="M12 1v2m0 18v2M1 12h2m18 0h2M4.2 4.2l1.4 1.4m12.8 12.8 1.4 1.4m0-15.6-1.4 1.4M5.6 18.4l-1.4 1.4"/>',
- sprout:'<path d="M12 21v-9M12 15C5 15 3 11 3 6c6 0 9 3 9 9Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9Z"/>',
- recycle:'<path d="m8 6 2-3a2 2 0 0 1 3.5 0l3 5m-1-4 1 4-4 .3M18 11l3 5a2 2 0 0 1-1.7 3H14m3-3-3 3 3 3M10 19H4.7A2 2 0 0 1 3 16l3-5m-4 1 4-1 1 4"/>',
- rotate:'<path d="M3 10a9 9 0 1 1 1 7M3 4v6h6"/>',
- hand:'<path d="M8 13V5a2 2 0 0 1 4 0v6-1a2 2 0 0 1 4 0v1a2 2 0 0 1 4 0v6c0 4-3 5-6 5h-2c-2 0-3-1-4-3l-3-5a2 2 0 0 1 3-2l2 2"/>',
- sparkle:'<path d="m12 3 2.3 6.7L21 12l-6.7 2.3L12 21l-2.3-6.7L3 12l6.7-2.3Z"/>',
- arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',
- heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
- leaf:'<path d="M20 3C6 2 1 9 6 16s17 4 14-13ZM4 22 17 7"/>',
- smile:'<circle cx="12" cy="12" r="9"/><path d="M8 14c1 3 7 3 8 0M8 9h.01M16 9h.01"/>',
- check:'<path d="m5 12 4 4L19 6"/>'
-};
-const icon = key => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[key] || paths.sparkle}</svg>`;
-const art = key => {
- const flower = '<path d="M50 86V44" stroke="#6b9251" stroke-width="5" stroke-linecap="round"/><path d="M48 72C27 74 26 59 27 59c17-2 21 13 21 13M52 63c19-2 22-15 22-15-18-1-22 15-22 15" fill="#91ad67"/><g fill="#e8a1a7"><ellipse cx="50" cy="25" rx="10" ry="17"/><ellipse cx="50" cy="25" rx="10" ry="17" transform="rotate(60 50 40)"/><ellipse cx="50" cy="25" rx="10" ry="17" transform="rotate(120 50 40)"/><ellipse cx="50" cy="25" rx="10" ry="17" transform="rotate(180 50 40)"/><ellipse cx="50" cy="25" rx="10" ry="17" transform="rotate(240 50 40)"/><ellipse cx="50" cy="25" rx="10" ry="17" transform="rotate(300 50 40)"/></g><circle cx="50" cy="40" r="12" fill="#edbf57"/><ellipse cx="50" cy="89" rx="19" ry="4" fill="#aebd8c" opacity=".35"/>';
- const tree = '<ellipse cx="50" cy="90" rx="27" ry="5" fill="#b4c499" opacity=".4"/><path d="M44 88V39h12v49z" fill="#a67c54"/><path d="m50 64-14-14m15 6 13-15" stroke="#a67c54" stroke-width="7" stroke-linecap="round"/><circle cx="31" cy="40" r="20" fill="#76995e"/><circle cx="67" cy="39" r="22" fill="#6c9056"/><circle cx="49" cy="25" r="24" fill="#89aa6c"/><circle cx="41" cy="39" r="20" fill="#85a567"/>';
- const grass = '<ellipse cx="50" cy="87" rx="36" ry="6" fill="#b4c499" opacity=".4"/><path d="M19 86c0-14-4-31-9-40 17 5 22 20 23 35-1-24-5-39-10-50 19 9 23 28 22 50 1-40 7-55 16-62-4 28-6 43-5 64 5-31 15-45 28-51-8 17-14 34-15 52 8-17 17-25 23-27-7 11-9 22-10 29Z" fill="#7a9e55"/><path d="M34 86c-1-17-5-28-7-34 14 8 17 19 17 31 2-21 6-32 10-42 3 17 3 29 2 44 8-18 14-27 19-31-1 13-4 22-7 32Z" fill="#91b46d"/>';
- const newspaper = '<g transform="rotate(-9 50 50)"><rect x="15" y="18" width="70" height="67" rx="5" fill="#dedbc7"/><rect x="12" y="14" width="70" height="67" rx="4" fill="#fff9df" stroke="#b4b79b" stroke-width="1.7"/><path d="M22 27h49" stroke="#506951" stroke-width="6"/><rect x="22" y="38" width="22" height="20" rx="1" fill="#a2ba8d"/><path d="M51 40h20m-20 8h20m-20 8h20M22 65h49m-49 7h49" stroke="#a3ad95" stroke-width="3"/></g>';
- const can = '<ellipse cx="50" cy="86" rx="22" ry="5" fill="#9cae9b" opacity=".3"/><path d="M31 22h38v57c0 10-38 10-38 0z" fill="#bdcdd0" stroke="#8da4a5" stroke-width="1.3"/><path d="M31 36h38v33H31z" fill="#e5bc59"/><path d="m46 42 12 9-12 12" stroke="#fff3c9" stroke-width="3" fill="none"/><ellipse cx="50" cy="22" rx="19" ry="7" fill="#e5e7dd" stroke="#8da4a5" stroke-width="1.5"/><ellipse cx="50" cy="22" rx="6" ry="2" fill="none" stroke="#93a6a4" stroke-width="2"/>';
- const bottle = '<ellipse cx="50" cy="89" rx="20" ry="5" fill="#9cae9b" opacity=".3"/><path d="M42 22v9c0 6-10 10-10 19v30c0 11 36 11 36 0V50c0-9-10-13-10-19v-9" fill="#a5cfc4" stroke="#83b0a5" stroke-width="1.5"/><rect x="40" y="13" width="20" height="12" rx="3" fill="#e6bd57"/><path d="M33 51h34v22H33z" fill="#fff6db"/><path d="m45 58 5-3 5 3v6l-5 3-5-3z" fill="none" stroke="#84a779" stroke-width="2"/><path d="M39 39v8m0 29v4" stroke="#d5e9dc" stroke-width="3" stroke-linecap="round"/>';
- const box = '<path d="m17 33 30-17 36 18-32 18Z" fill="#d9bc86"/><path d="m17 33 34 19v36L17 68Z" fill="#c5a172"/><path d="m51 52 32-18v36L51 88Z" fill="#e3c995"/><path d="m31 25 36 19v15l-10 5V49L23 30" fill="#f1d9a4"/><path d="m60 67 7-4 7 4m-7-4v12" fill="none" stroke="#8e8e5f" stroke-width="3"/>';
- const tin = '<path d="M26 27h48v49c0 12-48 12-48 0z" fill="#b7c5b9" stroke="#8e9f94" stroke-width="1.5"/><ellipse cx="50" cy="27" rx="24" ry="8" fill="#dde2d4" stroke="#8e9f94" stroke-width="1.5"/><path d="M27 42q23 10 46 0M27 52q23 10 46 0M27 62q23 10 46 0M27 72q23 10 46 0" stroke="#8e9f94" fill="none" stroke-width="2"/>';
- const container = '<path d="m18 39 5 39c2 11 52 11 54 0l5-39" fill="#b8d1c2" stroke="#8aab96" stroke-width="1.5"/><ellipse cx="50" cy="39" rx="33" ry="12" fill="#7da48b"/><ellipse cx="50" cy="35" rx="33" ry="12" fill="#95b49c" stroke="#6f957f" stroke-width="1.5"/><path d="M31 53v23" stroke="#d8e8d9" stroke-width="3" stroke-linecap="round"/>';
- const trophy = '<circle cx="50" cy="46" r="31" fill="#e5e9bb"/><path d="m50 23 7 14 16 2-12 11 3 16-14-8-14 8 3-16-12-11 16-2Z" fill="#d7b85a"/><path d="m35 70-5 20 20-9 20 9-5-20" fill="#8ba36b"/>';
- const map={flower,tree,grass,newspaper,can,bottle,box,tin,container,trophy};
- if (['paper','metal','plastic'].includes(key)) {
-   const color={paper:'#5c92c2',metal:'#e7bd55',plastic:'#a47a58'}[key];
-   return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M24 24h52v59c0 5-52 5-52 0z" fill="${color}"/><rect x="21" y="18" width="58" height="12" rx="4" fill="${color}"/><path d="M38 35h24" stroke="#415447" stroke-width="5" stroke-linecap="round"/><rect x="32" y="45" width="36" height="29" rx="3" fill="#fffbed"/><path d="m44 54 6-4 6 4m-6-4v12m-6 1-3-6 3-6m-3 6h13m5-3 3 6-3 6m3-6H49" fill="none" stroke="${color}" stroke-width="2.5"/><circle cx="32" cy="88" r="4" fill="#637162"/><circle cx="68" cy="88" r="4" fill="#637162"/></svg>`;
- }
- return `<svg viewBox="0 0 100 100" aria-hidden="true">${map[key] || flower}</svg>`;
-};
-const plants = [
- {key:'flower',name:'花',en:'FLOWER',description:'花有美麗的花瓣。',voice:'這是花。花有美麗的花瓣。'},
- {key:'tree',name:'樹',en:'TREE',description:'樹有樹幹和樹葉。',voice:'這是樹。樹有樹幹和樹葉。'},
- {key:'grass',name:'草',en:'GRASS',description:'草長在地上。',voice:'這是草。草長在地上。'}
-];
-const bins = [
- {key:'paper',name:'廢紙',en:'藍色回收箱',color:'藍色',example:'報紙、紙盒'},
- {key:'metal',name:'金屬',en:'黃色回收箱',color:'黃色',example:'鋁罐、金屬罐'},
- {key:'plastic',name:'塑膠',en:'啡色回收箱',color:'啡色',example:'膠樽、塑膠容器'}
-];
-const items = [
- {key:'newspaper',name:'報紙',bin:'paper',category:'紙製品'},
- {key:'can',name:'鋁罐',bin:'metal',category:'金屬製品'},
- {key:'bottle',name:'膠樽',bin:'plastic',category:'塑膠製品'},
- {key:'box',name:'紙盒',bin:'paper',category:'紙製品'},
- {key:'tin',name:'金屬罐',bin:'metal',category:'金屬製品'},
- {key:'container',name:'塑膠容器',bin:'plastic',category:'塑膠製品'}
-];
-let stored = {};
-try {stored=JSON.parse(localStorage.getItem('green-garden-settings') || '{}') || {};} catch {}
-const preferences = {sound:stored.sound !== false,reducedMotion:stored.reducedMotion ?? window.matchMedia('(prefers-reduced-motion: reduce)').matches,largeText:!!stored.largeText,difficulty:stored.difficulty==='extended'?'extended':'basic'};
-const state = {mode:'nature',stage:'explore',index:0,selected:'flower',answered:false,hint:null,feedback:null,picked:false};
-let garden = null;
-let currentSpeech = '';
-let lastSceneItem = undefined;
-let sceneZoom = 1;
-const count = () => state.mode==='nature'?3:preferences.difficulty==='extended'?6:3;
-const currentPlant = () => plants[state.index];
-const currentItem = () => items[state.index];
-const save = () => {try {localStorage.setItem('green-garden-settings',JSON.stringify(preferences));} catch {}};
-function paintIcons(root=document) {root.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));}
-function speak(text,force=false) {
- if ((!preferences.sound && !force) || !('speechSynthesis' in window)) return;
+import {icon,art,parkArt} from './illustrations.js';
+import {parkStops,growthStages,plantConditions,partFacts,teacherScienceNotes} from './park-content.js';
+
+const $=id=>document.getElementById(id);
+const bins=[{key:'paper',name:'廢紙',color:'藍色'},{key:'metal',name:'金屬',color:'黃色'},{key:'plastic',name:'塑膠',color:'啡色'}];
+const items=[{key:'newspaper',name:'報紙',bin:'paper'},{key:'can',name:'鋁罐',bin:'metal'},{key:'bottle',name:'膠樽',bin:'plastic'},{key:'box',name:'紙盒',bin:'paper'},{key:'tin',name:'金屬罐',bin:'metal'},{key:'container',name:'塑膠容器',bin:'plastic'}];
+let stored={};
+try{stored=JSON.parse(localStorage.getItem('green-garden-settings')||'{}')||{};}catch{}
+const preferences={sound:stored.sound!==false,reducedMotion:stored.reducedMotion??window.matchMedia('(prefers-reduced-motion: reduce)').matches,largeText:!!stored.largeText,difficulty:stored.difficulty==='extended'?'extended':'basic'};
+const tour={stop:'entrance',taskActive:false,answered:false,observed:null,feedback:null,hint:null,stamps:new Set(),growth:0,condition:null,conditionsSeen:new Set(),watered:false,traveling:false};
+const recycling={index:0,answered:false,complete:false,picked:false,hint:null,feedback:null};
+let mode='nature',park=null,garden=null,currentSpeech='',sceneZoom=1,lastSceneItem;
+const engines={park:'loading',recycle:'idle'};
+const currentStop=()=>parkStops.find(stop=>stop.key===tour.stop);
+const currentItem=()=>items[recycling.index];
+const itemCount=()=>preferences.difficulty==='extended'?6:3;
+const save=()=>{try{localStorage.setItem('green-garden-settings',JSON.stringify(preferences));}catch{}};
+const esc=text=>String(text).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
+function paintIcons(){document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon));}
+function speak(text,force=false){
+ if((!preferences.sound&&!force)||!('speechSynthesis' in window))return;
  window.speechSynthesis.cancel();
- const utterance = new SpeechSynthesisUtterance(text);
- const voices = window.speechSynthesis.getVoices();
- const voice = voices.find(v=>/^zh[-_]HK$/i.test(v.lang)) || voices.find(v=>/yue/i.test(v.lang)) || voices.find(v=>/^zh[-_]TW$/i.test(v.lang)) || voices.find(v=>/^zh/i.test(v.lang));
- if(voice) utterance.voice=voice;
- utterance.lang=voice?.lang || 'zh-HK';utterance.rate=.8;utterance.pitch=1;
- utterance.onerror=()=>{$('voice-note').textContent='此裝置暫時無法播放語音。可以繼續按畫面文字及圖片學習。';};
+ const utterance=new SpeechSynthesisUtterance(text),voices=window.speechSynthesis.getVoices();
+ const voice=voices.find(v=>/^zh[-_]HK$/i.test(v.lang))||voices.find(v=>/yue/i.test(v.lang))||voices.find(v=>/^zh[-_]TW$/i.test(v.lang))||voices.find(v=>/^zh/i.test(v.lang));
+ if(voice)utterance.voice=voice;utterance.lang=voice?.lang||'zh-HK';utterance.rate=.8;
+ utterance.onerror=()=>{$('voice-note').textContent='此裝置暫時無法播放語音。可以繼續按文字及圖片學習。';};
  window.speechSynthesis.speak(utterance);
 }
-function applyPreferences() {
- document.body.classList.toggle('large-text',preferences.largeText);
- document.body.classList.toggle('reduce-motion',preferences.reducedMotion);
- $('sound-toggle').setAttribute('aria-pressed',String(preferences.sound));
- $('sound-toggle').setAttribute('aria-label',preferences.sound?'關閉語音':'開啟語音');
- $('sound-label').textContent=preferences.sound?'語音開啟':'語音關閉';
- $('sound-toggle').querySelector('[data-icon]').innerHTML=icon(preferences.sound?'volume':'muted');
+function applyPreferences(){
+ document.body.classList.toggle('large-text',preferences.largeText);document.body.classList.toggle('reduce-motion',preferences.reducedMotion);
+ $('sound-toggle').setAttribute('aria-pressed',String(preferences.sound));$('sound-toggle').setAttribute('aria-label',preferences.sound?'關閉語音':'開啟語音');
+ $('sound-label').textContent=preferences.sound?'語音開啟':'語音關閉';$('sound-toggle').querySelector('[data-icon]').innerHTML=icon(preferences.sound?'volume':'muted');
  $('reduce-motion').checked=preferences.reducedMotion;$('large-text').checked=preferences.largeText;$('difficulty').value=preferences.difficulty;
- garden?.setMotion(!preferences.reducedMotion);
+ park?.setMotion(!preferences.reducedMotion);garden?.setMotion(!preferences.reducedMotion);
 }
-function choiceMarkup(option) {
- const isQuiz=state.stage==='practice' || state.mode==='recycle';
- const active=option.key===state.selected && (!isQuiz || state.answered);
- const locked=state.stage==='complete' || (isQuiz && state.answered);
- return `<button class="choice ${option.key} ${active?'active':''} ${state.hint===option.key?'hint':''}" data-choice="${option.key}" aria-label="${option.name}${option.color?'，'+option.en:''}" ${!isQuiz?`aria-pressed="${active}"`:''} ${locked?'aria-disabled="true"':''}><span class="choice-illustration">${art(option.key)}</span><span class="choice-text"><strong>${option.name}</strong><small>${option.en}</small></span><span class="choice-check">${icon('check')}</span></button>`;
+function keepFocus(callback){
+ const active=document.activeElement;let marker;
+ for(const key of ['choice','stop','growth','condition'])if(active?.dataset?.[key]){marker=[key,active.dataset[key]];break;}
+ callback();
+ if(marker)document.querySelector(`[data-${marker[0]}="${marker[1]}"]`)?.focus({preventScroll:true});
 }
-function render() {
- const focusedChoice=document.activeElement?.dataset?.choice;
- const nature=state.mode==='nature',complete=state.stage==='complete',quiz=state.stage==='practice';
- $('tab-nature').classList.toggle('active',nature);$('tab-recycle').classList.toggle('active',!nature);
- $('tab-nature').setAttribute('aria-pressed',String(nature));$('tab-recycle').setAttribute('aria-pressed',String(!nature));
- $('scene-label').textContent=nature?'我的小花園':'香港三色回收站';
- $('scene-caption').textContent=nature?'直接點選 3D 植物聽介紹，按住也可以拖動。':'直接拖入箱內，或先點物品，再點回收箱。';
- $('garden').setAttribute('aria-label',nature?'可點選或拖動的立體花、樹、草。也可使用下方大按鈕。':'把前方立體回收物拖進回收箱，或先點物品再點回收箱。也可使用下方大按鈕。');
- $('choice-buttons').setAttribute('aria-label',nature?'選擇植物':'選擇回收箱');
- $('choice-buttons').innerHTML=(nature?plants:bins).map(choiceMarkup).join('');
- if(focusedChoice) $('choice-buttons').querySelector(`[data-choice="${focusedChoice}"]`)?.focus({preventScroll:true});
- $('activity-label').textContent=complete?'完成練習':nature?(quiz?'找一找遊戲':'認識植物'):'回收小練習';
- $('progress').hidden=nature&&!quiz&&!complete;
- if(!$('progress').hidden) {
-  $('progress').setAttribute('aria-label',complete?`已完成全部 ${count()} 個`:`第 ${state.index+1} 個，共 ${count()} 個`);
-  $('progress').innerHTML=Array.from({length:count()},(_,i)=>`<span class="progress-dot ${complete||i<state.index?'done':i===state.index?'current':''}" aria-hidden="true"></span>`).join('');
- }
- let picture,title,description,kicker,feedback,button;
- if(complete) {
-  picture='trophy';kicker='每一小步，都是進步';title='做到了！';description=nature?'你認識了花、樹、草。':'你認識了三色回收箱。';
-  feedback={kind:'success',text:nature?'謝謝你愛護大自然！':'謝謝你一起做環保！'};button='再練習一次';
- } else if(nature) {
-  const plant=quiz?currentPlant():plants.find(p=>p.key===state.selected);
-  picture=plant.key;kicker=quiz?`第 ${state.index+1} 個・找一找`:'大自然的朋友';title=quiz?`請按「${plant.name}」`:`這是${plant.name}`;description=quiz?'點選 3D 植物，也可拖動它。':plant.description;
-  feedback=state.feedback || {kind:'',text:quiz?'看一看，再點一下或拖一拖。':'點一點、拖一拖，認識花、樹、草。'};
-  button=quiz?(state.answered?(state.index===2?'看看成果':'下一個'):'提示我'):'開始找一找';
- } else {
-  const item=currentItem();picture=item.key;kicker=`第 ${state.index+1} 件・${item.category}`;title=`這是${item.name}`;description=state.picked?'請點一個回收箱。':`把${item.name}拖進回收箱。`;
-  feedback=state.feedback || {kind:'',text:'也可先點物品，再點一個回收箱。'};
-  button=state.answered?(state.index===count()-1?'看看成果':'下一個'):'提示我';
- }
- $('object-picture').innerHTML=art(picture);$('object-kicker').textContent=kicker;$('activity-title').textContent=title;$('activity-description').textContent=description;
- $('touch-prompt').innerHTML=`<span class="touch-picture">${art(picture)}</span><span><strong>${!nature&&!complete?`${currentItem().name}放在哪個回收箱？`:title}</strong><small>${state.feedback?feedback.text:complete?description:nature?(quiz?'請按下面的按鈕。':description):'請按下面的回收箱。'}</small></span>`;
- $('interaction-help').hidden=complete;
- $('interaction-help').innerHTML=nature?'點一下 3D 植物聽介紹。<br>按住植物，也可以拖動它。':'方法一：按住物品，拖進箱內。<br>方法二：點物品，再點回收箱。';
- $('item-actions').hidden=nature||complete;
- $('pickup-action').disabled=state.answered;
- $('pickup-action').setAttribute('aria-pressed',String(state.picked));
- $('pickup-label').textContent=nature?'拿起物品':state.answered?'已放入回收箱':state.picked?`已拿起${currentItem().name}`:`拿起${currentItem().name}`;
- $('return-action').disabled=!state.picked||state.answered||complete;
- $('view-reset').disabled=state.answered||complete;
- const sceneMessage=complete?'做到了！可以再練習一次。':state.feedback?feedback.text:nature?(quiz?`請點「${currentPlant().name}」，也可以拖動它。`:'點一下花、樹或草，也可按住拖動。'):`把${currentItem().name}拖進回收箱。`;
- $('scene-status').textContent=sceneMessage;
- $('scene-status').className=`scene-status ${state.picked?'held':feedback.kind}`;
- $('feedback').className=`feedback ${feedback.kind}`;$('feedback-text').textContent=feedback.text;
- $('feedback').querySelector('[data-icon]').innerHTML=icon(feedback.kind==='success'?'check':feedback.kind==='retry'?'leaf':'sparkle');
- $('primary-label').textContent=button;
- $('secondary-action').hidden=nature&&state.stage==='explore';$('secondary-action').textContent=nature?'返回認識植物':'重新開始這一輪';
- $('bottom-title').textContent=nature?'愛護花草，從認識開始':'回收前，做一做';
- $('bottom-copy').textContent=nature?'花、樹、草，都是我們的好朋友。':'倒清、洗淨、晾乾，再放進合適的回收箱。';
- $('gentle-note').textContent='慢慢來，按錯了也可以再試。';
- currentSpeech=complete?`${title}${description}${feedback.text}`:state.feedback?feedback.text:`${title}。${description}`;
- if(garden) {
-  garden.focus(state.hint || state.selected);
-  const nextItem=nature||complete?null:currentItem().key;
-  if(lastSceneItem!==nextItem){garden.showItem(nextItem);lastSceneItem=nextItem;}
-  garden.setInteraction({enabled:!complete&&!state.answered,completed:complete||state.answered});
+function renderFeedback(value){
+ $('feedback').className=`feedback ${value.kind||''}`;$('feedback-text').textContent=value.text;
+ $('feedback').querySelector('[data-icon]').innerHTML=icon(value.kind==='success'?'check':value.kind==='retry'?'leaf':'sparkle');
+}
+function renderLoading(){
+ const key=mode==='nature'?'park':'recycle',status=engines[key];
+ $('scene-loading').hidden=status==='ready';
+ if(status==='failed'){
+  $('scene-loading').classList.add('fallback');
+  $('scene-loading').innerHTML=`<span class="fallback-garden">${art('tree')}${art('flower')}${art('grass')}</span><span>3D 暫時未能顯示。<br>按地點及下方大按鈕，仍可完成學習。</span>`;
+ }else{
+  $('scene-loading').classList.remove('fallback');
+  $('scene-loading').innerHTML=`<span class="loading-leaf">${icon('sprout')}</span><span>${mode==='nature'?'科學小公園':'回收物品'}準備中…</span>`;
  }
 }
-function reset(mode) {
- window.speechSynthesis?.cancel();
- Object.assign(state,{mode,stage:mode==='nature'?'explore':'practice',index:0,selected:mode==='nature'?'flower':null,answered:false,hint:null,feedback:null,picked:false});
- garden?.setMode(mode);lastSceneItem=undefined;render();
+function render(){
+ keepFocus(()=>{
+  const nature=mode==='nature';
+  $('tab-nature').classList.toggle('active',nature);$('tab-recycle').classList.toggle('active',!nature);
+  $('tab-nature').setAttribute('aria-pressed',String(nature));$('tab-recycle').setAttribute('aria-pressed',String(!nature));
+  $('park-world').hidden=!nature;$('recycle-world').hidden=nature;$('park-route-wrap').hidden=!nature;$('park-walk').hidden=!nature;
+  $('zoom-in').hidden=nature;$('zoom-out').hidden=nature;$('touch-prompt').hidden=true;
+  $('park-care').hidden=!nature||!['flower','growth'].includes(tour.stop);
+  $('growth-lab').hidden=!nature||tour.stop!=='growth';$('item-actions').hidden=nature||recycling.complete;
+  $('view-reset').setAttribute('aria-label',nature?'回到這一站的觀察位置':'還原物件位置');$('view-reset').title=nature?'回到觀察位置':'還原物件位置';
+  if(nature)renderPark();else renderRecycling();renderLoading();
+ });
 }
-function select(key) {
- if(state.stage==='complete')return;
- if(key==='item'){pickUp();return;}
- const valid=state.mode==='nature'?plants:bins;
- if(!valid.some(o=>o.key===key))return;
- if(state.mode==='nature'&&state.stage==='explore') {
-  state.selected=key;state.feedback=null;render();speak(plants.find(p=>p.key===key).voice);return;
- }
- if(state.answered)return;
- const expected=state.mode==='nature'?currentPlant().key:currentItem().bin;
- if(key===expected) {
-  state.answered=true;state.selected=key;state.hint=null;state.picked=false;
-  const bin=bins.find(b=>b.key===key);
-  const text=state.mode==='nature'?`做到了！這是${currentPlant().name}。`:`做到了！${currentItem().name}放入${bin.color}回收箱，回收${bin.name}。`;
-  state.feedback={kind:'success',text};render();if(state.mode==='recycle')garden?.putItem(key);garden?.celebrate(key);speak(text);
- } else {
-  state.hint=expected;state.picked=false;
-  const text=state.mode==='nature'?`再試一次。找找「${currentPlant().name}」。`:`再試一次。找找${bins.find(b=>b.key===expected).color}的「${bins.find(b=>b.key===expected).name}」回收箱。`;
-  state.feedback={kind:'retry',text};render();if(state.mode==='recycle')garden?.returnItem();speak(text);
- }
+function renderPark(){
+ const stop=currentStop(),task=stop.task,observation=tour.observed&&partFacts[tour.observed];
+ const feedback=tour.feedback||{kind:'',text:tour.taskActive?task.prompt:stop.fact};
+ $('scene-label').textContent=tour.traveling?`前往${stop.shortName}…`:stop.name;$('scene-caption').textContent='按路牌或上方地點遊覽；點植物近看部位。';
+ $('garden').setAttribute('aria-label',`3D 科學小公園：${stop.name}。可使用下方大按鈕及地點按鈕完成學習。`);
+ $('activity-label').textContent=tour.taskActive?'這一站的小任務':'植物小小觀察家';$('object-kicker').textContent=tour.traveling?'沿着小路，慢慢出發':stop.name;
+ $('object-picture').innerHTML=parkArt(stop.key);$('activity-title').textContent=tour.taskActive?task.prompt:observation?`這是${observation.name}`:stop.title;
+ $('activity-description').textContent=tour.taskActive?(tour.answered?'做到了！準備好再到下一站。':'點選 3D 物件，或按下面的選項。'):observation?observation.text:stop.description;
+ $('interaction-help').hidden=false;$('interaction-help').textContent=stop.key==='growth'?'逐步切換生長階段，再認識陽光、水分和空氣。':stop.key==='entrance'?'按一個地點，開始遊公園。':stop.key==='recycle'?'愛護植物，也讓公園保持清潔。':'先看一看，再開始小任務。';
+ $('progress').hidden=false;$('progress').className='progress tour-stamps';$('progress').setAttribute('aria-label',`完成 ${tour.stamps.size} 個小任務，共 5 個`);
+ $('progress').innerHTML=parkStops.filter(s=>s.task).map((s,i)=>`<span class="tour-stamp ${tour.stamps.has(s.key)?'done':''}" title="${esc(s.name)}${tour.stamps.has(s.key)?'：已完成':''}" aria-hidden="true">${tour.stamps.has(s.key)?'✓':i+1}</span>`).join('');
+ $('stamp-count').textContent=`完成 ${tour.stamps.size} / 5 個小任務`;
+ $('park-route').innerHTML=parkStops.map((s,i)=>`<button class="route-stop ${s.key===tour.stop?'active':''} ${tour.stamps.has(s.key)?'done':''}" data-stop="${s.key}" aria-current="${s.key===tour.stop?'location':'false'}" aria-label="前往${esc(s.name)}${tour.stamps.has(s.key)?'，小任務已完成':''}"><span class="route-order">0${i+1}</span>${parkArt(s.key)}<span>${esc(s.shortName)}</span></button>`).join('');
+ $('choice-buttons').setAttribute('aria-label',tour.taskActive?'小任務的選項':'選擇觀察對象');$('choice-buttons').hidden=false;
+ if(task){
+  $('choice-buttons').innerHTML=task.options.map(option=>`<button class="choice part-choice ${['paper','metal','plastic'].includes(option.key)?option.key:''} ${tour.observed===option.key?'active':''} ${tour.hint===option.key?'hint':''}" data-choice="${option.key}" ${tour.taskActive?(tour.answered?'aria-disabled="true"':''):`aria-pressed="${tour.observed===option.key}"`} ${tour.traveling?'disabled':''}><span class="choice-illustration">${parkArt(option.key)}</span><span class="choice-text"><strong>${esc(option.label)}</strong><small>${tour.taskActive?'點一下作答':'點一下觀察'}</small></span><span class="choice-check">${icon('check')}</span></button>`).join('');
+ }else $('choice-buttons').innerHTML=['flower','tree','grass'].map(key=>`<button class="park-overview-choice" data-stop="${key}">${parkArt(key)}前往${esc(parkStops.find(s=>s.key===key).shortName)}</button>`).join('');
+ renderFeedback(feedback);
+ let primary='開始小任務';
+ if(stop.key==='entrance')primary='出發去花圃';
+ else if(tour.taskActive)primary=tour.answered?(stop.key==='recycle'?'開始回收挑戰':`到下一站：${parkStops[parkStops.indexOf(stop)+1].shortName}`):'提示我';
+ $('primary-label').textContent=tour.traveling?'正在前往觀察點…':primary;$('primary-action').disabled=tour.traveling;
+ $('secondary-action').hidden=stop.key==='entrance';$('secondary-action').textContent=tour.taskActive?'繼續觀察這一站':'回到公園入口';$('secondary-action').disabled=tour.traveling;
+ $('view-reset').disabled=tour.traveling||engines.park!=='ready';
+ $('scene-status').textContent=tour.traveling?`沿着小路，前往${stop.name}。`:tour.feedback?feedback.text:tour.taskActive?task.prompt:stop.intro;
+ $('scene-status').className=`scene-status ${tour.traveling?'traveling':feedback.kind||''}`;
+ $('park-walk').querySelectorAll('button').forEach(button=>button.disabled=tour.traveling||engines.park!=='ready');
+ $('park-water').disabled=tour.traveling;$('water-note').textContent=tour.watered?'澆水不會讓植物立即長大。':'也可把 3D 水壺拖到植物旁。';
+ $('gentle-note').textContent='沒有計時，隨時可以再觀察。';$('bottom-title').textContent='今天的科學發現';$('bottom-copy').textContent='認識花樹草，觀察生長，再找出生長需要的條件。';
+ if(stop.key==='growth')renderGrowth();
+ currentSpeech=tour.feedback?feedback.text:tour.taskActive?task.prompt:observation?observation.voice:stop.voice;
+ park?.setInteractive(engines.park==='ready');garden?.setInteraction({enabled:false,completed:recycling.answered||recycling.complete});
 }
-function pickUp() {
- if(state.mode!=='recycle'||state.stage==='complete'||state.answered)return;
- state.picked=true;state.hint=null;
- state.feedback={kind:'',text:`已拿起${currentItem().name}。請點一個回收箱。`};
- render();garden?.takeItem();speak(currentSpeech);
+function renderGrowth(){
+ const stage=growthStages[tour.growth];
+ $('growth-track').innerHTML=growthStages.map((s,i)=>`<button class="growth-step ${i===tour.growth?'active':''}" data-growth="${i}" aria-pressed="${i===tour.growth}"><span>${i+1}</span><span>${esc(s.name)}</span></button>`).join('');
+ $('growth-stage-name').textContent=`${tour.growth+1}. ${stage.name}`;$('growth-stage-description').textContent=stage.description;
+ $('growth-next').disabled=tour.growth===growthStages.length-1;$('growth-next').innerHTML=tour.growth===growthStages.length-1?'已看到開花，可選前面階段再觀察':`看看下一階段：${esc(growthStages[tour.growth+1].name)} ${icon('arrow')}`;
+ $('condition-buttons').innerHTML=plantConditions.map(condition=>`<button class="condition-button ${tour.conditionsSeen.has(condition.key)?'seen':''} ${tour.condition===condition.key?'active':''}" data-condition="${condition.key}" aria-pressed="${tour.condition===condition.key}">${icon(condition.key)}<span>${esc(condition.name)}</span>${tour.conditionsSeen.has(condition.key)?'<span class="condition-check" aria-hidden="true">✓</span>':''}</button>`).join('');
+ $('condition-description').textContent=tour.condition?plantConditions.find(c=>c.key===tour.condition).description:'陽光、水分和空氣，都是小苗的好幫手。';
 }
-function putBack() {
- if(state.mode!=='recycle'||state.stage==='complete'||state.answered)return;
- state.picked=false;state.feedback={kind:'',text:'放回原位了。可以再試。'};
- garden?.returnItem();render();speak(currentSpeech);
+function binChoice(bin){
+ const active=recycling.answered&&recycling.hint===bin.key;
+ return `<button class="choice ${bin.key} ${active?'active':''} ${!recycling.answered&&recycling.hint===bin.key?'hint':''}" data-choice="${bin.key}" aria-label="${bin.name}，${bin.color}回收箱" ${recycling.complete||recycling.answered?'aria-disabled="true"':''}><span class="choice-illustration">${art(bin.key)}</span><span class="choice-text"><strong>${bin.name}</strong><small>${bin.color}回收箱</small></span><span class="choice-check">${icon('check')}</span></button>`;
 }
-function drop(target) {
- if(state.mode!=='recycle'||state.stage==='complete'||state.answered)return;
- if(target)select(target);else putBack();
+function renderRecycling(){
+ const complete=recycling.complete,item=currentItem();
+ const feedback=recycling.feedback||{kind:complete?'success':'',text:complete?'謝謝你一起愛護公園！':'也可先點物品，再點一個回收箱。'};
+ $('scene-label').textContent='香港三色回收站';$('scene-caption').textContent='直接拖入箱內，或先點物品，再點回收箱。';$('garden').setAttribute('aria-label','把前方立體回收物拖進回收箱。也可使用下方大按鈕。');
+ $('activity-label').textContent=complete?'完成回收挑戰':'回收小練習';$('object-kicker').textContent=complete?'愛護公園，從我做起':`第 ${recycling.index+1} 件，共 ${itemCount()} 件`;
+ $('object-picture').innerHTML=art(complete?'trophy':item.key);$('activity-title').textContent=complete?'做到了！':`這是${item.name}`;$('activity-description').textContent=complete?'你認識了三色回收箱。':recycling.picked?'請點一個回收箱。':`把${item.name}拖進回收箱。`;
+ $('interaction-help').hidden=complete;$('interaction-help').innerHTML='方法一：按住物品，拖進箱內。<br>方法二：點物品，再點回收箱。';
+ $('progress').hidden=false;$('progress').className='progress';$('progress').setAttribute('aria-label',complete?`已完成全部 ${itemCount()} 件`:`第 ${recycling.index+1} 件，共 ${itemCount()} 件`);
+ $('progress').innerHTML=Array.from({length:itemCount()},(_,i)=>`<span class="progress-dot ${complete||i<recycling.index?'done':i===recycling.index?'current':''}" aria-hidden="true"></span>`).join('');
+ $('choice-buttons').hidden=false;$('choice-buttons').setAttribute('aria-label','選擇回收箱');$('choice-buttons').innerHTML=bins.map(binChoice).join('');
+ $('pickup-label').textContent=recycling.answered?'已放入回收箱':recycling.picked?`已拿起${item.name}`:`拿起${item.name}`;$('pickup-action').disabled=recycling.answered;$('pickup-action').setAttribute('aria-pressed',String(recycling.picked));$('return-action').disabled=!recycling.picked||recycling.answered;
+ $('view-reset').disabled=recycling.answered||complete;$('primary-action').disabled=false;$('primary-label').textContent=complete?'再練習一次':recycling.answered?(recycling.index===itemCount()-1?'看看成果':'下一個'):'提示我';
+ $('secondary-action').hidden=false;$('secondary-action').disabled=false;$('secondary-action').textContent='返回公園回收站';
+ $('scene-status').textContent=complete?'做到了！一起讓公園保持清潔。':recycling.feedback?feedback.text:`把${item.name}拖進回收箱。`;$('scene-status').className=`scene-status ${recycling.picked?'held':feedback.kind||''}`;renderFeedback(feedback);
+ $('gentle-note').textContent='慢慢來，按錯了也可以再試。';$('bottom-title').textContent='回收前，做一做';$('bottom-copy').textContent='容器先倒清、洗淨、晾乾；廢紙保持乾爽。';
+ currentSpeech=recycling.feedback?feedback.text:complete?'做到了！你認識了三色回收箱。':`這是${item.name}。${$('activity-description').textContent}`;park?.setInteractive(false);
+ if(garden){const kind=complete?null:item.key;if(kind!==lastSceneItem){garden.showItem(kind);lastSceneItem=kind;}garden.focus(recycling.hint);garden.setInteraction({enabled:engines.recycle==='ready'&&!complete&&!recycling.answered,completed:complete||recycling.answered});}
 }
-function updateZoom() {
- $('zoom-out').disabled=sceneZoom<=1;
- $('zoom-in').disabled=sceneZoom>=1.25;
- garden?.setZoom(sceneZoom);
+function arrive(key){if(mode==='nature'&&tour.stop===key){tour.traveling=false;render();}}
+function goToStop(key,announce=true){
+ const stop=parkStops.find(s=>s.key===key);if(!stop)return;
+ window.speechSynthesis?.cancel();mode='nature';Object.assign(tour,{stop:key,taskActive:false,answered:false,observed:null,feedback:null,hint:null,traveling:!!park});render();
+ if(park){park.setInteractive(true);park.goTo(key);park.setGrowthStage(tour.growth);}else tour.traveling=false;
+ if(announce)speak(stop.voice);
 }
-function hint() {
- if(state.mode==='nature') {state.hint=currentPlant().key;state.feedback={kind:'',text:`找找「${currentPlant().name}」。它的按鈕有外框提示。`};}
- else {const bin=bins.find(b=>b.key===currentItem().bin);state.hint=bin.key;state.feedback={kind:'',text:`${currentItem().name}是${bin.name}，放入${bin.color}回收箱。`};}
- render();speak(currentSpeech);
+function selectPark(key){
+ if(tour.traveling)return;const stop=currentStop();if(tour.taskActive){answerPark(key);return;}tour.observed=partFacts[key]?key:null;tour.hint=null;
+ if(partFacts[key]){tour.feedback={kind:'',text:partFacts[key].text};park?.focusPart(key);render();speak(partFacts[key].voice);}
+ else if(stop.key==='recycle'&&bins.some(b=>b.key===key)){const bin=bins.find(b=>b.key===key);tour.feedback={kind:'',text:`${bin.color}回收箱，回收${bin.name}。`};render();speak(tour.feedback.text);}
+ else if(key==='water')waterPlant();
+ else{tour.feedback={kind:'',text:key==='stone'?'這是石頭。石頭不是植物。':key==='bench'?'這是長椅，讓我們休息。':key==='toy'?'玩具給人玩，不能代替植物需要的水分。':'糖果不能代替植物需要的水分。'};render();speak(tour.feedback.text);}
 }
-function primary() {
- if(state.stage==='complete') {
-  const mode=state.mode;reset(mode);if(mode==='nature'){state.stage='practice';state.selected=null;render();}
- } else if(state.mode==='nature'&&state.stage==='explore') {
-  Object.assign(state,{stage:'practice',index:0,selected:null,answered:false,hint:null,feedback:null,picked:false});render();
- } else if(!state.answered) {hint();return;}
- else {
-  if(state.index+1===count()){state.stage='complete';state.hint=null;state.selected=null;state.feedback=null;render();}
-  else{Object.assign(state,{index:state.index+1,selected:null,answered:false,hint:null,feedback:null,picked:false});render();}
- }
- speak(currentSpeech);
+function answerPark(key){
+ const stop=currentStop(),task=stop.task;if(!task||tour.answered||tour.traveling||!task.options.some(o=>o.key===key))return;tour.observed=key;
+ if(key===task.answer){tour.answered=true;tour.hint=null;tour.stamps.add(stop.key);tour.feedback={kind:'success',text:task.success};park?.focusPart(key);}
+ else{tour.hint=task.answer;tour.feedback={kind:'retry',text:task.hint};park?.focusPart(task.answer);}
+ render();speak(tour.feedback.text);
 }
-paintIcons();applyPreferences();render();updateZoom();
-$('tab-nature').addEventListener('click',()=>{if(state.mode!=='nature'){reset('nature');speak('一起認識花、樹、草。按一按，認識新朋友。');}});
-$('tab-recycle').addEventListener('click',()=>{if(state.mode!=='recycle'){reset('recycle');speak(currentSpeech);}});
-$('choice-buttons').addEventListener('click',event=>{const choice=event.target.closest('[data-choice]');if(choice)select(choice.dataset.choice);});
-$('primary-action').addEventListener('click',primary);
-$('secondary-action').addEventListener('click',()=>{reset(state.mode);speak(currentSpeech);});
-$('pickup-action').addEventListener('click',pickUp);
-$('return-action').addEventListener('click',putBack);
-$('zoom-in').addEventListener('click',()=>{sceneZoom=Math.min(1.25,Math.round((sceneZoom+.125)*1000)/1000);updateZoom();});
-$('zoom-out').addEventListener('click',()=>{sceneZoom=Math.max(1,Math.round((sceneZoom-.125)*1000)/1000);updateZoom();});
-$('listen').addEventListener('click',()=>speak(currentSpeech,true));
-$('sound-toggle').addEventListener('click',()=>{preferences.sound=!preferences.sound;save();applyPreferences();if(preferences.sound)speak(currentSpeech);else window.speechSynthesis?.cancel();});
-$('settings-open').addEventListener('click',()=>{$('settings').showModal();});
-$('settings').addEventListener('click',event=>{if(event.target===$('settings')){const r=$('settings').getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)$('settings').close();}});
-$('reduce-motion').addEventListener('change',event=>{preferences.reducedMotion=event.target.checked;save();applyPreferences();});
-$('large-text').addEventListener('change',event=>{preferences.largeText=event.target.checked;save();applyPreferences();});
-$('difficulty').addEventListener('change',event=>{preferences.difficulty=event.target.value;save();if(state.mode==='recycle')reset('recycle');});
-$('view-reset').addEventListener('click',()=>{if(state.answered||state.stage==='complete')return;state.picked=false;state.feedback={kind:'',text:'位置已還原。可以繼續學習。'};garden?.resetLayout();sceneZoom=1;updateZoom();render();speak(currentSpeech);});
-if(!('speechSynthesis' in window)) {
- $('voice-note').textContent='此瀏覽器未支援語音。所有指示均有文字及圖片，可以繼續學習。';
- $('listen').hidden=true;$('sound-toggle').hidden=true;
+function primaryPark(){
+ if(tour.traveling)return;const stop=currentStop();
+ if(stop.key==='entrance'){goToStop('flower');return;}
+ if(!tour.taskActive){tour.taskActive=true;tour.answered=false;tour.observed=null;tour.feedback=null;tour.hint=null;render();speak(stop.task.prompt);return;}
+ if(tour.answered){if(stop.key==='recycle')switchMode('recycle');else goToStop(parkStops[parkStops.indexOf(stop)+1].key);return;}
+ tour.hint=stop.task.answer;tour.feedback={kind:'',text:stop.task.hint};park?.focusPart(tour.hint);render();speak(tour.feedback.text);
 }
-function sceneError(){
- const canvas=$('garden').querySelector('canvas');if(canvas)canvas.style.visibility='hidden';
- $('scene-loading').hidden=false;
- $('scene-loading').innerHTML=`<span class="fallback-garden">${art('tree')}${art('flower')}${art('grass')}</span><span>3D 暫時未能顯示<br>仍可按下方大按鈕繼續學習。</span>`;
- $('scene-loading').classList.add('fallback');
- $('garden').setAttribute('aria-label','3D 未能顯示。請使用下方大按鈕完成全部學習活動。');
+function setGrowth(index){
+ if(mode!=='nature'||tour.stop!=='growth'||tour.traveling||!Number.isInteger(index)||index<0||index>=growthStages.length)return;tour.growth=index;park?.setGrowthStage(index);
+ tour.feedback={kind:'',text:`現在看到：${growthStages[index].name}。${growthStages[index].description}`};render();speak(growthStages[index].voice);
 }
-try {
- const {createGarden}=await import('./scene.js');
- garden=createGarden($('garden'),{onSelect:select,onDrop:drop,reducedMotion:preferences.reducedMotion,onReady:()=>{$('scene-loading').hidden=true;},onError:sceneError});
- garden.setMode(state.mode);lastSceneItem=undefined;render();updateZoom();
-} catch {sceneError();}
-document.addEventListener('visibilitychange',()=>{if(document.hidden)window.speechSynthesis?.cancel();});
-window.addEventListener('pagehide',()=>{window.speechSynthesis?.cancel();garden?.dispose();},{once:true});
+function seeCondition(key){
+ if(mode!=='nature'||tour.stop!=='growth'||tour.traveling)return;const condition=plantConditions.find(c=>c.key===key);if(!condition)return;
+ tour.condition=key;tour.conditionsSeen.add(key);park?.setConditions({[key]:true});if(key==='water'){waterPlant();return;}
+ tour.feedback={kind:'',text:condition.description};render();speak(condition.voice);
+}
+function waterPlant(fromScene=false){
+ if(mode!=='nature'||tour.traveling||!['flower','growth'].includes(tour.stop))return;if(!fromScene)park?.water();tour.watered=true;
+ if(tour.stop==='growth'){tour.condition='water';tour.conditionsSeen.add('water');}
+ if(tour.taskActive&&currentStop().task.answer==='water'&&!tour.answered){answerPark('water');return;}
+ tour.feedback={kind:'',text:'幫植物澆水了。適量就好，長大需要時間。'};render();speak(tour.feedback.text);
+}
+function parkAction(action){
+ if(mode!=='nature')return;if(action==='water')waterPlant(true);
+ else if(action==='water-miss'){tour.feedback={kind:'',text:'水壺放回原位了。可以再拖到植物旁。'};render();speak(tour.feedback.text);}
+ else if(action==='sun'||action==='air')seeCondition(action);
+}
+function resetRecycling(){Object.assign(recycling,{index:0,answered:false,complete:false,picked:false,hint:null,feedback:null});lastSceneItem=undefined;garden?.returnItem();render();}
+function selectRecycle(key){
+ if(mode!=='recycle'||recycling.complete||recycling.answered)return;if(key==='item'){pickUp();return;}const bin=bins.find(b=>b.key===key);if(!bin)return;recycling.picked=false;
+ if(key===currentItem().bin){recycling.answered=true;recycling.hint=key;recycling.feedback={kind:'success',text:`做到了！${currentItem().name}放入${bin.color}回收箱，回收${bin.name}。`};render();garden?.putItem(key);garden?.celebrate(key);}
+ else{recycling.hint=currentItem().bin;const correct=bins.find(b=>b.key===currentItem().bin);recycling.feedback={kind:'retry',text:`再試一次。找找${correct.color}的「${correct.name}」回收箱。`};render();garden?.returnItem();}speak(recycling.feedback.text);
+}
+function pickUp(){if(mode!=='recycle'||recycling.answered||recycling.complete)return;recycling.picked=true;recycling.hint=null;recycling.feedback={kind:'',text:`已拿起${currentItem().name}。請點一個回收箱。`};render();garden?.takeItem();speak(currentSpeech);}
+function putBack(){if(mode!=='recycle'||recycling.answered||recycling.complete)return;recycling.picked=false;recycling.feedback={kind:'',text:'放回原位了。可以再試。'};garden?.returnItem();render();speak(currentSpeech);}
+function primaryRecycle(){
+ if(recycling.complete){resetRecycling();speak(currentSpeech);return;}
+ if(!recycling.answered){const bin=bins.find(b=>b.key===currentItem().bin);recycling.hint=bin.key;recycling.feedback={kind:'',text:`${currentItem().name}是${bin.name}，放入${bin.color}回收箱。`};render();speak(currentSpeech);return;}
+ if(recycling.index+1===itemCount()){recycling.complete=true;recycling.feedback=null;}else Object.assign(recycling,{index:recycling.index+1,answered:false,picked:false,hint:null,feedback:null});render();speak(currentSpeech);
+}
+function updateZoom(){$('zoom-out').disabled=sceneZoom<=1;$('zoom-in').disabled=sceneZoom>=1.25;garden?.setZoom(sceneZoom);}
+function switchMode(next){
+ if(mode===next)return;window.speechSynthesis?.cancel();mode=next;
+ if(next==='nature'){render();if(park){tour.traveling=true;render();park.setInteractive(true);park.goTo(tour.stop);}speak(currentSpeech);}else{render();ensureRecycling();speak(currentSpeech);}
+}
+function engineError(key){
+ engines[key]='failed';if(key==='park'){tour.traveling=false;try{park?.dispose();}catch{}park=null;}else{try{garden?.dispose();}catch{}garden=null;}
+ $(key==='park'?'park-world':'recycle-world').style.visibility='hidden';render();
+}
+async function ensureRecycling(){
+ if(engines.recycle!=='idle')return;engines.recycle='loading';renderLoading();
+ try{
+  const {createGarden}=await import('./scene.js');
+  garden=createGarden($('recycle-world'),{reducedMotion:preferences.reducedMotion,onSelect:selectRecycle,onDrop:key=>key?selectRecycle(key):putBack(),onReady:()=>{if(engines.recycle!=='failed'){engines.recycle='ready';render();}},onError:()=>engineError('recycle')});
+  engines.recycle='ready';garden.setMode('recycle');lastSceneItem=undefined;render();updateZoom();
+ }catch{engineError('recycle');}
+}
+paintIcons();applyPreferences();render();updateZoom();$('science-notes').innerHTML=teacherScienceNotes.map(note=>`<li>${esc(note)}</li>`).join('');
+$('tab-nature').addEventListener('click',()=>switchMode('nature'));$('tab-recycle').addEventListener('click',()=>switchMode('recycle'));
+$('park-route').addEventListener('click',event=>{const target=event.target.closest('[data-stop]');if(target)goToStop(target.dataset.stop);});
+$('choice-buttons').addEventListener('click',event=>{const stop=event.target.closest('[data-stop]');if(stop){goToStop(stop.dataset.stop);return;}const choice=event.target.closest('[data-choice]');if(choice)(mode==='nature'?selectPark:selectRecycle)(choice.dataset.choice);});
+$('primary-action').addEventListener('click',()=>mode==='nature'?primaryPark():primaryRecycle());
+$('secondary-action').addEventListener('click',()=>{if(mode==='recycle'){goToStop('recycle');return;}if(tour.taskActive){tour.taskActive=false;tour.answered=false;tour.feedback=null;tour.hint=null;tour.observed=null;render();speak(currentSpeech);}else goToStop('entrance');});
+$('park-walk').addEventListener('click',event=>{const target=event.target.closest('[data-walk]');if(target&&mode==='nature'&&!tour.traveling)park?.move(target.dataset.walk);});
+$('park-water').addEventListener('click',()=>waterPlant());$('growth-track').addEventListener('click',event=>{const target=event.target.closest('[data-growth]');if(target)setGrowth(Number(target.dataset.growth));});$('growth-next').addEventListener('click',()=>setGrowth(tour.growth+1));
+$('condition-buttons').addEventListener('click',event=>{const target=event.target.closest('[data-condition]');if(target)seeCondition(target.dataset.condition);});
+$('pickup-action').addEventListener('click',pickUp);$('return-action').addEventListener('click',putBack);
+$('zoom-in').addEventListener('click',()=>{sceneZoom=Math.min(1.25,sceneZoom+.125);updateZoom();});$('zoom-out').addEventListener('click',()=>{sceneZoom=Math.max(1,sceneZoom-.125);updateZoom();});
+$('view-reset').addEventListener('click',()=>{if(mode==='nature'){park?.resetView();tour.feedback={kind:'',text:'回到這一站的觀察位置了。'};render();speak(currentSpeech);}else if(!recycling.answered&&!recycling.complete){recycling.picked=false;recycling.feedback={kind:'',text:'位置已還原。可以繼續學習。'};garden?.resetLayout();sceneZoom=1;updateZoom();render();speak(currentSpeech);}});
+$('listen').addEventListener('click',()=>speak(currentSpeech,true));$('sound-toggle').addEventListener('click',()=>{preferences.sound=!preferences.sound;save();applyPreferences();if(preferences.sound)speak(currentSpeech);else window.speechSynthesis?.cancel();});
+$('settings-open').addEventListener('click',()=>$('settings').showModal());$('settings').addEventListener('click',event=>{if(event.target===$('settings')){const r=$('settings').getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)$('settings').close();}});
+$('reduce-motion').addEventListener('change',event=>{preferences.reducedMotion=event.target.checked;save();applyPreferences();});$('large-text').addEventListener('change',event=>{preferences.largeText=event.target.checked;save();applyPreferences();});$('difficulty').addEventListener('change',event=>{preferences.difficulty=event.target.value;save();resetRecycling();});
+if(!('speechSynthesis' in window)){$('listen').hidden=true;$('sound-toggle').hidden=true;$('voice-note').textContent='此瀏覽器未支援語音。所有指示均有文字及圖片，可以繼續學習。';}
+try{
+ const {createPark}=await import('./park-scene.js');
+ park=createPark($('park-world'),{reducedMotion:preferences.reducedMotion,onNavigate:key=>{if(mode==='nature')goToStop(key);},onSelect:selection=>{if(mode==='nature'&&selection?.key)selectPark(selection.key);},onAction:parkAction,onArrive:arrive,onReady:()=>{if(engines.park!=='failed'){engines.park='ready';render();}},onError:()=>engineError('park')});
+ engines.park='ready';park.goTo(tour.stop);park.setGrowthStage(tour.growth);park.setConditions({sun:true,water:true,air:true});render();
+}catch{engineError('park');}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)window.speechSynthesis?.cancel();});window.addEventListener('pagehide',()=>{window.speechSynthesis?.cancel();park?.dispose();garden?.dispose();},{once:true});
