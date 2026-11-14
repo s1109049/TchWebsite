@@ -3,55 +3,52 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f5f7ef">
-  <meta name="description" content="遊覽 3D 科學小公園，近看花樹草、觀察植物的生長過程及生存條件，並練習香港三色回收。繁體中文、語音及大按鈕，按自己的步伐探索。">
-  <title>綠意小天地｜3D 科學小公園</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232e6049'/%3E%3Cpath d='M45 16C23 15 14 25 20 37s28 7 25-21Z' fill='%23d5e9a8'/%3E%3Cpath d='m19 48 21-26' stroke='%23f8f9ef' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#f6f7ef">
+  <meta name="description" content="按固定次序遊覽 3D 科學小公園，清楚觀察花、樹、草、植物生長與生存條件。大按鈕、短指示、語音及可選小任務。">
+  <title>綠意小天地｜一起遊科學公園</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2335644e'/%3E%3Cpath d='M45 16C23 15 14 25 20 37s28 7 25-21Z' fill='%23d5e9a8'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./park.css">
+  <link rel="stylesheet" href="./park.css?v=3">
 </head>
 <body>
   <a class="skip" href="#learn">跳到學習活動</a>
   <header class="site-header">
     <a class="brand" href="./" aria-label="綠意小天地首頁"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M29 8C12 7 6 15 11 25s22 4 18-17Z" fill="currentColor"/><path d="M10 33 26 13" fill="none" stroke="#35634e" stroke-width="2.5" stroke-linecap="round"/></svg></span><span>綠意小天地<small>GREEN LITTLE WORLD</small></span></a>
-    <div class="header-actions"><button id="sound-toggle" class="utility" aria-pressed="true"><span data-icon="volume"></span><span id="sound-label">語音開啟</span></button><button id="settings-open" class="utility" aria-haspopup="dialog"><span data-icon="sliders"></span><span>學習設定</span></button></div>
+    <div class="header-actions"><button id="sound-toggle" class="utility" aria-pressed="true"><span data-icon="volume"></span><span id="sound-label">語音開啟</span></button><button id="settings-open" class="utility" aria-label="學習設定" aria-haspopup="dialog"><span data-icon="sliders"></span><span>學習設定</span></button></div>
   </header>
   <main id="learn">
-    <section class="intro" aria-labelledby="page-title">
-      <div><div class="eyebrow"><span></span> 觀察・發現・一起長大</div><h1 id="page-title">走進<span>3D 科學小公園</span></h1><p>沿着小路遊覽，認識花樹草，發現植物長大的秘密。</p></div>
-      <div class="intro-note"><span data-icon="sun"></span><span>今天，一起做<br><strong>植物小小觀察家。</strong></span></div>
-    </section>
-    <nav class="lesson-tabs" aria-label="選擇學習主題"><button id="tab-nature" class="lesson-tab active" aria-pressed="true"><span class="tab-number">01</span><span data-icon="sprout"></span><span>公園遊覽</span><span class="tab-tag">植物小小觀察家</span></button><button id="tab-recycle" class="lesson-tab" aria-pressed="false"><span class="tab-number">02</span><span data-icon="recycle"></span><span>回收挑戰</span><span class="tab-tag">一起做環保</span></button></nav>
-    <section class="learning-layout" aria-label="互動學習區">
-      <div id="park-route-wrap" class="park-route-wrap"><div class="route-heading"><span><span data-icon="map"></span> 我的公園路線</span><span id="stamp-count">完成 0 / 5 個小任務</span></div><nav id="park-route" class="park-route" aria-label="選擇公園地點"></nav></div>
+    <section class="intro" aria-labelledby="page-title"><div><div class="eyebrow"><span></span> 一起看一看，發現植物的秘密</div><h1 id="page-title">跟着走，<span>遊科學小公園</span></h1><p>每次看一樣，準備好就按「下一站」。</p></div><div class="intro-note"><span data-icon="sun"></span><span>慢慢觀察，<br><strong>每一步都有新發現。</strong></span></div></section>
+    <nav class="lesson-tabs" aria-label="選擇學習活動"><button id="tab-nature" class="lesson-tab active" aria-pressed="true"><span data-icon="sprout"></span><span>科學公園</span></button><button id="tab-recycle" class="lesson-tab" aria-pressed="false"><span data-icon="recycle"></span><span>三色回收</span></button></nav>
+    <section class="learning-layout guided-layout" aria-label="互動學習區">
+      <div id="park-route-wrap" class="park-route-wrap"><div class="route-heading"><span>我們的觀察旅程</span><span id="stamp-count">公園入口</span></div><ol id="park-route" class="park-route" aria-label="導覽次序"></ol></div>
       <div class="garden-card">
-        <div class="scene-heading"><span class="scene-pill"><i></i><span id="scene-label">公園入口</span></span><div class="scene-tools"><button id="zoom-out" class="scene-control zoom-control" aria-label="縮小 3D 物件" title="縮小物件" hidden>−</button><button id="zoom-in" class="scene-control zoom-control" aria-label="放大 3D 物件" title="放大物件" hidden>＋</button><button id="view-reset" class="scene-control" aria-label="回到這一站的觀察位置" title="回到觀察位置"><span data-icon="rotate"></span></button></div></div>
-        <div id="garden" class="garden" role="group" aria-label="可遊覽的 3D 科學小公園。也可使用地點與觀察按鈕完成學習。"><div id="park-world" class="world-layer"></div><div id="recycle-world" class="world-layer" hidden></div><div id="scene-loading" class="scene-loading"><span class="loading-leaf" data-icon="sprout"></span><span>科學小公園準備中…</span></div></div>
-        <div id="scene-status" class="scene-status" aria-hidden="true">按一個地點，開始遊公園。</div>
-        <div id="park-walk" class="park-walk"><span>走一走</span><div><button data-walk="left" aria-label="向左移動">← <span>向左</span></button><button data-walk="forward" aria-label="向前走近觀察">↑ <span>走近</span></button><button data-walk="back" aria-label="向後走遠觀察">↓ <span>後退</span></button><button data-walk="right" aria-label="向右移動">→ <span>向右</span></button></div><small>也可拖動畫面，看看四周。</small></div>
-        <div class="scene-caption"><span data-icon="hand"></span><span id="scene-caption">按一按花、樹或草，認識新朋友。</span><span class="dimension-tag">3D 互動花園</span></div>
-        <div id="touch-prompt" class="touch-prompt" aria-hidden="true"></div>
-        <section id="growth-lab" class="growth-lab" aria-labelledby="growth-heading" hidden><div class="lab-heading"><h3 id="growth-heading">小花的生長日記</h3><span>生長示意</span></div><div id="growth-track" class="growth-track" role="group" aria-label="選擇植物的生長階段"></div><div class="growth-reading" aria-live="polite"><strong id="growth-stage-name">1. 種子</strong><p id="growth-stage-description">合適條件下，種子可以長成小苗。</p></div><button id="growth-next" class="lab-next">看看下一個階段 <span data-icon="arrow"></span></button><p class="science-note">這是一棵開花植物的示意；真正生長需要較長時間。</p><div class="conditions-heading"><strong>植物長大，需要甚麼？</strong><small>按一按，認識生長條件。</small></div><div id="condition-buttons" class="condition-buttons" role="group" aria-label="認識植物生長的條件"></div><p id="condition-description" class="condition-description" aria-live="polite">陽光、水分和空氣，都是小苗的好幫手。</p></section>
-        <div id="park-care" class="park-care" hidden><button id="park-water" class="care-button"><span data-icon="water"></span> 幫植物澆水</button><span id="water-note">也可把 3D 水壺拖到花圃。</span></div>
+        <div class="scene-heading"><span class="scene-pill"><i></i><span id="scene-label">公園入口</span></span><div class="scene-tools"><button id="zoom-out" class="scene-control zoom-control" aria-label="縮小回收物件" hidden>−</button><button id="zoom-in" class="scene-control zoom-control" aria-label="放大回收物件" hidden>＋</button><button id="view-reset" class="scene-control" aria-label="還原回收物件位置" hidden><span data-icon="rotate"></span></button></div></div>
+        <div id="scene-status" class="scene-status" aria-hidden="true">按「開始遊覽」，一起出發。</div>
+        <div id="garden" class="garden" role="group" aria-label="按固定次序觀察的 3D 科學小公園。可用下方大按鈕完成活動。"><div id="park-world" class="world-layer"></div><div id="recycle-world" class="world-layer" hidden></div><div id="scene-loading" class="scene-loading"><span class="loading-leaf" data-icon="sprout"></span><span>小公園準備中…</span></div></div>
+        <div id="tour-nav" class="tour-nav"><button id="prev-action" class="previous-button" disabled><span data-icon="arrowleft"></span><span>上一站</span></button><button id="primary-action" class="primary-button"><span id="primary-label">開始遊覽</span><span data-icon="arrow"></span></button></div>
+        <div id="choice-buttons" class="choice-grid" aria-label="選擇觀察部位" aria-describedby="activity-title activity-description" hidden></div>
+        <section id="growth-lab" class="growth-lab" aria-labelledby="growth-heading" hidden><div class="lab-heading"><h3 id="growth-heading">看小花慢慢長大</h3><span>生長示意</span></div><div id="growth-track" class="growth-track" role="group" aria-label="選擇生長階段"></div><div class="growth-reading" aria-live="polite"><strong id="growth-stage-name">1. 種子</strong><p id="growth-stage-description">合適條件下，種子可以長成小苗。</p></div><button id="growth-next" class="lab-next">下一個生長階段 <span data-icon="arrow"></span></button><p class="science-note">這是一棵開花植物的示意。真正生長需要時間。</p></section>
+        <section id="conditions-lab" class="conditions-lab" aria-labelledby="conditions-heading" hidden><h3 id="conditions-heading">植物長大，需要甚麼？</h3><div id="condition-buttons" class="condition-buttons" role="group" aria-label="認識生長條件"></div><p id="condition-description" class="condition-description" aria-live="polite">按一個圖示，聽聽它的作用。</p></section>
+        <div id="park-care" class="park-care" hidden><button id="park-water" class="care-button"><span data-icon="water"></span> 幫植物澆水</button><span id="water-note">適量就好。長大需要時間。</span></div>
         <div id="item-actions" class="item-actions" hidden><button id="pickup-action" class="pickup-button"><span data-icon="hand"></span><span id="pickup-label">拿起報紙</span></button><button id="return-action" class="return-button" disabled>放回原位</button></div>
-        <div id="choice-buttons" class="choice-grid" aria-label="選擇植物" aria-describedby="activity-title activity-description"></div>
+        <p class="scene-caption"><span data-icon="hand"></span><span id="scene-caption">點一下植物，也可使用大按鈕觀察。</span></p>
       </div>
       <aside class="activity-card" aria-labelledby="activity-title">
-        <div class="activity-top"><span class="activity-label" id="activity-label">植物小小觀察家</span><button class="listen-button" id="listen" aria-label="聽一聽這一站的提示"><span data-icon="volume"></span>聽一聽</button></div>
-        <div id="progress" class="progress" hidden aria-label="練習進度"></div>
-        <div class="object-picture" id="object-picture" aria-hidden="true"></div>
-        <div class="activity-copy" aria-live="polite" aria-atomic="true"><span id="object-kicker" class="object-kicker">今天的探索旅程</span><h2 id="activity-title">歡迎來到科學小公園</h2><p id="activity-description">沿着小路走，看看花、樹和草。</p></div><p id="interaction-help" class="interaction-help">按地點前往觀察，也可在公園裏走一走。</p>
-        <div id="feedback" class="feedback" role="status" aria-atomic="true"><span data-icon="sparkle"></span><span id="feedback-text">看一看、點一點，每一站都有新發現。</span></div>
-        <button id="primary-action" class="primary-button"><span id="primary-label">出發去花圃</span><span data-icon="arrow"></span></button>
-        <button id="secondary-action" class="secondary-button" hidden>返回認識植物</button>
-        <div class="gentle-note"><span data-icon="heart"></span><span id="gentle-note">慢慢來，按錯了也可以再試。</span></div>
+        <div class="activity-top"><span id="activity-label" class="activity-label">一起觀察</span><button class="listen-button" id="listen" aria-label="重播這一站的介紹"><span data-icon="volume"></span>聽一聽</button></div>
+        <div id="progress" class="progress" hidden></div><div id="object-picture" class="object-picture" aria-hidden="true" hidden></div>
+        <div class="activity-copy" aria-live="polite" aria-atomic="true"><span id="object-kicker" class="object-kicker">今天的旅程</span><h2 id="activity-title">一起遊公園</h2><p id="activity-description">看看花、樹、草，發現它們怎樣長大。</p></div>
+        <p id="interaction-help" class="interaction-help">準備好，就按「開始遊覽」。</p>
+        <div id="feedback" class="feedback" role="status" aria-atomic="true"><span data-icon="leaf"></span><span id="feedback-text">我們會一站一站慢慢看。</span></div>
+        <button id="task-action" class="task-button" hidden><span data-icon="sparkle"></span><span id="task-label">試一題</span><small>可以跳過</small></button>
+        <button id="secondary-action" class="secondary-button" hidden>返回科學公園</button>
+        <div class="gentle-note"><span data-icon="heart"></span><span id="gentle-note">慢慢來，不用急。</span></div>
       </aside>
     </section>
-    <section class="bottom-notes" aria-label="學習小提示"><div class="tip-icon" data-icon="leaf"></div><div><strong id="bottom-title">愛護花草，從認識開始</strong><p id="bottom-copy">花、樹、草，都是我們的好朋友。</p></div><span class="pace-note"><span data-icon="smile"></span> 沒有計時，安心學習</span></section>
-    <footer><span>綠意小天地 <i>·</i> 用心觀察，一起愛護環境</span><span>為每一種學習步伐而設</span></footer>
+    <section class="bottom-notes" aria-label="觀察小提示"><div class="tip-icon" data-icon="leaf"></div><div><strong id="bottom-title">每次觀察一樣</strong><p id="bottom-copy">可以重聽、再看，準備好才繼續。</p></div><span class="pace-note"><span data-icon="smile"></span>沒有計時，安心學習</span></section>
+    <footer><span>綠意小天地 <i>·</i> 看見植物，發現科學</span><span>按照自己的步伐</span></footer>
   </main>
-  <dialog id="settings" aria-labelledby="settings-title"><form method="dialog"><div class="dialog-heading"><div><span class="eyebrow">按照你的步伐</span><h2 id="settings-title">學習設定</h2></div><button class="dialog-close" aria-label="關閉學習設定" value="close">×</button></div><label class="setting-row"><span><strong>減少動態</strong><small>直接到達觀察點，省略移動及慶祝動畫</small></span><input id="reduce-motion" type="checkbox" role="switch"></label><label class="setting-row"><span><strong>加大文字</strong><small>讓指示和按鈕更容易閱讀</small></span><input id="large-text" type="checkbox" role="switch"></label><label class="setting-select"><span><strong>回收練習</strong><small>由簡單開始，再試更多物品</small></span><select id="difficulty"><option value="basic">基礎：3 件物品</option><option value="extended">進階：6 件物品</option></select></label><div class="voice-note" id="voice-note">語音會使用裝置提供的中文聲音，優先選用粵語。</div><details class="teacher-note"><summary>給老師及照顧者的小提示</summary><p>可按路線依次遊覽，或直接選擇地點。每站先觀察，再按「開始小任務」。畫面上的大按鈕可替代 3D 點選及拖拉。</p><p>生長過程由學生逐步切換，不會在澆水後立即長大。請配合真實植物或照片，觀察多天的變化。</p><p>回收練習可拖入箱內，也可先點物品、再點回收箱；答對後自行按「下一個」。練習沒有計時或扣分，也不收集學生姓名或作答紀錄。</p></details><details class="teacher-note"><summary>科學概念與教學備註</summary><ul id="science-notes"></ul></details><button class="primary-button" value="done">設定好了<span data-icon="check"></span></button></form></dialog>
-  <noscript><p class="noscript">請開啟 JavaScript 使用互動小花園。香港三色回收：藍色收廢紙，黃色收金屬，啡色收塑膠。</p></noscript>
-  <script type="module" src="./app.js?v=2-park"></script>
+  <dialog id="settings" aria-labelledby="settings-title"><form method="dialog"><div class="dialog-heading"><div><span class="eyebrow">按照你的步伐</span><h2 id="settings-title">學習設定</h2></div><button class="dialog-close" aria-label="關閉設定" value="close">×</button></div><label class="setting-row"><span><strong>減少動態</strong><small>直接切換觀察畫面</small></span><input id="reduce-motion" type="checkbox" role="switch"></label><label class="setting-row"><span><strong>加大文字</strong><small>放大指示和按鈕文字</small></span><input id="large-text" type="checkbox" role="switch"></label><label class="setting-select"><span><strong>獨立回收練習</strong><small>只用於「三色回收」活動</small></span><select id="difficulty"><option value="basic">基礎：3 件物品</option><option value="extended">進階：6 件物品</option></select></label><div class="voice-note" id="voice-note">語音優先使用裝置提供的粵語聲音。</div><details class="teacher-note"><summary>給老師及照顧者</summary><p>公園按固定次序導覽，使用「上一站／下一站」便可。每站的小題目均可跳過，不必答對才能繼續。植物介紹及成長階段可重複觀察。</p><p>三色回收是另一項獨立活動，不屬於公園旅程。網頁不收集學生姓名或作答紀錄；設定只保留在此瀏覽器。</p></details><details class="teacher-note"><summary>科學教學備註</summary><ul id="science-notes"></ul></details><button class="primary-button" value="done">設定好了<span data-icon="check"></span></button></form></dialog>
+  <noscript><p class="noscript">請開啟 JavaScript 使用科學小公園。植物長大需要適當的光、水、空氣、溫度及養分。</p></noscript>
+  <script type="module" src="./app.js?v=3-guided"></script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 {
   "name": "green-little-world",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "Accessible 3D science park tour, plant growth and Hong Kong recycling learning",
+  "description": "Simple guided 3D plant science park with a separate Hong Kong recycling activity",
   "scripts": {
     "test": "node tests/scene-interaction.test.mjs && node tests/park-scene.test.mjs"
   },
