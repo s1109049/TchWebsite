@@ -1,0 +1,13 @@
+{
+  "name": "green-little-world",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Accessible Three.js nature and Hong Kong recycling learning activities",
+  "scripts": {
+    "test": "node tests/scene-interaction.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
