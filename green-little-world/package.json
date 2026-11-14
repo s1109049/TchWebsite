@@ -1,11 +1,11 @@
 {
   "name": "green-little-world",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Accessible Three.js nature and Hong Kong recycling learning activities",
+  "description": "Accessible 3D science park tour, plant growth and Hong Kong recycling learning",
   "scripts": {
-    "test": "node tests/scene-interaction.test.mjs"
+    "test": "node tests/scene-interaction.test.mjs && node tests/park-scene.test.mjs"
   },
   "engines": {
     "node": ">=22"
